@@ -1,35 +1,36 @@
 //
-//  MasterViewController.m
+//  TitleViewController.m
 //  Titlz
 //
 //  Created by David Lains on 12/26/11.
 //  Copyright (c) 2011 Dagger Lake Software. All rights reserved.
 //
 
-#import "MasterViewController.h"
+#import "TitleViewController.h"
 
-#import "DetailViewController.h"
+#import "TitleDetailViewController.h"
 
-@interface MasterViewController ()
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+@interface TitleViewController ()
+- (void)configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
 @end
 
-@implementation MasterViewController
+@implementation TitleViewController
 
-@synthesize detailViewController = _detailViewController;
+@synthesize titleDetailViewController = _titleDetailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+-(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        self.title = NSLocalizedString(@"Master", @"Master");
+    if (self)
+    {
+        self.title = NSLocalizedString(@"Title", @"Title");
     }
     return self;
 }
 							
-- (void)didReceiveMemoryWarning
+-(void) didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Release any cached data, images, etc that aren't in use.
@@ -37,69 +38,70 @@
 
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad
+-(void) viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     // Set up the edit and add buttons.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
+    UIBarButtonItem* addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
     self.navigationItem.rightBarButtonItem = addButton;
 }
 
-- (void)viewDidUnload
+-(void) viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
+-(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+-(void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
+-(void) viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+-(void) viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+-(BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
 // Customize the number of sections in the table view.
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+-(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
 {
     return [[self.fetchedResultsController sections] count];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+-(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     return [sectionInfo numberOfObjects];
 }
 
 // Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+-(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
+    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
@@ -117,16 +119,18 @@
 }
 */
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+-(void) tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
         // Delete the managed object for the given index path
-        NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
+        NSManagedObjectContext* context = [self.fetchedResultsController managedObjectContext];
         [context deleteObject:[self.fetchedResultsController objectAtIndexPath:indexPath]];
         
         // Save the context.
         NSError *error = nil;
-        if (![context save:&error]) {
+        if (![context save:&error])
+        {
             /*
              Replace this implementation with code to handle the error appropriately.
              
@@ -138,54 +142,57 @@
     }   
 }
 
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+-(BOOL) tableView:(UITableView*)tableView canMoveRowAtIndexPath:(NSIndexPath*)indexPath
 {
     // The table view should not be re-orderable.
     return NO;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+-(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    if (!self.detailViewController) {
-        self.detailViewController = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
+    if (!self.titleDetailViewController)
+    {
+        self.titleDetailViewController = [[TitleDetailViewController alloc] initWithNibName:@"TitleDetailViewController" bundle:nil];
     }
-    NSManagedObject *selectedObject = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    self.detailViewController.detailItem = selectedObject;    
-    [self.navigationController pushViewController:self.detailViewController animated:YES];
+    NSManagedObject* selectedObject = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    self.titleDetailViewController.detailItem = selectedObject;    
+    [self.navigationController pushViewController:self.titleDetailViewController animated:YES];
 }
 
 #pragma mark - Fetched results controller
 
-- (NSFetchedResultsController *)fetchedResultsController
+-(NSFetchedResultsController*) fetchedResultsController
 {
-    if (__fetchedResultsController != nil) {
+    if (__fetchedResultsController != nil)
+    {
         return __fetchedResultsController;
     }
     
     // Set up the fetched results controller.
     // Create the fetch request for the entity.
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
+    NSEntityDescription* entity = [NSEntityDescription entityForName:@"Title" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending:NO];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:NO];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Master"];
-    aFetchedResultsController.delegate = self;
-    self.fetchedResultsController = aFetchedResultsController;
+    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Title"];
+    controller.delegate = self;
+    self.fetchedResultsController = controller;
     
-	NSError *error = nil;
-	if (![self.fetchedResultsController performFetch:&error]) {
+	NSError* error = nil;
+	if (![self.fetchedResultsController performFetch:&error])
+    {
 	    /*
 	     Replace this implementation with code to handle the error appropriately.
 
@@ -198,15 +205,15 @@
     return __fetchedResultsController;
 }    
 
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+-(void) controllerWillChangeContent:(NSFetchedResultsController*)controller
 {
     [self.tableView beginUpdates];
 }
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
+-(void) controller:(NSFetchedResultsController*)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
-    switch(type) {
+    switch(type)
+    {
         case NSFetchedResultsChangeInsert:
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
@@ -217,13 +224,12 @@
     }
 }
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath
+-(void) controller:(NSFetchedResultsController*)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath*)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath*)newIndexPath
 {
-    UITableView *tableView = self.tableView;
+    UITableView* tableView = self.tableView;
     
-    switch(type) {
+    switch(type)
+    {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
@@ -243,7 +249,7 @@
     }
 }
 
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+-(void) controllerDidChangeContent:(NSFetchedResultsController*)controller
 {
     [self.tableView endUpdates];
 }
@@ -258,26 +264,27 @@
 }
  */
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+-(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
 {
-    NSManagedObject *managedObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = [[managedObject valueForKey:@"timeStamp"] description];
+    NSManagedObject* managedObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = [managedObject valueForKey:@"name"];
 }
 
-- (void)insertNewObject
+-(void) insertNewObject
 {
     // Create a new instance of the entity managed by the fetched results controller.
-    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-    NSEntityDescription *entity = [[self.fetchedResultsController fetchRequest] entity];
-    NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
+    NSManagedObjectContext* context = [self.fetchedResultsController managedObjectContext];
+    NSEntityDescription* entity = [[self.fetchedResultsController fetchRequest] entity];
+    NSManagedObject* newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
     
     // If appropriate, configure the new managed object.
     // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    [newManagedObject setValue:[NSDate date] forKey:@"timeStamp"];
+    [newManagedObject setValue:@"New Title" forKey:@"name"];
     
     // Save the context.
-    NSError *error = nil;
-    if (![context save:&error]) {
+    NSError* error = nil;
+    if (![context save:&error])
+    {
         /*
          Replace this implementation with code to handle the error appropriately.
          

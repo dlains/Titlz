@@ -15,10 +15,10 @@
 		55A99EA514A949FA00836F4E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A99EA414A949FA00836F4E /* main.m */; };
 		55A99EA914A949FA00836F4E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A99EA814A949FA00836F4E /* AppDelegate.m */; };
 		55A99EAC14A949FA00836F4E /* Titlz.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 55A99EAA14A949FA00836F4E /* Titlz.xcdatamodeld */; };
-		55A99EAF14A949FA00836F4E /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A99EAE14A949FA00836F4E /* MasterViewController.m */; };
-		55A99EB214A949FA00836F4E /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A99EB114A949FA00836F4E /* DetailViewController.m */; };
-		55A99EB514A949FA00836F4E /* MasterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55A99EB314A949FA00836F4E /* MasterViewController.xib */; };
-		55A99EB814A949FA00836F4E /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55A99EB614A949FA00836F4E /* DetailViewController.xib */; };
+		55A99EAF14A949FA00836F4E /* TitleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A99EAE14A949FA00836F4E /* TitleViewController.m */; };
+		55A99EB214A949FA00836F4E /* TitleDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A99EB114A949FA00836F4E /* TitleDetailViewController.m */; };
+		55A99EB514A949FA00836F4E /* TitleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55A99EB314A949FA00836F4E /* TitleViewController.xib */; };
+		55A99EB814A949FA00836F4E /* TitleDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55A99EB614A949FA00836F4E /* TitleDetailViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,19 +27,19 @@
 		55A99E9814A949FA00836F4E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		55A99E9A14A949FA00836F4E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		55A99E9C14A949FA00836F4E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		55A99EA014A949FA00836F4E /* Titlz-Info.plist */ = {isa = PBXFileReference; path = "Titlz-Info.plist"; sourceTree = "<group>"; };
+		55A99EA014A949FA00836F4E /* Titlz-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Titlz-Info.plist"; sourceTree = "<group>"; };
 		55A99EA214A949FA00836F4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		55A99EA414A949FA00836F4E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		55A99EA614A949FA00836F4E /* Titlz-Prefix.pch */ = {isa = PBXFileReference; path = "Titlz-Prefix.pch"; sourceTree = "<group>"; };
-		55A99EA714A949FA00836F4E /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		55A99EA614A949FA00836F4E /* Titlz-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Titlz-Prefix.pch"; sourceTree = "<group>"; };
+		55A99EA714A949FA00836F4E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		55A99EA814A949FA00836F4E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		55A99EAB14A949FA00836F4E /* Titlz.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Titlz.xcdatamodel; sourceTree = "<group>"; };
-		55A99EAD14A949FA00836F4E /* MasterViewController.h */ = {isa = PBXFileReference; path = MasterViewController.h; sourceTree = "<group>"; };
-		55A99EAE14A949FA00836F4E /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
-		55A99EB014A949FA00836F4E /* DetailViewController.h */ = {isa = PBXFileReference; path = DetailViewController.h; sourceTree = "<group>"; };
-		55A99EB114A949FA00836F4E /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
-		55A99EB414A949FA00836F4E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MasterViewController.xib; sourceTree = "<group>"; };
-		55A99EB714A949FA00836F4E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DetailViewController.xib; sourceTree = "<group>"; };
+		55A99EAD14A949FA00836F4E /* TitleViewController.h */ = {isa = PBXFileReference; path = TitleViewController.h; sourceTree = "<group>"; };
+		55A99EAE14A949FA00836F4E /* TitleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TitleViewController.m; sourceTree = "<group>"; };
+		55A99EB014A949FA00836F4E /* TitleDetailViewController.h */ = {isa = PBXFileReference; path = TitleDetailViewController.h; sourceTree = "<group>"; };
+		55A99EB114A949FA00836F4E /* TitleDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TitleDetailViewController.m; sourceTree = "<group>"; };
+		55A99EB414A949FA00836F4E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TitleViewController.xib; sourceTree = "<group>"; };
+		55A99EB714A949FA00836F4E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TitleDetailViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,15 +88,9 @@
 		55A99E9E14A949FA00836F4E /* Titlz */ = {
 			isa = PBXGroup;
 			children = (
-				55A99EA714A949FA00836F4E /* AppDelegate.h */,
-				55A99EA814A949FA00836F4E /* AppDelegate.m */,
-				55A99EAD14A949FA00836F4E /* MasterViewController.h */,
-				55A99EAE14A949FA00836F4E /* MasterViewController.m */,
-				55A99EB014A949FA00836F4E /* DetailViewController.h */,
-				55A99EB114A949FA00836F4E /* DetailViewController.m */,
-				55A99EB314A949FA00836F4E /* MasterViewController.xib */,
-				55A99EB614A949FA00836F4E /* DetailViewController.xib */,
-				55A99EAA14A949FA00836F4E /* Titlz.xcdatamodeld */,
+				55A99EC014A94A6C00836F4E /* Model */,
+				55A99EBE14A94A3A00836F4E /* Classes */,
+				55A99EBF14A94A4900836F4E /* Views */,
 				55A99E9F14A949FA00836F4E /* Supporting Files */,
 			);
 			path = Titlz;
@@ -111,6 +105,36 @@
 				55A99EA614A949FA00836F4E /* Titlz-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		55A99EBE14A94A3A00836F4E /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				55A99EA714A949FA00836F4E /* AppDelegate.h */,
+				55A99EA814A949FA00836F4E /* AppDelegate.m */,
+				55A99EAD14A949FA00836F4E /* TitleViewController.h */,
+				55A99EAE14A949FA00836F4E /* TitleViewController.m */,
+				55A99EB014A949FA00836F4E /* TitleDetailViewController.h */,
+				55A99EB114A949FA00836F4E /* TitleDetailViewController.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		55A99EBF14A94A4900836F4E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				55A99EB314A949FA00836F4E /* TitleViewController.xib */,
+				55A99EB614A949FA00836F4E /* TitleDetailViewController.xib */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		55A99EC014A94A6C00836F4E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				55A99EAA14A949FA00836F4E /* Titlz.xcdatamodeld */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -165,8 +189,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				55A99EA314A949FA00836F4E /* InfoPlist.strings in Resources */,
-				55A99EB514A949FA00836F4E /* MasterViewController.xib in Resources */,
-				55A99EB814A949FA00836F4E /* DetailViewController.xib in Resources */,
+				55A99EB514A949FA00836F4E /* TitleViewController.xib in Resources */,
+				55A99EB814A949FA00836F4E /* TitleDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,8 +204,8 @@
 				55A99EA514A949FA00836F4E /* main.m in Sources */,
 				55A99EA914A949FA00836F4E /* AppDelegate.m in Sources */,
 				55A99EAC14A949FA00836F4E /* Titlz.xcdatamodeld in Sources */,
-				55A99EAF14A949FA00836F4E /* MasterViewController.m in Sources */,
-				55A99EB214A949FA00836F4E /* DetailViewController.m in Sources */,
+				55A99EAF14A949FA00836F4E /* TitleViewController.m in Sources */,
+				55A99EB214A949FA00836F4E /* TitleDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,20 +220,20 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		55A99EB314A949FA00836F4E /* MasterViewController.xib */ = {
+		55A99EB314A949FA00836F4E /* TitleViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				55A99EB414A949FA00836F4E /* en */,
 			);
-			name = MasterViewController.xib;
+			name = TitleViewController.xib;
 			sourceTree = "<group>";
 		};
-		55A99EB614A949FA00836F4E /* DetailViewController.xib */ = {
+		55A99EB614A949FA00836F4E /* TitleDetailViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				55A99EB714A949FA00836F4E /* en */,
 			);
-			name = DetailViewController.xib;
+			name = TitleDetailViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -301,6 +325,7 @@
 				55A99EBD14A949FA00836F4E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
