@@ -7,23 +7,28 @@
 //
 
 #import "TitleDetailViewController.h"
+#import "Title.h"
 
 @interface TitleDetailViewController ()
-- (void)configureView;
+-(void) configureView;
+-(void) doneButtonPressed;
+-(void) cancelButtonPressed;
+-(UITableViewCell*) configureNameCell;
+-(UITableViewCell*) configureEditionCells;
 @end
 
 @implementation TitleDetailViewController
 
 @synthesize detailItem = _detailItem;
-@synthesize detailDescriptionLabel = _detailDescriptionLabel;
+@synthesize editing = _editing;
 
 #pragma mark - Managing the detail item
 
--(void) setDetailItem:(id)newDetailItem
+-(void) setDetailItem:(Title*)detailItem
 {
-    if (_detailItem != newDetailItem)
+    if(_detailItem != detailItem)
     {
-        _detailItem = newDetailItem;
+        _detailItem = detailItem;
         
         // Update the view.
         [self configureView];
@@ -36,7 +41,7 @@
 
     if (self.detailItem)
     {
-        self.detailDescriptionLabel.text = [self.detailItem description];
+        
     }
 }
 
@@ -52,7 +57,19 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    [self configureView];
+    if (self.editing)
+    {
+        self.title = @"New Title";
+        UIBarButtonItem* doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed)];
+        self.navigationItem.rightBarButtonItem = doneButton;
+        UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
+        self.navigationItem.leftBarButtonItem = cancelButton;
+    }
+    else
+    {
+        self.title = @"Title";
+    }
+//    self.navigationItem.leftBarButtonItem = ;
 }
 
 -(void) viewDidUnload
@@ -97,5 +114,94 @@
     }
     return self;
 }
-							
+
+#pragma mark -
+#pragma mark Button Processing
+
+-(void) doneButtonPressed
+{
+    // Save the changes.
+    
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+}
+
+-(void) cancelButtonPressed
+{
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark -
+#pragma mark Table View Methods.
+
+// Customize the number of sections in the table view.
+-(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
+{
+    return TitleDetailSectionCount;
+}
+
+-(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
+{
+    switch (section)
+    {
+        case NameSection:
+            return 1;
+        case EditionSection:
+            return self.detailItem.editions.count;
+        case AuthorSection:
+            return self.detailItem.authors.count;
+        case EditorSection:
+            return self.detailItem.editors.count;
+        case IllustratorSection:
+            return self.detailItem.illustrators.count;
+        case ContributorSection:
+            return self.detailItem.contributors.count;
+        case BookSection:
+            return self.detailItem.books.count;
+        case CollectionSection:
+            return self.detailItem.collections.count;
+        default:
+            return 0;
+    }
+}
+
+// Customize the appearance of table view cells.
+-(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    UITableViewCell* cell = nil;
+    
+    switch (indexPath.section)
+    {
+        case NameSection:
+            cell = [self configureNameCell];
+            break;
+        case EditionSection:
+            cell = [self configureEditionCells];
+            break;
+        default:
+            break;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCell*) configureNameCell
+{
+    static NSString* CellIdentifier = @"NameCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.editing = TRUE;
+    }
+    
+    cell.textLabel.text = self.detailItem.name;
+    return cell;
+}
+
+-(UITableViewCell*) configureEditionCells
+{
+    return nil;
+}
+
 @end

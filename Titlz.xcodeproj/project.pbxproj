@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5562329F14AAF3680099765E /* Title.m in Sources */ = {isa = PBXBuildFile; fileRef = 5562329E14AAF3680099765E /* Title.m */; };
 		55A99E9714A949FA00836F4E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A99E9614A949FA00836F4E /* UIKit.framework */; };
 		55A99E9914A949FA00836F4E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A99E9814A949FA00836F4E /* Foundation.framework */; };
 		55A99E9B14A949FA00836F4E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A99E9A14A949FA00836F4E /* CoreGraphics.framework */; };
@@ -22,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5562329D14AAF3680099765E /* Title.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Title.h; sourceTree = "<group>"; };
+		5562329E14AAF3680099765E /* Title.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Title.m; sourceTree = "<group>"; };
 		55A99E9214A949FA00836F4E /* Titlz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Titlz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		55A99E9614A949FA00836F4E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		55A99E9814A949FA00836F4E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -34,9 +37,9 @@
 		55A99EA714A949FA00836F4E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		55A99EA814A949FA00836F4E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		55A99EAB14A949FA00836F4E /* Titlz.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Titlz.xcdatamodel; sourceTree = "<group>"; };
-		55A99EAD14A949FA00836F4E /* TitleViewController.h */ = {isa = PBXFileReference; path = TitleViewController.h; sourceTree = "<group>"; };
+		55A99EAD14A949FA00836F4E /* TitleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TitleViewController.h; sourceTree = "<group>"; };
 		55A99EAE14A949FA00836F4E /* TitleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TitleViewController.m; sourceTree = "<group>"; };
-		55A99EB014A949FA00836F4E /* TitleDetailViewController.h */ = {isa = PBXFileReference; path = TitleDetailViewController.h; sourceTree = "<group>"; };
+		55A99EB014A949FA00836F4E /* TitleDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TitleDetailViewController.h; sourceTree = "<group>"; };
 		55A99EB114A949FA00836F4E /* TitleDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TitleDetailViewController.m; sourceTree = "<group>"; };
 		55A99EB414A949FA00836F4E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TitleViewController.xib; sourceTree = "<group>"; };
 		55A99EB714A949FA00836F4E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TitleDetailViewController.xib; sourceTree = "<group>"; };
@@ -57,6 +60,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5562329C14AAF1FA0099765E /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				5562329D14AAF3680099765E /* Title.h */,
+				5562329E14AAF3680099765E /* Title.m */,
+			);
+			name = Entities;
+			sourceTree = "<group>";
+		};
 		55A99E8714A949FA00836F4E = {
 			isa = PBXGroup;
 			children = (
@@ -89,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				55A99EC014A94A6C00836F4E /* Model */,
+				5562329C14AAF1FA0099765E /* Entities */,
 				55A99EBE14A94A3A00836F4E /* Classes */,
 				55A99EBF14A94A4900836F4E /* Views */,
 				55A99E9F14A949FA00836F4E /* Supporting Files */,
@@ -206,6 +219,7 @@
 				55A99EAC14A949FA00836F4E /* Titlz.xcdatamodeld in Sources */,
 				55A99EAF14A949FA00836F4E /* TitleViewController.m in Sources */,
 				55A99EB214A949FA00836F4E /* TitleDetailViewController.m in Sources */,
+				5562329F14AAF3680099765E /* Title.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

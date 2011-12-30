@@ -7,11 +7,11 @@
 //
 
 #import "TitleViewController.h"
-
 #import "TitleDetailViewController.h"
+#import "Title.h"
 
 @interface TitleViewController ()
-- (void)configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
+-(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
 @end
 
 @implementation TitleViewController
@@ -25,7 +25,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        self.title = NSLocalizedString(@"Title", @"Title");
+        self.title = NSLocalizedString(@"Titles", @"Titles");
     }
     return self;
 }
@@ -154,8 +154,9 @@
     {
         self.titleDetailViewController = [[TitleDetailViewController alloc] initWithNibName:@"TitleDetailViewController" bundle:nil];
     }
-    NSManagedObject* selectedObject = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    self.titleDetailViewController.detailItem = selectedObject;    
+    Title* selectedTitle = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    self.titleDetailViewController.detailItem = selectedTitle;
+    self.titleDetailViewController.editing = FALSE;
     [self.navigationController pushViewController:self.titleDetailViewController animated:YES];
 }
 
@@ -266,24 +267,31 @@
 
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
 {
-    NSManagedObject* managedObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = [managedObject valueForKey:@"name"];
+    Title* title = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = title.name;
 }
 
 -(void) insertNewObject
 {
     // Create a new instance of the entity managed by the fetched results controller.
-    NSManagedObjectContext* context = [self.fetchedResultsController managedObjectContext];
-    NSEntityDescription* entity = [[self.fetchedResultsController fetchRequest] entity];
-    NSManagedObject* newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
+    Title* title = [Title titleInManagedObjectContext:[self.fetchedResultsController managedObjectContext]];
     
     // If appropriate, configure the new managed object.
     // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    [newManagedObject setValue:@"New Title" forKey:@"name"];
+    title.name = @"New Title";
     
+    if (!self.titleDetailViewController)
+    {
+        self.titleDetailViewController = [[TitleDetailViewController alloc] initWithNibName:@"TitleDetailViewController" bundle:nil];
+    }
+    self.titleDetailViewController.detailItem = title;
+    self.titleDetailViewController.editing = TRUE;
+    UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:self.titleDetailViewController];
+    [self.navigationController presentModalViewController:navigationController animated:YES];
+
     // Save the context.
     NSError* error = nil;
-    if (![context save:&error])
+    if (![[self.fetchedResultsController managedObjectContext] save:&error])
     {
         /*
          Replace this implementation with code to handle the error appropriately.

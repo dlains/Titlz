@@ -8,10 +8,25 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TitleDetailViewController : UIViewController
+@class Title;
 
-@property(nonatomic, strong) id detailItem;
+// TitleDetailSections
+enum TitleDetailSections
+{
+    NameSection = 0,
+    EditionSection,
+    AuthorSection,
+    EditorSection,
+    IllustratorSection,
+    ContributorSection,
+    BookSection,
+    CollectionSection,
+    TitleDetailSectionCount
+};
 
-@property(nonatomic, strong) IBOutlet UILabel* detailDescriptionLabel;
+@interface TitleDetailViewController : UITableViewController
+
+@property(nonatomic, strong) Title* detailItem;
+@property(nonatomic, assign) BOOL editing;
 
 @end
