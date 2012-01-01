@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		552C741814AE8EBB00595DE9 /* EditableTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552C741714AE8EBB00595DE9 /* EditableTextCell.xib */; };
+		552C741C14AE926600595DE9 /* EditableTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C741B14AE926600595DE9 /* EditableTextCell.m */; };
 		5562329F14AAF3680099765E /* Title.m in Sources */ = {isa = PBXBuildFile; fileRef = 5562329E14AAF3680099765E /* Title.m */; };
 		55A99E9714A949FA00836F4E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A99E9614A949FA00836F4E /* UIKit.framework */; };
 		55A99E9914A949FA00836F4E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A99E9814A949FA00836F4E /* Foundation.framework */; };
@@ -23,6 +25,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		552C741714AE8EBB00595DE9 /* EditableTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditableTextCell.xib; sourceTree = "<group>"; };
+		552C741A14AE926600595DE9 /* EditableTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableTextCell.h; sourceTree = "<group>"; };
+		552C741B14AE926600595DE9 /* EditableTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditableTextCell.m; sourceTree = "<group>"; };
 		5562329D14AAF3680099765E /* Title.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Title.h; sourceTree = "<group>"; };
 		5562329E14AAF3680099765E /* Title.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Title.m; sourceTree = "<group>"; };
 		55A99E9214A949FA00836F4E /* Titlz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Titlz.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -129,6 +134,8 @@
 				55A99EAE14A949FA00836F4E /* TitleViewController.m */,
 				55A99EB014A949FA00836F4E /* TitleDetailViewController.h */,
 				55A99EB114A949FA00836F4E /* TitleDetailViewController.m */,
+				552C741A14AE926600595DE9 /* EditableTextCell.h */,
+				552C741B14AE926600595DE9 /* EditableTextCell.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -138,6 +145,7 @@
 			children = (
 				55A99EB314A949FA00836F4E /* TitleViewController.xib */,
 				55A99EB614A949FA00836F4E /* TitleDetailViewController.xib */,
+				552C741714AE8EBB00595DE9 /* EditableTextCell.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -204,6 +212,7 @@
 				55A99EA314A949FA00836F4E /* InfoPlist.strings in Resources */,
 				55A99EB514A949FA00836F4E /* TitleViewController.xib in Resources */,
 				55A99EB814A949FA00836F4E /* TitleDetailViewController.xib in Resources */,
+				552C741814AE8EBB00595DE9 /* EditableTextCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,6 +229,7 @@
 				55A99EAF14A949FA00836F4E /* TitleViewController.m in Sources */,
 				55A99EB214A949FA00836F4E /* TitleDetailViewController.m in Sources */,
 				5562329F14AAF3680099765E /* Title.m in Sources */,
+				552C741C14AE926600595DE9 /* EditableTextCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

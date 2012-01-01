@@ -26,7 +26,9 @@ enum TitleDetailSections
 
 @interface TitleDetailViewController : UITableViewController
 
+@property(nonatomic, strong) NSManagedObjectContext* editingContext;
 @property(nonatomic, strong) Title* detailItem;
-@property(nonatomic, assign) BOOL editing;
+
+-(id) initWithPrimaryManagedObjectContext:(NSManagedObjectContext*)primaryManagedObjectContext;
 
 @end

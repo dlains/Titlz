@@ -7,90 +7,98 @@
 //
 
 #import "TitleDetailViewController.h"
+#import "EditableTextCell.h"
 #import "Title.h"
 
 @interface TitleDetailViewController ()
--(void) configureView;
 -(void) doneButtonPressed;
 -(void) cancelButtonPressed;
 -(UITableViewCell*) configureNameCell;
--(UITableViewCell*) configureEditionCells;
+-(UITableViewCell*) configureEditionCell;
 @end
 
 @implementation TitleDetailViewController
 
 @synthesize detailItem = _detailItem;
-@synthesize editing = _editing;
+@synthesize editingContext = _editingContext;
 
-#pragma mark - Managing the detail item
+#pragma mark - Initialization
 
--(void) setDetailItem:(Title*)detailItem
+-(id) initWithPrimaryManagedObjectContext:(NSManagedObjectContext*)primaryManagedObjectContext
 {
-    if(_detailItem != detailItem)
+    if (self = [super initWithNibName:@"TitleDetailViewController" bundle:nil])
     {
-        _detailItem = detailItem;
-        
-        // Update the view.
-        [self configureView];
+        self.editingContext = [[NSManagedObjectContext alloc] init];
+        [self.editingContext setPersistentStoreCoordinator:[primaryManagedObjectContext persistentStoreCoordinator]];
+        NSUndoManager* undoManager = [[NSUndoManager alloc] init];
+        [self.editingContext setUndoManager:undoManager];
     }
-}
-
--(void) configureView
-{
-    // Update the user interface for the detail item.
-
-    if (self.detailItem)
-    {
-        
-    }
-}
-
--(void) didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Release any cached data, images, etc that aren't in use.
+    return self;
 }
 
 #pragma mark - View lifecycle
 
+-(void) didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    self.editingContext = nil;
+    self.detailItem = nil;
+}
+
 -(void) viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    if (self.editing)
-    {
-        self.title = @"New Title";
-        UIBarButtonItem* doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed)];
-        self.navigationItem.rightBarButtonItem = doneButton;
-        UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
-        self.navigationItem.leftBarButtonItem = cancelButton;
-    }
-    else
-    {
-        self.title = @"Title";
-    }
-//    self.navigationItem.leftBarButtonItem = ;
+
+    // Register for undo and redo change notifications.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoOrRedoAction:) name:NSUndoManagerDidUndoChangeNotification object:[self.editingContext undoManager]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoOrRedoAction:) name:NSUndoManagerDidRedoChangeNotification object:[self.editingContext undoManager]];
 }
 
 -(void) viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+
+    self.editingContext = nil;
+    self.detailItem = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+
+	// Check to see if the detailItem is set, if not this is a new record, switch to editing mode.
+    if (self.detailItem == nil)
+    {
+        // Create a new empty Title entity.
+        self.detailItem = [Title titleInManagedObjectContext:self.editingContext];
+        
+        self.title = @"New Title";
+        UIBarButtonItem* doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed)];
+        self.navigationItem.rightBarButtonItem = doneButton;
+        UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
+        self.navigationItem.leftBarButtonItem = cancelButton;
+        self.tableView.editing = TRUE;
+    }
+    else
+    {
+        self.title = @"Title";
+        self.navigationItem.rightBarButtonItem = self.editButtonItem;
+        [self.tableView reloadData];
+    }
 }
 
 -(void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self becomeFirstResponder];
 }
 
 -(void) viewWillDisappear:(BOOL)animated
 {
+    [self resignFirstResponder];
+    [[self.editingContext undoManager] removeAllActions];
+    [self.editingContext reset];
 	[super viewWillDisappear:animated];
 }
 
@@ -115,23 +123,59 @@
     return self;
 }
 
-#pragma mark -
-#pragma mark Button Processing
+#pragma mark - Undo Support
+
+-(BOOL) canBecomeFirstResponder
+{
+    return YES;
+}
+
+-(NSUndoManager*) undoManager
+{
+    return [[self.detailItem managedObjectContext] undoManager];
+}
+
+-(void) undoOrRedoAction:(NSNotification*)notification
+{
+    [self.tableView reloadData];
+}
+
+#pragma mark - Button Processing
 
 -(void) doneButtonPressed
 {
     // Save the changes.
+    NSError* error = nil;
+    BOOL success = [[self.detailItem managedObjectContext] save:&error];
+    if(!success)
+    {
+        NSLog(@"Error saving: %@.", error);
+    }
     
     [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 -(void) cancelButtonPressed
 {
+    [self becomeFirstResponder];
+    [self.editingContext reset];
     [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
-#pragma mark -
-#pragma mark Table View Methods.
+-(BOOL) textFieldShouldReturn:(UITextField*)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
+-(void) textFieldDidEndEditing:(UITextField*)textField
+{
+    self.detailItem.name = textField.text;
+    
+    [self becomeFirstResponder];
+}
+
+#pragma mark - Table View Methods.
 
 // Customize the number of sections in the table view.
 -(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
@@ -175,7 +219,7 @@
             cell = [self configureNameCell];
             break;
         case EditionSection:
-            cell = [self configureEditionCells];
+            cell = [self configureEditionCell];
             break;
         default:
             break;
@@ -184,22 +228,43 @@
     return cell;
 }
 
+// Editing styles per row.
+-(UITableViewCellEditingStyle) tableView:(UITableView*)tableView editingStyleForRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    switch (indexPath.section)
+    {
+        case NameSection:
+            return UITableViewCellEditingStyleNone;
+                
+        default:
+            return UITableViewCellEditingStyleInsert;
+    }
+}
+
 -(UITableViewCell*) configureNameCell
 {
-    static NSString* CellIdentifier = @"NameCell";
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
-    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
+    if(cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.editing = TRUE;
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
+        cell.textField.enabled = NO;
     }
-    
-    cell.textLabel.text = self.detailItem.name;
+
+    if(self.tableView.editing && [self.detailItem.name length] <= 0)
+    {
+        cell.textField.placeholder = @"New Title";
+    }
+    else
+    {
+        cell.textField.text = self.detailItem.name;
+    }
     return cell;
 }
 
--(UITableViewCell*) configureEditionCells
+-(UITableViewCell*) configureEditionCell
 {
     return nil;
 }

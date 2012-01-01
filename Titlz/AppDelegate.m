@@ -20,8 +20,11 @@
 
 -(BOOL) application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
+    // Undo and managed object context merging support.
+    application.applicationSupportsShakeToEdit = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextSaved:) name:NSManagedObjectContextDidSaveNotification object:nil];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
 
     TitleViewController* titleViewController = [[TitleViewController alloc] initWithNibName:@"TitleViewController" bundle:nil];
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:titleViewController];
@@ -41,10 +44,8 @@
 
 -(void) applicationDidEnterBackground:(UIApplication*)application
 {
-    /*
-     Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-     If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-     */
+    // Saves changes in the application's managed object context before the application terminates.
+    [self saveContext];
 }
 
 -(void) applicationWillEnterForeground:(UIApplication*)application
@@ -63,6 +64,9 @@
 
 -(void) applicationWillTerminate:(UIApplication*)application
 {
+    // Stop responding to notifications.
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
 }
@@ -83,6 +87,14 @@
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         } 
+    }
+}
+
+-(void) contextSaved:(NSNotification*)notification
+{
+    if ([notification object] != self.managedObjectContext)
+    {
+        [self.managedObjectContext mergeChangesFromContextDidSaveNotification:notification];
     }
 }
 

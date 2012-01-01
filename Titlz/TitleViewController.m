@@ -152,11 +152,10 @@
 {
     if (!self.titleDetailViewController)
     {
-        self.titleDetailViewController = [[TitleDetailViewController alloc] initWithNibName:@"TitleDetailViewController" bundle:nil];
+        self.titleDetailViewController = [[TitleDetailViewController alloc] initWithPrimaryManagedObjectContext:self.managedObjectContext];
     }
     Title* selectedTitle = [[self fetchedResultsController] objectAtIndexPath:indexPath];
     self.titleDetailViewController.detailItem = selectedTitle;
-    self.titleDetailViewController.editing = FALSE;
     [self.navigationController pushViewController:self.titleDetailViewController animated:YES];
 }
 
@@ -273,34 +272,12 @@
 
 -(void) insertNewObject
 {
-    // Create a new instance of the entity managed by the fetched results controller.
-    Title* title = [Title titleInManagedObjectContext:[self.fetchedResultsController managedObjectContext]];
-    
-    // If appropriate, configure the new managed object.
-    // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    title.name = @"New Title";
-    
-    if (!self.titleDetailViewController)
-    {
-        self.titleDetailViewController = [[TitleDetailViewController alloc] initWithNibName:@"TitleDetailViewController" bundle:nil];
-    }
-    self.titleDetailViewController.detailItem = title;
-    self.titleDetailViewController.editing = TRUE;
-    UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:self.titleDetailViewController];
-    [self.navigationController presentModalViewController:navigationController animated:YES];
+    // Use a local TitleDetailViewController here to avoid problems with reusing it with the main navigation controller.
+    TitleDetailViewController* titleDetailViewController = [[TitleDetailViewController alloc] initWithPrimaryManagedObjectContext:self.managedObjectContext];
+    titleDetailViewController.detailItem = nil;
 
-    // Save the context.
-    NSError* error = nil;
-    if (![[self.fetchedResultsController managedObjectContext] save:&error])
-    {
-        /*
-         Replace this implementation with code to handle the error appropriately.
-         
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-         */
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
+    UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:titleDetailViewController];
+    [self.navigationController presentModalViewController:navigationController animated:YES];
 }
 
 @end
