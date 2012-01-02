@@ -10,7 +10,6 @@
 
 @class Title;
 
-// TitleDetailSections
 enum TitleDetailSections
 {
     NameSection = 0,
@@ -28,6 +27,8 @@ enum TitleDetailSections
 
 @property(nonatomic, strong) NSManagedObjectContext* editingContext;
 @property(nonatomic, strong) Title* detailItem;
+@property(nonatomic, assign) BOOL editMode;
+@property(nonatomic, assign) BOOL newRecord;
 
 -(id) initWithPrimaryManagedObjectContext:(NSManagedObjectContext*)primaryManagedObjectContext;
 

@@ -22,6 +22,10 @@
 		55A99EB214A949FA00836F4E /* TitleDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A99EB114A949FA00836F4E /* TitleDetailViewController.m */; };
 		55A99EB514A949FA00836F4E /* TitleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55A99EB314A949FA00836F4E /* TitleViewController.xib */; };
 		55A99EB814A949FA00836F4E /* TitleDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55A99EB614A949FA00836F4E /* TitleDetailViewController.xib */; };
+		55EB3C3D14B0CC1300721D42 /* DLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EB3C3C14B0CC1300721D42 /* DLog.m */; };
+		55EB3C4214B13D1D00721D42 /* PersonDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EB3C4014B13D1D00721D42 /* PersonDetailViewController.m */; };
+		55EB3C4314B13D1D00721D42 /* PersonDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55EB3C4114B13D1D00721D42 /* PersonDetailViewController.xib */; };
+		55EB3C4614B13E5600721D42 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EB3C4514B13E5600721D42 /* Person.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +52,13 @@
 		55A99EB114A949FA00836F4E /* TitleDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TitleDetailViewController.m; sourceTree = "<group>"; };
 		55A99EB414A949FA00836F4E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TitleViewController.xib; sourceTree = "<group>"; };
 		55A99EB714A949FA00836F4E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TitleDetailViewController.xib; sourceTree = "<group>"; };
+		55EB3C3B14B0CC1300721D42 /* DLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLog.h; sourceTree = "<group>"; };
+		55EB3C3C14B0CC1300721D42 /* DLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLog.m; sourceTree = "<group>"; };
+		55EB3C3F14B13D1D00721D42 /* PersonDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonDetailViewController.h; sourceTree = "<group>"; };
+		55EB3C4014B13D1D00721D42 /* PersonDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonDetailViewController.m; sourceTree = "<group>"; };
+		55EB3C4114B13D1D00721D42 /* PersonDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonDetailViewController.xib; sourceTree = "<group>"; };
+		55EB3C4414B13E5600721D42 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		55EB3C4514B13E5600721D42 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +81,8 @@
 			children = (
 				5562329D14AAF3680099765E /* Title.h */,
 				5562329E14AAF3680099765E /* Title.m */,
+				55EB3C4414B13E5600721D42 /* Person.h */,
+				55EB3C4514B13E5600721D42 /* Person.m */,
 			);
 			name = Entities;
 			sourceTree = "<group>";
@@ -128,6 +141,8 @@
 		55A99EBE14A94A3A00836F4E /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				55EB3C3B14B0CC1300721D42 /* DLog.h */,
+				55EB3C3C14B0CC1300721D42 /* DLog.m */,
 				55A99EA714A949FA00836F4E /* AppDelegate.h */,
 				55A99EA814A949FA00836F4E /* AppDelegate.m */,
 				55A99EAD14A949FA00836F4E /* TitleViewController.h */,
@@ -136,6 +151,8 @@
 				55A99EB114A949FA00836F4E /* TitleDetailViewController.m */,
 				552C741A14AE926600595DE9 /* EditableTextCell.h */,
 				552C741B14AE926600595DE9 /* EditableTextCell.m */,
+				55EB3C3F14B13D1D00721D42 /* PersonDetailViewController.h */,
+				55EB3C4014B13D1D00721D42 /* PersonDetailViewController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -145,6 +162,7 @@
 			children = (
 				55A99EB314A949FA00836F4E /* TitleViewController.xib */,
 				55A99EB614A949FA00836F4E /* TitleDetailViewController.xib */,
+				55EB3C4114B13D1D00721D42 /* PersonDetailViewController.xib */,
 				552C741714AE8EBB00595DE9 /* EditableTextCell.xib */,
 			);
 			name = Views;
@@ -213,6 +231,7 @@
 				55A99EB514A949FA00836F4E /* TitleViewController.xib in Resources */,
 				55A99EB814A949FA00836F4E /* TitleDetailViewController.xib in Resources */,
 				552C741814AE8EBB00595DE9 /* EditableTextCell.xib in Resources */,
+				55EB3C4314B13D1D00721D42 /* PersonDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,6 +249,9 @@
 				55A99EB214A949FA00836F4E /* TitleDetailViewController.m in Sources */,
 				5562329F14AAF3680099765E /* Title.m in Sources */,
 				552C741C14AE926600595DE9 /* EditableTextCell.m in Sources */,
+				55EB3C3D14B0CC1300721D42 /* DLog.m in Sources */,
+				55EB3C4214B13D1D00721D42 /* PersonDetailViewController.m in Sources */,
+				55EB3C4614B13E5600721D42 /* Person.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

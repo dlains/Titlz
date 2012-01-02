@@ -136,7 +136,7 @@
              
              abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
              */
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            DLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
     }   
@@ -198,7 +198,7 @@
 
 	     abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
 	     */
-	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+	    DLog(@"Unresolved error %@, %@", error, [error userInfo]);
 	    abort();
 	}
     
@@ -275,6 +275,7 @@
     // Use a local TitleDetailViewController here to avoid problems with reusing it with the main navigation controller.
     TitleDetailViewController* titleDetailViewController = [[TitleDetailViewController alloc] initWithPrimaryManagedObjectContext:self.managedObjectContext];
     titleDetailViewController.detailItem = nil;
+    titleDetailViewController.newRecord = YES;
 
     UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:titleDetailViewController];
     [self.navigationController presentModalViewController:navigationController animated:YES];

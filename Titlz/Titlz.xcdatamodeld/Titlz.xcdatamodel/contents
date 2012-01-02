@@ -30,7 +30,7 @@
         <relationship name="publisher" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Publisher" inverseName="editions" inverseEntity="Publisher" syncable="YES"/>
         <relationship name="title" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Title" inverseName="editions" inverseEntity="Title" syncable="YES"/>
     </entity>
-    <entity name="Person" syncable="YES">
+    <entity name="Person" representedClassName="Person" syncable="YES">
         <attribute name="born" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="died" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="firstName" attributeType="String" syncable="YES"/>
