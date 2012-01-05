@@ -9,13 +9,16 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
+#import "NewTitleViewController.h"
+
 @class TitleDetailViewController;
 
-@interface TitleViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+@interface TitleViewController : UITableViewController <NSFetchedResultsControllerDelegate, NewTitleDelegate>
 
 @property(nonatomic, strong) TitleDetailViewController* titleDetailViewController;
 
 @property(nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
 @property(nonatomic, strong) NSManagedObjectContext* managedObjectContext;
+@property(nonatomic, retain) NSManagedObjectContext *addingManagedObjectContext;
 
 @end

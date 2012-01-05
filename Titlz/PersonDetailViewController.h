@@ -17,7 +17,7 @@ enum PersonDetailSections
     AuthoredSection,
     EditedSection,
     IllustratedSection,
-    ContributedToSection,
+    ContributedSection,
     PersonDetailSectionCount
 };
 
@@ -33,11 +33,12 @@ enum PersonDataSectionRows
 
 @interface PersonDetailViewController : UITableViewController
 
-@property(nonatomic, strong) NSManagedObjectContext* editingContext;
 @property(nonatomic, strong) Person* detailItem;
-@property(nonatomic, assign) BOOL editMode;
-@property(nonatomic, assign) BOOL newRecord;
+@property(nonatomic, assign) NSInteger personTypeBeingAdded;
+@property(nonatomic, strong) NSUndoManager* undoManager;
 
--(id) initWithPrimaryManagedObjectContext:(NSManagedObjectContext*)primaryManagedObjectContext;
+-(void) setUpUndoManager;
+-(void) cleanUpUndoManager;
+-(void) updateRightBarButtonItemState;
 
 @end

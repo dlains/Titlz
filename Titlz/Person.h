@@ -21,9 +21,12 @@
 @property (nonatomic, retain) NSSet* aliases;
 @property (nonatomic, retain) Person* aliasOf;
 @property (nonatomic, retain) NSSet* authored;
-@property (nonatomic, retain) NSSet* contributedTo;
+@property (nonatomic, retain) NSSet* contributed;
 @property (nonatomic, retain) NSSet* edited;
 @property (nonatomic, retain) NSSet* illustrated;
+
+// Transient properties.
+@property (nonatomic, readonly) NSString* fullName;
 
 +(id) personInManagedObjectContext:(NSManagedObjectContext*)context;
 
@@ -41,10 +44,10 @@
 - (void)addAuthored:(NSSet *)values;
 - (void)removeAuthored:(NSSet *)values;
 
-- (void)addContributedToObject:(Title *)value;
-- (void)removeContributedToObject:(Title *)value;
-- (void)addContributedTo:(NSSet *)values;
-- (void)removeContributedTo:(NSSet *)values;
+- (void)addContributedObject:(Title *)value;
+- (void)removeContributedObject:(Title *)value;
+- (void)addContributed:(NSSet *)values;
+- (void)removeContributed:(NSSet *)values;
 
 - (void)addEditedObject:(Title *)value;
 - (void)removeEditedObject:(Title *)value;

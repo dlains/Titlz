@@ -7,16 +7,15 @@
 //
 
 #import "TitleDetailViewController.h"
-#import "PersonDetailViewController.h"
+#import "PersonViewController.h"
 #import "EditableTextCell.h"
 #import "Title.h"
+#import "Person.h"
 
 @interface TitleDetailViewController ()
--(void) doneButtonPressed;
--(void) cancelButtonPressed;
 -(UITableViewCell*) configureNameCell;
 -(UITableViewCell*) configureEditionCell;
--(UITableViewCell*) configureAuthorCell;
+-(UITableViewCell*) configureAuthorCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureEditorCell;
 -(UITableViewCell*) configureIllustratorCell;
 -(UITableViewCell*) configureContributorCell;
@@ -28,20 +27,17 @@
 @implementation TitleDetailViewController
 
 @synthesize detailItem = _detailItem;
-@synthesize editingContext = _editingContext;
-@synthesize editMode = _editMode;
-@synthesize newRecord = _newRecord;
+@synthesize undoManager = _undoManager;
+@synthesize managedObjectContext = _managedObjectContext;
 
 #pragma mark - Initialization
 
--(id) initWithPrimaryManagedObjectContext:(NSManagedObjectContext*)primaryManagedObjectContext
+-(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
-    if (self = [super initWithNibName:@"TitleDetailViewController" bundle:nil])
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self)
     {
-        self.editingContext = [[NSManagedObjectContext alloc] init];
-        [self.editingContext setPersistentStoreCoordinator:[primaryManagedObjectContext persistentStoreCoordinator]];
-        NSUndoManager* undoManager = [[NSUndoManager alloc] init];
-        [self.editingContext setUndoManager:undoManager];
+        self.title = NSLocalizedString(@"Title", @"Title");
     }
     return self;
 }
@@ -51,51 +47,35 @@
 -(void) didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    self.editingContext = nil;
     self.detailItem = nil;
 }
 
 -(void) viewDidLoad
 {
     [super viewDidLoad];
-
-    // Register for undo and redo change notifications.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoOrRedoAction:) name:NSUndoManagerDidUndoChangeNotification object:[self.editingContext undoManager]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoOrRedoAction:) name:NSUndoManagerDidRedoChangeNotification object:[self.editingContext undoManager]];
 }
 
 -(void) viewDidUnload
 {
     [super viewDidUnload];
 
-    self.editingContext = nil;
     self.detailItem = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 
-	// Check to see if the detailItem is set, if not this is a new record, switch to editing mode.
-    if (self.detailItem == nil)
-    {
-        // Create a new empty Title entity.
-        self.detailItem = [Title titleInManagedObjectContext:self.editingContext];
-        
-        self.title = @"New Title";
-        UIBarButtonItem* doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed)];
-        self.navigationItem.rightBarButtonItem = doneButton;
-        UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed)];
-        self.navigationItem.leftBarButtonItem = cancelButton;
-        [self setEditing:YES animated:NO];
-    }
-    else
-    {
-        self.title = @"Title";
-        self.navigationItem.rightBarButtonItem = self.editButtonItem;
-        [self.tableView reloadData];
-    }
+    self.title = @"Title";
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+/*
+ The view controller must be first responder in order to be able to receive shake events for undo. It should resign first responder status when it disappears.
+ */
+-(BOOL) canBecomeFirstResponder
+{
+    return YES;
 }
 
 -(void) viewDidAppear:(BOOL)animated
@@ -107,8 +87,6 @@
 -(void) viewWillDisappear:(BOOL)animated
 {
     [self resignFirstResponder];
-    [[self.editingContext undoManager] removeAllActions];
-    [self.editingContext reset];
 	[super viewWillDisappear:animated];
 }
 
@@ -123,31 +101,63 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
--(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
+-(void) updateRightBarButtonItemState
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self)
-    {
-        self.title = NSLocalizedString(@"Title", @"Title");
-    }
-    return self;
+	// Conditionally enable the right bar button item -- it should only be enabled if the title is in a valid state for saving.
+    self.navigationItem.rightBarButtonItem.enabled = [self.detailItem validateForUpdate:NULL];
 }
 
 #pragma mark - Undo Support
 
--(BOOL) canBecomeFirstResponder
+-(void) setUpUndoManager
 {
-    return YES;
+	/*
+	 If the title's managed object context doesn't already have an undo manager, then create one and set it for the context and self.
+	 The view controller needs to keep a reference to the undo manager it creates so that it can determine whether to remove the undo manager when editing finishes.
+	 */
+	if (self.detailItem.managedObjectContext.undoManager == nil)
+    {
+		NSUndoManager* undoManager = [[NSUndoManager alloc] init];
+		[undoManager setLevelsOfUndo:3];
+		self.undoManager = undoManager;
+		
+		self.detailItem.managedObjectContext.undoManager = self.undoManager;
+	}
+	
+	// Register as an observer of the title's context's undo manager.
+	NSUndoManager* titleUndoManager = self.detailItem.managedObjectContext.undoManager;
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidUndo:) name:NSUndoManagerDidUndoChangeNotification object:titleUndoManager];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidRedo:) name:NSUndoManagerDidRedoChangeNotification object:titleUndoManager];
+}
+
+-(void) cleanUpUndoManager
+{
+	// Remove self as an observer.
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+    if (self.detailItem.managedObjectContext.undoManager == self.undoManager)
+    {
+        self.detailItem.managedObjectContext.undoManager = nil;
+        self.undoManager = nil;
+    }
 }
 
 -(NSUndoManager*) undoManager
 {
-    return [[self.detailItem managedObjectContext] undoManager];
+    return self.detailItem.managedObjectContext.undoManager;
 }
 
--(void) undoOrRedoAction:(NSNotification*)notification
+-(void) undoManagerDidUndo:(NSNotification*)notification
 {
     [self.tableView reloadData];
+	[self updateRightBarButtonItemState];
+}
+
+-(void) undoManagerDidRedo:(NSNotification*)notification
+{
+    [self.tableView reloadData];
+	[self updateRightBarButtonItemState];
 }
 
 #pragma mark - Button Processing
@@ -168,7 +178,6 @@
 -(void) cancelButtonPressed
 {
     [self becomeFirstResponder];
-    [self.editingContext reset];
     [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
@@ -189,34 +198,42 @@
 
 -(void) setEditing:(BOOL)editing animated:(BOOL)animated
 {
-    self.editMode = editing;
     [super setEditing:editing animated:animated];
     
-    if(!self.newRecord)
+	// Hide the back button when editing starts, and show it again when editing finishes.
+    [self.navigationItem setHidesBackButton:editing animated:animated];
+
+    NSIndexPath* edition     = [NSIndexPath indexPathForRow:self.detailItem.editions.count inSection:EditionSection];
+    NSIndexPath* author      = [NSIndexPath indexPathForRow:self.detailItem.authors.count inSection:AuthorSection];
+    NSIndexPath* editor      = [NSIndexPath indexPathForRow:self.detailItem.editors.count inSection:EditorSection];
+    NSIndexPath* illustrator = [NSIndexPath indexPathForRow:self.detailItem.illustrators.count inSection:IllustratorSection];
+    NSIndexPath* contributor = [NSIndexPath indexPathForRow:self.detailItem.contributors.count inSection:ContributorSection];
+    NSIndexPath* book        = [NSIndexPath indexPathForRow:self.detailItem.books.count inSection:BookSection];
+    NSIndexPath* collection  = [NSIndexPath indexPathForRow:self.detailItem.collections.count inSection:CollectionSection];
+
+    NSArray* paths = [NSArray arrayWithObjects:edition, author, editor, illustrator, contributor, book, collection, nil];
+
+    if (editing)
     {
-        NSIndexPath* edition     = [NSIndexPath indexPathForRow:self.detailItem.editions.count inSection:EditionSection];
-        NSIndexPath* author      = [NSIndexPath indexPathForRow:self.detailItem.authors.count inSection:AuthorSection];
-        NSIndexPath* editor      = [NSIndexPath indexPathForRow:self.detailItem.editors.count inSection:EditorSection];
-        NSIndexPath* illustrator = [NSIndexPath indexPathForRow:self.detailItem.illustrators.count inSection:IllustratorSection];
-        NSIndexPath* contributor = [NSIndexPath indexPathForRow:self.detailItem.contributors.count inSection:ContributorSection];
-        NSIndexPath* book        = [NSIndexPath indexPathForRow:self.detailItem.books.count inSection:BookSection];
-        NSIndexPath* collection  = [NSIndexPath indexPathForRow:self.detailItem.collections.count inSection:CollectionSection];
-
-        NSArray* paths = [NSArray arrayWithObjects:edition, author, editor, illustrator, contributor, book, collection, nil];
-
-        if (editing)
+        [self setUpUndoManager];
+        [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationRight];
+    }
+    else
+    {
+		[self cleanUpUndoManager];
+		// Save the changes.
+		NSError* error;
+		if (![self.detailItem.managedObjectContext save:&error])
         {
-            [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationRight];
-        }
-        else
-        {
-            [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
-            [self.tableView reloadData];
-        }
+			// Update to handle the error appropriately.
+			DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+			exit(-1);  // Fail
+		}
+        [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadData];
     }
 }
 
-// Customize the number of sections in the table view.
 -(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
 {
     return TitleDetailSectionCount;
@@ -225,9 +242,10 @@
 -(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger insertionRow = 0;
+    NSInteger count = 0;
     
     // If the table is in editing mode add one row for inserting new records to most of the sections.
-    if(self.editMode)
+    if(self.editing)
         insertionRow = 1;
     
     switch (section)
@@ -237,7 +255,8 @@
         case EditionSection:
             return self.detailItem.editions.count + insertionRow;
         case AuthorSection:
-            return self.detailItem.authors.count + insertionRow;
+            count = self.detailItem.authors.count + insertionRow;
+            break;
         case EditorSection:
             return self.detailItem.editors.count + insertionRow;
         case IllustratorSection:
@@ -251,6 +270,9 @@
         default:
             return 0;
     }
+    
+    DLog(@"Number of rows in Author section: %i.", count);
+    return count;
 }
 
 // Customize the appearance of table view cells.
@@ -267,7 +289,7 @@
             cell = [self configureEditionCell];
             break;
         case AuthorSection:
-            cell = [self configureAuthorCell];
+            cell = [self configureAuthorCellAtIndexPath:indexPath];
             break;
         case EditorSection:
             cell = [self configureEditorCell];
@@ -321,13 +343,8 @@
 
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection
 {
-    NSInteger insertionRow = 0;
-
-    if(self.editMode)
-        insertionRow = 1;
-    
     // The last row should be the insert style, all others should be delete.
-    if(collection.count == 0 || row == collection.count + insertionRow)
+    if(collection.count == 0 || row == collection.count)
         return UITableViewCellEditingStyleInsert;
     else
         return UITableViewCellEditingStyleDelete;
@@ -344,12 +361,13 @@
         case AuthorSection:
             if (indexPath.row == self.detailItem.authors.count)
             {
-                PersonDetailViewController* personDetailViewController = [[PersonDetailViewController alloc] initWithPrimaryManagedObjectContext:self.editingContext];
-                personDetailViewController.detailItem = nil;
-                personDetailViewController.newRecord = YES;
+                PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
+                personViewController.delegate = self;
+                personViewController.managedObjectContext = self.managedObjectContext;
+                personViewController.selectionMode = TRUE;
+                personViewController.personSelectionType = Author;
                 
-                UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:personDetailViewController];
-                [self.navigationController presentModalViewController:navigationController animated:YES];
+                [self.navigationController pushViewController:personViewController animated:YES];
             }
             else
             {
@@ -371,43 +389,43 @@
         case NameSection:
             break;
         case EditionSection:
-            if (self.detailItem.editions.count > 0 || self.editMode)
+            if (self.detailItem.editions.count > 0 || self.editing)
             {
                 header = [NSString stringWithString:@"Editions"];
             }
             break;
         case AuthorSection:
-            if (self.detailItem.authors.count > 0 || self.editMode)
+            if (self.detailItem.authors.count > 0 || self.editing)
             {
                 header = [NSString stringWithString:@"Authors"];
             }
             break;
         case EditorSection:
-            if (self.detailItem.editors.count > 0 || self.editMode)
+            if (self.detailItem.editors.count > 0 || self.editing)
             {
                 header = [NSString stringWithString:@"Editors"];
             }
             break;
         case IllustratorSection:
-            if (self.detailItem.illustrators.count > 0 || self.editMode)
+            if (self.detailItem.illustrators.count > 0 || self.editing)
             {
                 header = [NSString stringWithString:@"Illustrators"];
             }
             break;
         case ContributorSection:
-            if (self.detailItem.contributors.count > 0 || self.editMode)
+            if (self.detailItem.contributors.count > 0 || self.editing)
             {
                 header = [NSString stringWithString:@"Contributors"];
             }
             break;
         case BookSection:
-            if (self.detailItem.books.count > 0 || self.editMode)
+            if (self.detailItem.books.count > 0 || self.editing)
             {
                 header = [NSString stringWithString:@"Books"];
             }
             break;
         case CollectionSection:
-            if (self.detailItem.collections.count > 0 || self.editMode)
+            if (self.detailItem.collections.count > 0 || self.editing)
             {
                 header = [NSString stringWithString:@"Collections"];
             }
@@ -432,7 +450,7 @@
         cell.textField.enabled = NO;
     }
 
-    if(self.editMode && [self.detailItem.name length] <= 0)
+    if(self.editing && [self.detailItem.name length] <= 0)
     {
         cell.textField.placeholder = @"New Title";
     }
@@ -454,13 +472,13 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editMode)
+    if(self.editing)
         cell.textLabel.text = @"Add New Edition...";
     
     return cell;
 }
 
--(UITableViewCell*) configureAuthorCell
+-(UITableViewCell*) configureAuthorCellAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString* CellIdentifier = @"Cell";
     
@@ -471,8 +489,14 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editMode)
+    if(self.editing && indexPath.row == self.detailItem.authors.count)
         cell.textLabel.text = @"Add New Author...";
+    else
+    {
+        NSArray* authors = [self.detailItem.authors allObjects];
+        Person* person = [authors objectAtIndex:indexPath.row];
+        cell.textLabel.text = person.fullName;
+    }
     
     return cell;
 }
@@ -488,7 +512,7 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editMode)
+    if(self.editing)
         cell.textLabel.text = @"Add New Editor...";
     
     return cell;
@@ -505,7 +529,7 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editMode)
+    if(self.editing)
         cell.textLabel.text = @"Add New Illustrator...";
     
     return cell;
@@ -522,7 +546,7 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editMode)
+    if(self.editing)
         cell.textLabel.text = @"Add New Contributor...";
     
     return cell;
@@ -539,7 +563,7 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editMode)
+    if(self.editing)
         cell.textLabel.text = @"Add New Book...";
     
     return cell;
@@ -556,10 +580,28 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editMode)
+    if(self.editing)
         cell.textLabel.text = @"Add New Collection...";
     
     return cell;
+}
+
+#pragma mark - Selection Delegate Methods
+
+-(void) personViewController:(PersonViewController *)controller didSelectAuthor:(Person *)author
+{
+    // Just try a straight save for now.
+    [self.detailItem addAuthorsObject:author];
+    
+    NSError* error;
+    if (![self.detailItem.managedObjectContext save:&error])
+    {
+        // Update to handle the error appropriately.
+        DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        exit(-1);  // Fail
+    }
+
+    [self.tableView reloadData];
 }
 
 @end

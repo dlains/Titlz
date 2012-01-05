@@ -10,6 +10,8 @@
 
 #import "TitleViewController.h"
 
+void uncaughtExceptionHandler(NSException* exception);
+
 @implementation AppDelegate
 
 @synthesize window = _window;
@@ -18,11 +20,17 @@
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 @synthesize navigationController = _navigationController;
 
+void uncaughtExceptionHandler(NSException* exception)
+{
+    DLog(@"CRASH: %@", exception);
+    DLog(@"Stack Trace: %@", [exception callStackSymbols]);
+}
+
 -(BOOL) application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
-    // Undo and managed object context merging support.
+    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+
     application.applicationSupportsShakeToEdit = YES;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextSaved:) name:NSManagedObjectContextDidSaveNotification object:nil];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
@@ -87,14 +95,6 @@
             DLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         } 
-    }
-}
-
--(void) contextSaved:(NSNotification*)notification
-{
-    if ([notification object] != self.managedObjectContext)
-    {
-        [self.managedObjectContext mergeChangesFromContextDidSaveNotification:notification];
     }
 }
 

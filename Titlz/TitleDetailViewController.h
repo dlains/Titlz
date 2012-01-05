@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PersonViewController.h"
 
 @class Title;
 
@@ -23,13 +24,14 @@ enum TitleDetailSections
     TitleDetailSectionCount
 };
 
-@interface TitleDetailViewController : UITableViewController
+@interface TitleDetailViewController : UITableViewController <AuthorSelectedDelegate>
 
-@property(nonatomic, strong) NSManagedObjectContext* editingContext;
 @property(nonatomic, strong) Title* detailItem;
-@property(nonatomic, assign) BOOL editMode;
-@property(nonatomic, assign) BOOL newRecord;
+@property(nonatomic, strong) NSUndoManager* undoManager;
+@property(nonatomic, strong) NSManagedObjectContext* managedObjectContext;
 
--(id) initWithPrimaryManagedObjectContext:(NSManagedObjectContext*)primaryManagedObjectContext;
+-(void) setUpUndoManager;
+-(void) cleanUpUndoManager;
+-(void) updateRightBarButtonItemState;
 
 @end

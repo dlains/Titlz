@@ -1,39 +1,44 @@
 //
-//  TitleViewController.m
+//  PersonViewController.m
 //  Titlz
 //
-//  Created by David Lains on 12/26/11.
-//  Copyright (c) 2011 Dagger Lake Software. All rights reserved.
+//  Created by David Lains on 1/4/12.
+//  Copyright (c) 2012 Dagger Lake Software. All rights reserved.
 //
 
-#import "TitleViewController.h"
-#import "TitleDetailViewController.h"
-#import "Title.h"
+#import "PersonViewController.h"
+#import "PersonDetailViewController.h"
+#import "Person.h"
 
-@interface TitleViewController ()
+@interface PersonViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
 @end
 
-@implementation TitleViewController
+@implementation PersonViewController
 
-@synthesize titleDetailViewController = _titleDetailViewController;
+@synthesize personDetailViewController = _personDetailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize addingManagedObjectContext = __addingManagedObjectContext;
+@synthesize delegate = _delegate;
+@synthesize selectionMode = _selectionMode;
+@synthesize personSelectionType = _personSelectionType;
 
 -(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        self.title = NSLocalizedString(@"Titles", @"Titles");
+        self.title = NSLocalizedString(@"People", @"People");
     }
     return self;
 }
-							
+
 -(void) didReceiveMemoryWarning
 {
+    // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
+    
     // Release any cached data, images, etc that aren't in use.
 }
 
@@ -45,7 +50,7 @@
 	// Do any additional setup after loading the view, typically from a nib.
     // Set up the edit and add buttons.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
-
+    
     UIBarButtonItem* addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
     self.navigationItem.rightBarButtonItem = addButton;
 }
@@ -69,21 +74,22 @@
 
 -(void) viewWillDisappear:(BOOL)animated
 {
-	[super viewWillDisappear:animated];
+    [super viewWillDisappear:animated];
 }
 
 -(void) viewDidDisappear:(BOOL)animated
 {
-	[super viewDidDisappear:animated];
+    [super viewDidDisappear:animated];
 }
 
 -(BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-// Customize the number of sections in the table view.
+#pragma mark - Table view data source
+
 -(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
 {
     return [[self.fetchedResultsController sections] count];
@@ -95,7 +101,6 @@
     return [sectionInfo numberOfObjects];
 }
 
-// Customize the appearance of table view cells.
 -(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
     static NSString* CellIdentifier = @"Cell";
@@ -104,9 +109,11 @@
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        if (!self.selectionMode)
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
-
+    
     [self configureCell:cell atIndexPath:indexPath];
     return cell;
 }
@@ -149,16 +156,35 @@
     return NO;
 }
 
+#pragma mark - Table view delegate
+
 -(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    if (!self.titleDetailViewController)
+    if (self.selectionMode)
     {
-        self.titleDetailViewController = [[TitleDetailViewController alloc] initWithNibName:@"TitleDetailViewController" bundle:nil];
+        // Get the selected person and update the correct delegate.
+        Person* selectedPerson = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+        switch (self.personSelectionType)
+        {
+            case Author:
+                [self.delegate personViewController:self didSelectAuthor:selectedPerson];
+                [self.navigationController popViewControllerAnimated:YES];
+                break;
+            default:
+                break;
+        }
     }
-    Title* selectedTitle = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    self.titleDetailViewController.detailItem = selectedTitle;
-    self.titleDetailViewController.managedObjectContext = self.managedObjectContext;
-    [self.navigationController pushViewController:self.titleDetailViewController animated:YES];
+    else
+    {
+        // Selecting a row to get detail info.
+        if (!self.personDetailViewController)
+        {
+            self.personDetailViewController = [[PersonDetailViewController alloc] initWithNibName:@"PersonDetailViewController" bundle:nil];
+        }
+        Person* selectedPerson = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+        self.personDetailViewController.detailItem = selectedPerson;
+        [self.navigationController pushViewController:self.personDetailViewController animated:YES];
+    }
 }
 
 #pragma mark - Fetched results controller
@@ -174,21 +200,22 @@
     // Create the fetch request for the entity.
     NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
-    NSEntityDescription* entity = [NSEntityDescription entityForName:@"Title" inManagedObjectContext:self.managedObjectContext];
+    NSEntityDescription* entity = [NSEntityDescription entityForName:@"Person" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:NO];
+    // TODO: Offer option to sort by first name or last name?
+    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastName" ascending:NO];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Title"];
+    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Person"];
     controller.delegate = self;
     self.fetchedResultsController = controller;
     
@@ -197,7 +224,7 @@
     {
 	    /*
 	     Replace this implementation with code to handle the error appropriately.
-
+         
 	     abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
 	     */
 	    DLog(@"Unresolved error %@, %@", error, [error userInfo]);
@@ -257,52 +284,52 @@
 }
 
 /*
-// Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed. 
+ // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed. 
  
  - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    // In the simplest, most efficient, case, reload the table view.
-    [self.tableView reloadData];
-}
+ {
+ // In the simplest, most efficient, case, reload the table view.
+ [self.tableView reloadData];
+ }
  */
 
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
 {
-    Title* title = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = title.name;
+    Person* person = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = person.fullName;
 }
 
-#pragma mark - New Title Handling
+#pragma mark - New Person Handling
 
 -(void) insertNewObject
 {
     // Use a local TitleDetailViewController here to avoid problems with reusing it with the main navigation controller.
     /*
-    TitleDetailViewController* titleDetailViewController = [[TitleDetailViewController alloc] initWithPrimaryManagedObjectContext:self.managedObjectContext];
-    titleDetailViewController.detailItem = nil;
-    titleDetailViewController.newRecord = YES;
-
-    UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:titleDetailViewController];
-    [self.navigationController presentModalViewController:navigationController animated:YES];
-    */
+     TitleDetailViewController* titleDetailViewController = [[TitleDetailViewController alloc] initWithPrimaryManagedObjectContext:self.managedObjectContext];
+     titleDetailViewController.detailItem = nil;
+     titleDetailViewController.newRecord = YES;
+     
+     UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:titleDetailViewController];
+     [self.navigationController presentModalViewController:navigationController animated:YES];
+     */
     
-    NewTitleViewController* newTitleViewController = [[NewTitleViewController alloc] initWithStyle:UITableViewStyleGrouped];
-	newTitleViewController.delegate = self;
+    NewPersonViewController* newPersonViewController = [[NewPersonViewController alloc] initWithStyle:UITableViewStyleGrouped];
+	newPersonViewController.delegate = self;
 	
 	// Create a new managed object context for the new title -- set its persistent store coordinator to the same as that from the fetched results controller's context.
 	self.addingManagedObjectContext = [[NSManagedObjectContext alloc] init];
 	
 	[self.addingManagedObjectContext setPersistentStoreCoordinator:[[self.fetchedResultsController managedObjectContext] persistentStoreCoordinator]];
     
-	newTitleViewController.detailItem = [Title titleInManagedObjectContext:self.addingManagedObjectContext];
+	newPersonViewController.detailItem = [Person personInManagedObjectContext:self.addingManagedObjectContext];
 	
-	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newTitleViewController];
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newPersonViewController];
 	
     [self.navigationController presentModalViewController:navController animated:YES];
     
 }
 
--(void) newTitleViewController:(NewTitleViewController *)controller didFinishWithSave:(BOOL)save
+-(void) newPersonViewController:(NewPersonViewController *)controller didFinishWithSave:(BOOL)save
 {
     if (save)
     {

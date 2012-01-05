@@ -21,9 +21,21 @@
 @dynamic aliases;
 @dynamic aliasOf;
 @dynamic authored;
-@dynamic contributedTo;
+@dynamic contributed;
 @dynamic edited;
 @dynamic illustrated;
+
+-(NSString*) fullName
+{
+    if (self.middleName.length > 0)
+    {
+        return [NSString stringWithFormat:@"%@ %@ %@", self.firstName, self.middleName, self.lastName];
+    }
+    else
+    {
+        return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
+    }
+}
 
 +(id) personInManagedObjectContext:(NSManagedObjectContext*)context
 {

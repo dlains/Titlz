@@ -22,6 +22,10 @@
 		55A99EB214A949FA00836F4E /* TitleDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A99EB114A949FA00836F4E /* TitleDetailViewController.m */; };
 		55A99EB514A949FA00836F4E /* TitleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55A99EB314A949FA00836F4E /* TitleViewController.xib */; };
 		55A99EB814A949FA00836F4E /* TitleDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55A99EB614A949FA00836F4E /* TitleDetailViewController.xib */; };
+		55C6968C14B2D23B00DA4172 /* NewTitleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C6968A14B2D23B00DA4172 /* NewTitleViewController.m */; };
+		55D4A74C14B55BED00BAA15E /* PersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D4A74A14B55BED00BAA15E /* PersonViewController.m */; };
+		55D4A74D14B55BED00BAA15E /* PersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55D4A74B14B55BED00BAA15E /* PersonViewController.xib */; };
+		55D4A75014B55CE700BAA15E /* NewPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D4A74F14B55CE700BAA15E /* NewPersonViewController.m */; };
 		55EB3C3D14B0CC1300721D42 /* DLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EB3C3C14B0CC1300721D42 /* DLog.m */; };
 		55EB3C4214B13D1D00721D42 /* PersonDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EB3C4014B13D1D00721D42 /* PersonDetailViewController.m */; };
 		55EB3C4314B13D1D00721D42 /* PersonDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55EB3C4114B13D1D00721D42 /* PersonDetailViewController.xib */; };
@@ -52,6 +56,13 @@
 		55A99EB114A949FA00836F4E /* TitleDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TitleDetailViewController.m; sourceTree = "<group>"; };
 		55A99EB414A949FA00836F4E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TitleViewController.xib; sourceTree = "<group>"; };
 		55A99EB714A949FA00836F4E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TitleDetailViewController.xib; sourceTree = "<group>"; };
+		55C6968914B2D23B00DA4172 /* NewTitleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewTitleViewController.h; sourceTree = "<group>"; };
+		55C6968A14B2D23B00DA4172 /* NewTitleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewTitleViewController.m; sourceTree = "<group>"; };
+		55D4A74914B55BED00BAA15E /* PersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonViewController.h; sourceTree = "<group>"; };
+		55D4A74A14B55BED00BAA15E /* PersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonViewController.m; sourceTree = "<group>"; };
+		55D4A74B14B55BED00BAA15E /* PersonViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonViewController.xib; sourceTree = "<group>"; };
+		55D4A74E14B55CE700BAA15E /* NewPersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPersonViewController.h; sourceTree = "<group>"; };
+		55D4A74F14B55CE700BAA15E /* NewPersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewPersonViewController.m; sourceTree = "<group>"; };
 		55EB3C3B14B0CC1300721D42 /* DLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLog.h; sourceTree = "<group>"; };
 		55EB3C3C14B0CC1300721D42 /* DLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLog.m; sourceTree = "<group>"; };
 		55EB3C3F14B13D1D00721D42 /* PersonDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonDetailViewController.h; sourceTree = "<group>"; };
@@ -141,18 +152,14 @@
 		55A99EBE14A94A3A00836F4E /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				55C6968F14B2D25F00DA4172 /* Title */,
+				55D4A74814B51C2700BAA15E /* Person */,
 				55EB3C3B14B0CC1300721D42 /* DLog.h */,
 				55EB3C3C14B0CC1300721D42 /* DLog.m */,
 				55A99EA714A949FA00836F4E /* AppDelegate.h */,
 				55A99EA814A949FA00836F4E /* AppDelegate.m */,
-				55A99EAD14A949FA00836F4E /* TitleViewController.h */,
-				55A99EAE14A949FA00836F4E /* TitleViewController.m */,
-				55A99EB014A949FA00836F4E /* TitleDetailViewController.h */,
-				55A99EB114A949FA00836F4E /* TitleDetailViewController.m */,
 				552C741A14AE926600595DE9 /* EditableTextCell.h */,
 				552C741B14AE926600595DE9 /* EditableTextCell.m */,
-				55EB3C3F14B13D1D00721D42 /* PersonDetailViewController.h */,
-				55EB3C4014B13D1D00721D42 /* PersonDetailViewController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -162,6 +169,7 @@
 			children = (
 				55A99EB314A949FA00836F4E /* TitleViewController.xib */,
 				55A99EB614A949FA00836F4E /* TitleDetailViewController.xib */,
+				55D4A74B14B55BED00BAA15E /* PersonViewController.xib */,
 				55EB3C4114B13D1D00721D42 /* PersonDetailViewController.xib */,
 				552C741714AE8EBB00595DE9 /* EditableTextCell.xib */,
 			);
@@ -174,6 +182,32 @@
 				55A99EAA14A949FA00836F4E /* Titlz.xcdatamodeld */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		55C6968F14B2D25F00DA4172 /* Title */ = {
+			isa = PBXGroup;
+			children = (
+				55A99EAD14A949FA00836F4E /* TitleViewController.h */,
+				55A99EAE14A949FA00836F4E /* TitleViewController.m */,
+				55A99EB014A949FA00836F4E /* TitleDetailViewController.h */,
+				55A99EB114A949FA00836F4E /* TitleDetailViewController.m */,
+				55C6968914B2D23B00DA4172 /* NewTitleViewController.h */,
+				55C6968A14B2D23B00DA4172 /* NewTitleViewController.m */,
+			);
+			name = Title;
+			sourceTree = "<group>";
+		};
+		55D4A74814B51C2700BAA15E /* Person */ = {
+			isa = PBXGroup;
+			children = (
+				55D4A74914B55BED00BAA15E /* PersonViewController.h */,
+				55D4A74A14B55BED00BAA15E /* PersonViewController.m */,
+				55EB3C3F14B13D1D00721D42 /* PersonDetailViewController.h */,
+				55EB3C4014B13D1D00721D42 /* PersonDetailViewController.m */,
+				55D4A74E14B55CE700BAA15E /* NewPersonViewController.h */,
+				55D4A74F14B55CE700BAA15E /* NewPersonViewController.m */,
+			);
+			name = Person;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -232,6 +266,7 @@
 				55A99EB814A949FA00836F4E /* TitleDetailViewController.xib in Resources */,
 				552C741814AE8EBB00595DE9 /* EditableTextCell.xib in Resources */,
 				55EB3C4314B13D1D00721D42 /* PersonDetailViewController.xib in Resources */,
+				55D4A74D14B55BED00BAA15E /* PersonViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,6 +287,9 @@
 				55EB3C3D14B0CC1300721D42 /* DLog.m in Sources */,
 				55EB3C4214B13D1D00721D42 /* PersonDetailViewController.m in Sources */,
 				55EB3C4614B13E5600721D42 /* Person.m in Sources */,
+				55C6968C14B2D23B00DA4172 /* NewTitleViewController.m in Sources */,
+				55D4A74C14B55BED00BAA15E /* PersonViewController.m in Sources */,
+				55D4A75014B55CE700BAA15E /* NewPersonViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +338,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				"GCC_PREPROCESSOR_DEFINITIONS[sdk=iphonesimulator*][arch=*]" = "DLDEBUG=1";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
