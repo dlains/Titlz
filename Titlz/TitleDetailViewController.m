@@ -22,6 +22,8 @@
 -(UITableViewCell*) configureBookCell;
 -(UITableViewCell*) configureCollectionCell;
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection;
+-(Person*) sortedAuthorAtIndexPath:(NSIndexPath*)indexPath;
+-(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
 @end
 
 @implementation TitleDetailViewController
@@ -379,6 +381,51 @@
     }
 }
 
+-(void) tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        switch (indexPath.section)
+        {
+            case NameSection:
+                // Never delete the name.
+                break;
+            case EditionSection:
+                break;
+            case AuthorSection:
+                // Get the correct author.
+                [self.detailItem removeAuthorsObject:[self sortedAuthorAtIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
+                break;
+            case EditorSection:
+                break;
+            case IllustratorSection:
+                break;
+            case ContributorSection:
+                break;
+            case BookSection:
+                break;
+            case CollectionSection:
+                break;
+            default:
+                break;
+        }
+        
+        // Save the context.
+        NSError *error = nil;
+        if (![self.managedObjectContext save:&error])
+        {
+            /*
+             Replace this implementation with code to handle the error appropriately.
+             
+             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+             */
+            DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+    }   
+}
+
 // Section headers.
 -(NSString*) tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
 {
@@ -438,6 +485,36 @@
     return header;
 }
 
+-(NSIndexPath*) tableView:(UITableView*)tableView willSelectRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    if (!self.editing)
+    {
+        switch (indexPath.section)
+        {
+            case NameSection:
+                return nil;
+            case EditionSection:
+                return indexPath;
+            case AuthorSection:
+            case EditorSection:
+            case IllustratorSection:
+            case ContributorSection:
+                return nil;
+            case BookSection:
+                return indexPath;
+            case CollectionSection:
+                return indexPath;
+            default:
+                DLog(@"Invalid TitleDetailViewController section found: %i.", indexPath.section);
+                return nil;
+        }
+    }
+    else
+    {
+        return indexPath;
+    }
+}
+
 -(UITableViewCell*) configureNameCell
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
@@ -450,14 +527,7 @@
         cell.textField.enabled = NO;
     }
 
-    if(self.editing && [self.detailItem.name length] <= 0)
-    {
-        cell.textField.placeholder = @"New Title";
-    }
-    else
-    {
-        cell.textField.text = self.detailItem.name;
-    }
+    cell.textField.text = self.detailItem.name;
     return cell;
 }
 
@@ -480,21 +550,19 @@
 
 -(UITableViewCell*) configureAuthorCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"AuthorCell";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
     if(self.editing && indexPath.row == self.detailItem.authors.count)
         cell.textLabel.text = @"Add New Author...";
     else
     {
-        NSArray* authors = [self.detailItem.authors allObjects];
-        Person* person = [authors objectAtIndex:indexPath.row];
+        Person* person = [self sortedAuthorAtIndexPath:indexPath];
         cell.textLabel.text = person.fullName;
     }
     
@@ -602,6 +670,22 @@
     }
 
     [self.tableView reloadData];
+}
+
+-(Person*) sortedAuthorAtIndexPath:(NSIndexPath*)indexPath
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedAuthors = [self.detailItem.authors sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedAuthors objectAtIndex:indexPath.row];
+}
+
+-(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    NSIndexPath* path = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section];
+    NSArray* paths = [NSArray arrayWithObjects:path, nil];
+    
+    [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
 }
 
 @end

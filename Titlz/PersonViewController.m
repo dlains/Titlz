@@ -208,7 +208,7 @@
     
     // Edit the sort key as appropriate.
     // TODO: Offer option to sort by first name or last name?
-    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastName" ascending:NO];
+    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastName" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
