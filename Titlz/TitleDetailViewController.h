@@ -24,7 +24,7 @@ enum TitleDetailSections
     TitleDetailSectionCount
 };
 
-@interface TitleDetailViewController : UITableViewController <AuthorSelectedDelegate>
+@interface TitleDetailViewController : UITableViewController <PersonSelectedDelegate>
 
 @property(nonatomic, strong) Title* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;

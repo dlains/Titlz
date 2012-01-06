@@ -19,7 +19,7 @@ typedef enum PersonTypeEnum
     Contributor,
 } PersonType;
 
-@protocol AuthorSelectedDelegate;
+@protocol PersonSelectedDelegate;
 
 @class PersonDetailViewController;
 
@@ -30,14 +30,14 @@ typedef enum PersonTypeEnum
 @property(nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
 @property(nonatomic, strong) NSManagedObjectContext* managedObjectContext;
 @property(nonatomic, retain) NSManagedObjectContext *addingManagedObjectContext;
-@property(nonatomic, assign) id <AuthorSelectedDelegate> delegate;
+@property(nonatomic, assign) id <PersonSelectedDelegate> delegate;
 @property(nonatomic, assign) BOOL selectionMode;
 @property(nonatomic, assign) PersonType personSelectionType;
 
 @end
 
-@protocol AuthorSelectedDelegate <NSObject>
+@protocol PersonSelectedDelegate <NSObject>
 
--(void) personViewController:(PersonViewController*)controller didSelectAuthor:(Person*)author;
+-(void) personViewController:(PersonViewController*)controller didSelectPerson:(Person*)person withPersonType:(PersonType)type;
 
 @end

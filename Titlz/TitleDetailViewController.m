@@ -16,14 +16,15 @@
 -(UITableViewCell*) configureNameCell;
 -(UITableViewCell*) configureEditionCell;
 -(UITableViewCell*) configureAuthorCellAtIndexPath:(NSIndexPath*)indexPath;
--(UITableViewCell*) configureEditorCell;
--(UITableViewCell*) configureIllustratorCell;
--(UITableViewCell*) configureContributorCell;
+-(UITableViewCell*) configureEditorCellAtIndexPath:(NSIndexPath *)indexPath;
+-(UITableViewCell*) configureIllustratorCellAtIndexPath:(NSIndexPath *)indexPath;
+-(UITableViewCell*) configureContributorCellAtIndexPath:(NSIndexPath *)indexPath;
 -(UITableViewCell*) configureBookCell;
 -(UITableViewCell*) configureCollectionCell;
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection;
--(Person*) sortedAuthorAtIndexPath:(NSIndexPath*)indexPath;
+-(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
+-(void) loadPersonViewControllerForPersonType:(PersonType)type;
 @end
 
 @implementation TitleDetailViewController
@@ -244,7 +245,6 @@
 -(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger insertionRow = 0;
-    NSInteger count = 0;
     
     // If the table is in editing mode add one row for inserting new records to most of the sections.
     if(self.editing)
@@ -257,8 +257,7 @@
         case EditionSection:
             return self.detailItem.editions.count + insertionRow;
         case AuthorSection:
-            count = self.detailItem.authors.count + insertionRow;
-            break;
+            return self.detailItem.authors.count + insertionRow;
         case EditorSection:
             return self.detailItem.editors.count + insertionRow;
         case IllustratorSection:
@@ -270,11 +269,9 @@
         case CollectionSection:
             return self.detailItem.collections.count + insertionRow;
         default:
+            DLog(@"Invalid TitleDetailViewController section found: %i.", section);
             return 0;
     }
-    
-    DLog(@"Number of rows in Author section: %i.", count);
-    return count;
 }
 
 // Customize the appearance of table view cells.
@@ -294,13 +291,13 @@
             cell = [self configureAuthorCellAtIndexPath:indexPath];
             break;
         case EditorSection:
-            cell = [self configureEditorCell];
+            cell = [self configureEditorCellAtIndexPath:indexPath];
             break;
         case IllustratorSection:
-            cell = [self configureIllustratorCell];
+            cell = [self configureIllustratorCellAtIndexPath:indexPath];
             break;
         case ContributorSection:
-            cell = [self configureContributorCell];
+            cell = [self configureContributorCellAtIndexPath:indexPath];
             break;
         case BookSection:
             cell = [self configureBookCell];
@@ -362,21 +359,26 @@
             break;
         case AuthorSection:
             if (indexPath.row == self.detailItem.authors.count)
-            {
-                PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
-                personViewController.delegate = self;
-                personViewController.managedObjectContext = self.managedObjectContext;
-                personViewController.selectionMode = TRUE;
-                personViewController.personSelectionType = Author;
-                
-                [self.navigationController pushViewController:personViewController animated:YES];
-            }
-            else
-            {
-                // Existing Author being edited.
-                
-            }
+                [self loadPersonViewControllerForPersonType:Author];
+            break;
+        case EditorSection:
+            if (indexPath.row == self.detailItem.editors.count)
+                [self loadPersonViewControllerForPersonType:Editor];
+            break;
+        case IllustratorSection:
+            if (indexPath.row == self.detailItem.illustrators.count)
+                [self loadPersonViewControllerForPersonType:Illustrator];
+            break;
+        case ContributorSection:
+            if (indexPath.row == self.detailItem.contributors.count)
+                [self loadPersonViewControllerForPersonType:Contributor];
+            break;
+        case BookSection:
+            break;
+        case CollectionSection:
+            break;
         default:
+            DLog(@"Invalid TitleDetailViewController section found: %i.", indexPath.section);
             break;
     }
 }
@@ -393,15 +395,20 @@
             case EditionSection:
                 break;
             case AuthorSection:
-                // Get the correct author.
-                [self.detailItem removeAuthorsObject:[self sortedAuthorAtIndexPath:indexPath]];
+                [self.detailItem removeAuthorsObject:[self sortedPersonFromSet:self.detailItem.authors atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             case EditorSection:
+                [self.detailItem removeEditorsObject:[self sortedPersonFromSet:self.detailItem.editors atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
                 break;
             case IllustratorSection:
+                [self.detailItem removeIllustratorsObject:[self sortedPersonFromSet:self.detailItem.illustrators atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
                 break;
             case ContributorSection:
+                [self.detailItem removeContributorsObject:[self sortedPersonFromSet:self.detailItem.contributors atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
                 break;
             case BookSection:
                 break;
@@ -559,64 +566,83 @@
     }
     
     if(self.editing && indexPath.row == self.detailItem.authors.count)
-        cell.textLabel.text = @"Add New Author...";
+    {
+        cell.textLabel.text = @"Add Author...";
+    }
     else
     {
-        Person* person = [self sortedAuthorAtIndexPath:indexPath];
+        Person* person = [self sortedPersonFromSet:self.detailItem.authors atIndexPath:indexPath];
         cell.textLabel.text = person.fullName;
     }
     
     return cell;
 }
 
--(UITableViewCell*) configureEditorCell
+-(UITableViewCell*) configureEditorCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"EditorCell";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editing)
-        cell.textLabel.text = @"Add New Editor...";
+    if(self.editing && indexPath.row == self.detailItem.editors.count)
+    {
+        cell.textLabel.text = @"Add Editor...";
+    }
+    else
+    {
+        Person* person = [self sortedPersonFromSet:self.detailItem.editors atIndexPath:indexPath];
+        cell.textLabel.text = person.fullName;
+    }
     
     return cell;
 }
 
--(UITableViewCell*) configureIllustratorCell
+-(UITableViewCell*) configureIllustratorCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"IllustratorCell";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editing)
-        cell.textLabel.text = @"Add New Illustrator...";
+    if(self.editing && indexPath.row == self.detailItem.illustrators.count)
+    {
+        cell.textLabel.text = @"Add Illustrator...";
+    }
+    else
+    {
+        Person* person = [self sortedPersonFromSet:self.detailItem.illustrators atIndexPath:indexPath];
+        cell.textLabel.text = person.fullName;
+    }
     
     return cell;
 }
 
--(UITableViewCell*) configureContributorCell
+-(UITableViewCell*) configureContributorCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"ContributorCell";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editing)
-        cell.textLabel.text = @"Add New Contributor...";
-    
+    if(self.editing && indexPath.row == self.detailItem.contributors.count)
+    {
+        cell.textLabel.text = @"Add Contributor...";
+    }
+    else
+    {
+        Person* person = [self sortedPersonFromSet:self.detailItem.contributors atIndexPath:indexPath];
+        cell.textLabel.text = person.fullName;
+    }
     return cell;
 }
 
@@ -654,12 +680,28 @@
     return cell;
 }
 
-#pragma mark - Selection Delegate Methods
+#pragma mark - Person Selection Delegate Method
 
--(void) personViewController:(PersonViewController *)controller didSelectAuthor:(Person *)author
+-(void) personViewController:(PersonViewController *)controller didSelectPerson:(Person *)person withPersonType:(PersonType)type
 {
-    // Just try a straight save for now.
-    [self.detailItem addAuthorsObject:author];
+    switch (type)
+    {
+        case Author:
+            [self.detailItem addAuthorsObject:person];
+            break;
+        case Editor:
+            [self.detailItem addEditorsObject:person];
+            break;
+        case Illustrator:
+            [self.detailItem addIllustratorsObject:person];
+            break;
+        case Contributor:
+            [self.detailItem addContributorsObject:person];
+            break;
+        default:
+            DLog(@"Invalid PersonType found in TitleDetailViewController: %i.", type);
+            break;
+    }
     
     NSError* error;
     if (![self.detailItem.managedObjectContext save:&error])
@@ -672,12 +714,14 @@
     [self.tableView reloadData];
 }
 
--(Person*) sortedAuthorAtIndexPath:(NSIndexPath*)indexPath
+#pragma mark - Local Helper Methods
+
+-(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
-    NSArray* sortedAuthors = [self.detailItem.authors sortedArrayUsingDescriptors:sortDescriptors];
-    return [sortedAuthors objectAtIndex:indexPath.row];
+    NSArray* sortedPeople = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedPeople objectAtIndex:indexPath.row];
 }
 
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath
@@ -686,6 +730,17 @@
     NSArray* paths = [NSArray arrayWithObjects:path, nil];
     
     [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
+}
+
+-(void) loadPersonViewControllerForPersonType:(PersonType)type
+{
+    PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
+    personViewController.delegate = self;
+    personViewController.managedObjectContext = self.managedObjectContext;
+    personViewController.selectionMode = TRUE;
+    personViewController.personSelectionType = type;
+    
+    [self.navigationController pushViewController:personViewController animated:YES];
 }
 
 @end

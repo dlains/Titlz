@@ -164,15 +164,8 @@
     {
         // Get the selected person and update the correct delegate.
         Person* selectedPerson = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        switch (self.personSelectionType)
-        {
-            case Author:
-                [self.delegate personViewController:self didSelectAuthor:selectedPerson];
-                [self.navigationController popViewControllerAnimated:YES];
-                break;
-            default:
-                break;
-        }
+        [self.delegate personViewController:self didSelectPerson:selectedPerson withPersonType:self.personSelectionType];
+        [self.navigationController popViewControllerAnimated:YES];
     }
     else
     {
