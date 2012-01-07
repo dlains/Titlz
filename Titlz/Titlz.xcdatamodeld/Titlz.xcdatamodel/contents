@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="878" systemVersion="11C74" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Award" syncable="YES">
+        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" attributeType="String" minValueString="5" indexed="YES" syncable="YES"/>
+        <attribute name="year" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="title" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Title" inverseName="awards" inverseEntity="Title" syncable="YES"/>
+    </entity>
     <entity name="Book">
         <attribute name="comments" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="condition" attributeType="String" syncable="YES"/>
@@ -33,6 +39,7 @@
     <entity name="Person" representedClassName="Person" syncable="YES">
         <attribute name="born" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="died" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="firstLetterOfName" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="firstName" attributeType="String" syncable="YES"/>
         <attribute name="lastName" attributeType="String" syncable="YES"/>
         <attribute name="middleName" optional="YES" attributeType="String" syncable="YES"/>
@@ -72,8 +79,10 @@
         <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="boughtFrom" inverseEntity="Book" syncable="YES"/>
     </entity>
     <entity name="Title" representedClassName="Title" syncable="YES">
+        <attribute name="firstLetterOfName" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="authored" inverseEntity="Person" syncable="YES"/>
+        <relationship name="awards" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Award" inverseName="title" inverseEntity="Award" syncable="YES"/>
         <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="title" inverseEntity="Book" syncable="YES"/>
         <relationship name="collections" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Collection" inverseName="titles" inverseEntity="Collection" syncable="YES"/>
         <relationship name="contributors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="contributed" inverseEntity="Person" syncable="YES"/>
@@ -90,10 +99,11 @@
         <element name="Book" positionX="-8973" positionY="-7746" width="137" height="225"/>
         <element name="Collection" positionX="-8964" positionY="-7434" width="128" height="75"/>
         <element name="Edition" positionX="-8669" positionY="-7218" width="128" height="195"/>
-        <element name="Person" positionX="-8244" positionY="-7524" width="128" height="210"/>
+        <element name="Person" positionX="-8244" positionY="-7524" width="128" height="225"/>
         <element name="Point" positionX="-8417" positionY="-7047" width="128" height="90"/>
         <element name="Publisher" positionX="-8417" positionY="-7263" width="128" height="180"/>
         <element name="Seller" positionX="-9171" positionY="-7488" width="128" height="195"/>
         <element name="Title" positionX="-8658" positionY="-7632" width="128" height="165"/>
+        <element name="Award" positionX="-8937" positionY="-7893" width="128" height="105"/>
     </elements>
 </model>

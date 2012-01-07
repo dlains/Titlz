@@ -13,17 +13,18 @@
 
 @interface Person : NSManagedObject
 
-@property (nonatomic, retain) NSDate* born;
-@property (nonatomic, retain) NSDate* died;
-@property (nonatomic, retain) NSString* firstName;
-@property (nonatomic, retain) NSString* lastName;
-@property (nonatomic, retain) NSString* middleName;
-@property (nonatomic, retain) NSSet* aliases;
-@property (nonatomic, retain) Person* aliasOf;
-@property (nonatomic, retain) NSSet* authored;
-@property (nonatomic, retain) NSSet* contributed;
-@property (nonatomic, retain) NSSet* edited;
-@property (nonatomic, retain) NSSet* illustrated;
+@property(nonatomic, retain) NSDate* born;
+@property(nonatomic, retain) NSDate* died;
+@property(nonatomic, readonly) NSString* firstLetterOfName;
+@property(nonatomic, retain) NSString* firstName;
+@property(nonatomic, retain) NSString* lastName;
+@property(nonatomic, retain) NSString* middleName;
+@property(nonatomic, retain) NSSet* aliases;
+@property(nonatomic, retain) Person* aliasOf;
+@property(nonatomic, retain) NSSet* authored;
+@property(nonatomic, retain) NSSet* contributed;
+@property(nonatomic, retain) NSSet* edited;
+@property(nonatomic, retain) NSSet* illustrated;
 
 // Transient properties.
 @property (nonatomic, readonly) NSString* fullName;

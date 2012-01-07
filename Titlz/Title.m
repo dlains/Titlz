@@ -25,4 +25,16 @@
     return [NSEntityDescription insertNewObjectForEntityForName:@"Title" inManagedObjectContext:context];
 }
 
+-(NSString*) firstLetterOfName
+{
+    [self willAccessValueForKey:@"firstLetterOfName"];
+    
+    NSString* value = [[self valueForKey:@"name"] uppercaseString];
+    
+    NSString* result = [value substringWithRange:[value rangeOfComposedCharacterSequenceAtIndex:0]];
+    
+    [self didAccessValueForKey:@"firstLetterOfName"];
+    return result;
+}
+
 @end

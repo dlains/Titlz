@@ -37,6 +37,18 @@
     }
 }
 
+-(NSString*) firstLetterOfName
+{
+    [self willAccessValueForKey:@"firstLetterOfName"];
+    
+    NSString* value = [[self valueForKey:@"lastName"] uppercaseString];
+    
+    NSString* result = [value substringWithRange:[value rangeOfComposedCharacterSequenceAtIndex:0]];
+    
+    [self didAccessValueForKey:@"firstLetterOfName"];
+    return result;
+}
+
 +(id) personInManagedObjectContext:(NSManagedObjectContext*)context
 {
     return [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:context];

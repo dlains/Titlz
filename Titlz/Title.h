@@ -13,6 +13,7 @@
 @interface Title : NSManagedObject
 
 @property(nonatomic, retain) NSString* name;
+@property(nonatomic, readonly) NSString* firstLetterOfName;
 @property(nonatomic, retain) NSSet* authors;
 @property(nonatomic, retain) NSSet* books;
 @property(nonatomic, retain) NSSet* collections;
@@ -26,6 +27,11 @@
 @end
 
 @interface Title (CoreDataGeneratedAccessors)
+
+-(void) addAwardsObject:(NSManagedObject*)value;
+-(void) removeAwardsObject:(NSManagedObject*)value;
+-(void) addAwards:(NSSet*)values;
+-(void) removeAwards:(NSSet*)values;
 
 -(void) addAuthorsObject:(NSManagedObject*)value;
 -(void) removeAuthorsObject:(NSManagedObject*)value;

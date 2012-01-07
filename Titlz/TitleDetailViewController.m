@@ -71,6 +71,7 @@
 
     self.title = @"Title";
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self.tableView reloadData];
 }
 
 /*
