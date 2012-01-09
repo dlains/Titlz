@@ -12,6 +12,9 @@
 
 @interface PersonViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
+-(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate;
+-(NSPredicate*) predicateForSearchString:(NSString*)searchString;
+-(NSPredicate*) predicateForSearchComponents:(NSArray*)stringComponents;
 @end
 
 @implementation PersonViewController
@@ -205,16 +208,22 @@
         return __fetchedResultsController;
     }
     
-    // Set up the fetched results controller.
-    // Create the fetch request for the entity.
+    self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:nil];
+    
+    return __fetchedResultsController;
+}    
+
+-(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate
+{
     NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
-    // Edit the entity name as appropriate.
     NSEntityDescription* entity = [NSEntityDescription entityForName:@"Person" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
     
+    [fetchRequest setPredicate:predicate];
+
     // Edit the sort key as appropriate.
     // TODO: Offer option to sort by first name or last name?
     NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastName" ascending:YES];
@@ -222,9 +231,13 @@
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
+    NSString* cacheName = @"Person";
+    if (predicate)
+        cacheName = nil;
+
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfName" cacheName:@"Person"];
+    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfName" cacheName:cacheName];
     controller.delegate = self;
     self.fetchedResultsController = controller;
     
@@ -306,6 +319,50 @@
 {
     Person* person = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = person.fullName;
+}
+
+#pragma mark - Search delegate
+
+-(BOOL) searchDisplayController:(UISearchDisplayController*)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    NSPredicate* predicate = [self predicateForSearchString:searchString];
+    self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:predicate];
+    return YES;
+}
+
+-(void) searchDisplayControllerWillEndSearch:(UISearchDisplayController*)controller
+{
+    self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:nil];
+}
+
+-(NSPredicate*) predicateForSearchString:(NSString*)searchString
+{
+    searchString = [searchString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    NSArray* stringComponents = [searchString componentsSeparatedByString:@" "];
+    if ([stringComponents count] > 1)
+    {
+        return [self predicateForSearchComponents:stringComponents];
+    }
+    else
+    {
+        return [NSPredicate predicateWithFormat:@"firstName CONTAINS[cd] %@ OR lastName CONTAINS[cd] %@", searchString, searchString];
+    }
+}
+
+-(NSPredicate*) predicateForSearchComponents:(NSArray*)stringComponents
+{
+    if ([stringComponents count] < 1)
+        return nil;
+
+    NSString* firstComponent = [stringComponents objectAtIndex:0];
+    NSString* lastComponent = [stringComponents lastObject];
+    
+    NSPredicate* firstAndLastInOrderPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:[NSPredicate predicateWithFormat:@"firstName CONTAINS[cd] %@", firstComponent], [NSPredicate predicateWithFormat:@"lastName CONTAINS[cd] %@", lastComponent], nil]];
+    
+    NSPredicate* firstAndLastInReverseOrderPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:[NSPredicate predicateWithFormat:@"firstName CONTAINS[cd] %@", lastComponent], [NSPredicate predicateWithFormat:@"lastName CONTAINS[cd] %@", firstComponent], nil]];
+    
+    return [NSCompoundPredicate orPredicateWithSubpredicates:[NSArray arrayWithObjects:firstAndLastInOrderPredicate, firstAndLastInReverseOrderPredicate, nil]];
 }
 
 #pragma mark - New Person Handling

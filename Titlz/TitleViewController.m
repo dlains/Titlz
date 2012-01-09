@@ -12,6 +12,7 @@
 
 @interface TitleViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
+-(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate;
 @end
 
 @implementation TitleViewController
@@ -186,25 +187,35 @@
         return __fetchedResultsController;
     }
     
-    // Set up the fetched results controller.
-    // Create the fetch request for the entity.
+    self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:nil];
+    
+    return __fetchedResultsController;
+}    
+
+-(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate
+{
     NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
-    // Edit the entity name as appropriate.
     NSEntityDescription* entity = [NSEntityDescription entityForName:@"Title" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
+
+    [fetchRequest setPredicate:predicate];
     
     // Edit the sort key as appropriate.
     NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
-    
+
+    NSString* cacheName = @"Title";
+    if (predicate)
+        cacheName = nil;
+
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfName" cacheName:@"Title"];
+    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfName" cacheName:cacheName];
     controller.delegate = self;
     self.fetchedResultsController = controller;
     
@@ -213,7 +224,7 @@
     {
 	    /*
 	     Replace this implementation with code to handle the error appropriately.
-
+         
 	     abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
 	     */
 	    DLog(@"Unresolved error %@, %@", error, [error userInfo]);
@@ -286,6 +297,20 @@
 {
     Title* title = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = title.name;
+}
+
+#pragma mark - Search delegate
+
+-(BOOL) searchDisplayController:(UISearchDisplayController*)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@", searchString];
+    self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:predicate];
+    return YES;
+}
+
+-(void) searchDisplayControllerWillEndSearch:(UISearchDisplayController*)controller
+{
+    self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:nil];
 }
 
 #pragma mark - New Title Handling
