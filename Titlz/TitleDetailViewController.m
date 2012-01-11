@@ -541,6 +541,7 @@
         cell.textField.enabled = NO;
     }
 
+    cell.fieldLabel.text = @"Title";
     cell.textField.text = self.detailItem.name;
     return cell;
 }

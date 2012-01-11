@@ -10,6 +10,7 @@
 
 @interface EditableTextCell : UITableViewCell
 
+@property(nonatomic, strong) IBOutlet UILabel* fieldLabel;
 @property(nonatomic, strong) IBOutlet UITextField* textField;
 
 @end

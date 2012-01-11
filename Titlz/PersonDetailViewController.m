@@ -508,22 +508,22 @@
     switch (row)
     {
         case FirstNameRow:
-            cell.textField.placeholder = @"First";
+            cell.fieldLabel.text = @"First";
             cell.textField.text = self.detailItem.firstName;
             cell.textField.tag = FirstNameRow;
             break;
         case MiddleNameRow:
-            cell.textField.placeholder = @"Middle";
+            cell.fieldLabel.text = @"Middle";
             cell.textField.text = self.detailItem.middleName;
             cell.textField.tag = MiddleNameRow;
             break;
         case LastNameRow:
-            cell.textField.placeholder = @"Last";
+            cell.fieldLabel.text = @"Last";
             cell.textField.text = self.detailItem.lastName;
             cell.textField.tag = LastNameRow;
             break;
         case BornRow:
-            cell.textField.placeholder = @"Born";
+            cell.fieldLabel.text = @"Born";
             bornTextField = cell.textField;
             cell.textField.tag = 3;
             datePicker.tag = 3;
@@ -531,7 +531,7 @@
             cell.textField.text = [formatter stringFromDate:self.detailItem.born];
             break;
         case DiedRow:
-            cell.textField.placeholder = @"Died";
+            cell.fieldLabel.text = @"Died";
             diedTextField = cell.textField;
             cell.textField.tag = 4;
             datePicker.tag = 4;

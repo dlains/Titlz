@@ -11,6 +11,7 @@
 @implementation EditableTextCell
 
 @synthesize textField = _textField;
+@synthesize fieldLabel = _fieldLabel;
 
 -(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

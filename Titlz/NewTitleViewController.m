@@ -130,6 +130,8 @@
         cell.textField.enabled = NO;
     }
     
+    cell.fieldLabel.text = @"Title";
+    
     if(self.editing && [self.detailItem.name length] <= 0)
     {
         cell.textField.placeholder = @"New Title";

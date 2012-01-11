@@ -201,26 +201,26 @@
     switch (indexPath.row)
     {
         case 0:
-            cell.textField.placeholder = @"First Name";
+            cell.fieldLabel.text = @"First";
             cell.textField.tag = 0;
             break;
         case 1:
-            cell.textField.placeholder = @"Middle Name";
+            cell.fieldLabel.text = @"Middle";
             cell.textField.tag = 1;
             break;
         case 2:
-            cell.textField.placeholder = @"Last Name";
+            cell.fieldLabel.text = @"Last";
             cell.textField.tag = 2;
             break;
         case 3:
-            cell.textField.placeholder = @"Born";
+            cell.fieldLabel.text = @"Born";
             bornTextField = cell.textField;
             cell.textField.tag = 3;
             datePicker.tag = 3;
             cell.textField.inputView = datePicker;
             break;
         case 4:
-            cell.textField.placeholder = @"Died";
+            cell.fieldLabel.text = @"Died";
             diedTextField = cell.textField;
             cell.textField.tag = 4;
             datePicker.tag = 4;
