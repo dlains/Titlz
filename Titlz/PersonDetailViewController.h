@@ -15,6 +15,7 @@ enum PersonDetailSections
 {
     DataSection = 0,
     AliasSection,
+    AliasOfSection,
     AuthoredSection,
     EditedSection,
     IllustratedSection,
@@ -32,7 +33,7 @@ enum PersonDataSectionRows
     PersonDataSectionRowCount
 };
 
-@interface PersonDetailViewController : UITableViewController <TitleSelectedDelegate>
+@interface PersonDetailViewController : UITableViewController <TitleSelectedDelegate, PersonSelectedDelegate>
 {
     UITextField* bornTextField;
     UITextField* diedTextField;

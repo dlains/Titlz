@@ -15,16 +15,21 @@
 
 @interface PersonDetailViewController ()
 -(UITableViewCell*) configureDataCellForRow:(NSInteger)row;
--(UITableViewCell*) configureAliasCell;
+-(UITableViewCell*) configureAliasCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configureAliasOfCell;
 -(UITableViewCell*) configureAuthoredCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureEditedCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureIllustratedCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureContributedCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection;
 -(Title*) sortedTitleFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
 -(void) loadTitleViewForPersonType:(PersonType)type;
 -(void) loadTitleDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
+-(void) loadPersonViewForPersonType:(PersonType)type;
+-(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
+-(void) loadPersonDetailViewForPerson:(Person*)person;
 @end
 
 @implementation PersonDetailViewController
@@ -265,6 +270,8 @@
             return 5;
         case AliasSection:
             return self.detailItem.aliases.count + insertionRow;
+        case AliasOfSection:
+            return (self.detailItem.aliasOf) ? 1 : 0;
         case AuthoredSection:
             return self.detailItem.authored.count + insertionRow;
         case EditedSection:
@@ -288,7 +295,10 @@
             cell = [self configureDataCellForRow:indexPath.row];
             break;
         case AliasSection:
-            cell = [self configureAliasCell];
+            cell = [self configureAliasCellAtIndexPath:indexPath];
+            break;
+        case AliasOfSection:
+            cell = [self configureAliasOfCell];
             break;
         case AuthoredSection:
             cell = [self configureAuthoredCellAtIndexPath:indexPath];
@@ -319,6 +329,8 @@
             return UITableViewCellEditingStyleNone;
         case AliasSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.aliases];
+        case AliasOfSection:
+            return UITableViewCellEditingStyleNone;
         case AuthoredSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.authored];
         case EditedSection:
@@ -360,6 +372,13 @@
         case DataSection:
             break;
         case AliasSection:
+            if (indexPath.row == self.detailItem.aliases.count)
+                [self loadPersonViewForPersonType:Alias];
+            else
+                [self loadPersonDetailViewForPersonType:Alias atIndexPath:indexPath];
+            break;
+        case AliasOfSection:
+            [self loadPersonDetailViewForPerson:self.detailItem.aliasOf];
             break;
         case AuthoredSection:
             if (indexPath.row == self.detailItem.authored.count)
@@ -401,6 +420,10 @@
                 // Never delete the data section rows.
                 break;
             case AliasSection:
+                [self.detailItem removeAliasesObject:[self sortedPersonFromSet:self.detailItem.aliases atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
+                break;
+            case AliasOfSection:
                 break;
             case AuthoredSection:
                 [self.detailItem removeAuthoredObject:[self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath]];
@@ -450,6 +473,12 @@
             if (self.detailItem.aliases.count > 0 || self.editing)
             {
                 header = [NSString stringWithString:@"Aliases"];
+            }
+            break;
+        case AliasOfSection:
+            if (self.detailItem.aliasOf)
+            {
+                header = [NSString stringWithString:@"Alias Of"];
             }
             break;
         case AuthoredSection:
@@ -545,9 +574,9 @@
     return cell;
 }
 
--(UITableViewCell*) configureAliasCell
+-(UITableViewCell*) configureAliasCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"AliasCell";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -556,8 +585,31 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editing)
-        cell.textLabel.text = @"Add New Alias...";
+    if(self.editing && indexPath.row == self.detailItem.aliases.count)
+    {
+        cell.textLabel.text = @"Add Alias...";
+    }
+    else
+    {
+        Person* person = [self sortedPersonFromSet:self.detailItem.aliases atIndexPath:indexPath];
+        cell.textLabel.text = person.fullName;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCell*) configureAliasOfCell
+{
+    static NSString* CellIdentifier = @"AliasOfCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    cell.textLabel.text = self.detailItem.aliasOf.fullName;
     
     return cell;
 }
@@ -691,6 +743,24 @@
     [self.tableView reloadData];
 }
 
+-(void) personViewController:(PersonViewController *)controller didSelectPerson:(Person *)person withPersonType:(PersonType)type
+{
+    if (type == Alias)
+    {
+        [self.detailItem addAliasesObject:person];
+
+        NSError* error;
+        if (![self.detailItem.managedObjectContext save:&error])
+        {
+            // Update to handle the error appropriately.
+            DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            exit(-1);  // Fail
+        }
+        
+        [self.tableView reloadData];
+    }
+}
+
 #pragma mark - Local Helper Methods
 
 -(Title*) sortedTitleFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
@@ -699,6 +769,14 @@
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     NSArray* sortedTitles = [set sortedArrayUsingDescriptors:sortDescriptors];
     return [sortedTitles objectAtIndex:indexPath.row];
+}
+
+-(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedPeople = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedPeople objectAtIndex:indexPath.row];
 }
 
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath
@@ -747,6 +825,42 @@
     {
         titleDetailViewController.detailItem = selectedTitle;
         [self.navigationController pushViewController:titleDetailViewController animated:YES];
+    }
+}
+
+-(void) loadPersonViewForPersonType:(PersonType)type
+{
+    PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
+    personViewController.delegate = self;
+    personViewController.managedObjectContext = self.detailItem.managedObjectContext;
+    personViewController.selectionMode = TRUE;
+    personViewController.personSelectionType = type;
+    
+    [self.navigationController pushViewController:personViewController animated:YES];
+}
+
+-(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath
+{
+    if (type == Alias)
+    {
+        Person* selectedPerson = [self sortedPersonFromSet:self.detailItem.aliases atIndexPath:indexPath];
+
+        if (selectedPerson)
+        {
+            PersonDetailViewController* personDetailViewController = [[PersonDetailViewController alloc] initWithNibName:@"PersonDetailViewController" bundle:nil];
+            personDetailViewController.detailItem = selectedPerson;
+            [self.navigationController pushViewController:personDetailViewController animated:YES];
+        }
+    }
+}
+
+-(void) loadPersonDetailViewForPerson:(Person*)person
+{
+    if (person)
+    {
+        PersonDetailViewController* personDetailViewController = [[PersonDetailViewController alloc] initWithNibName:@"PersonDetailViewController" bundle:nil];
+        personDetailViewController.detailItem = person;
+        [self.navigationController pushViewController:personDetailViewController animated:YES];
     }
 }
 

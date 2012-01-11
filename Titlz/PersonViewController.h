@@ -17,6 +17,7 @@ typedef enum PersonTypeEnum
     Editor,
     Illustrator,
     Contributor,
+    Alias,
 } PersonType;
 
 @protocol PersonSelectedDelegate;
