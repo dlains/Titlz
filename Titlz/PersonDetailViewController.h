@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TitleViewController.h"
 
 @class Person;
 
@@ -31,7 +32,11 @@ enum PersonDataSectionRows
     PersonDataSectionRowCount
 };
 
-@interface PersonDetailViewController : UITableViewController
+@interface PersonDetailViewController : UITableViewController <TitleSelectedDelegate>
+{
+    UITextField* bornTextField;
+    UITextField* diedTextField;
+}
 
 @property(nonatomic, strong) Person* detailItem;
 @property(nonatomic, assign) NSInteger personTypeBeingAdded;

@@ -8,6 +8,7 @@
 
 #import "TitleDetailViewController.h"
 #import "PersonViewController.h"
+#import "PersonDetailViewController.h"
 #import "EditableTextCell.h"
 #import "Title.h"
 #import "Person.h"
@@ -25,6 +26,7 @@
 -(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
 -(void) loadPersonViewControllerForPersonType:(PersonType)type;
+-(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
 @end
 
 @implementation TitleDetailViewController
@@ -69,7 +71,6 @@
 {
     [super viewWillAppear:animated];
 
-    self.title = @"Title";
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     [self.tableView reloadData];
 }
@@ -361,18 +362,26 @@
         case AuthorSection:
             if (indexPath.row == self.detailItem.authors.count)
                 [self loadPersonViewControllerForPersonType:Author];
+            else
+                [self loadPersonDetailViewForPersonType:Author atIndexPath:indexPath];
             break;
         case EditorSection:
             if (indexPath.row == self.detailItem.editors.count)
                 [self loadPersonViewControllerForPersonType:Editor];
+            else
+                [self loadPersonDetailViewForPersonType:Editor atIndexPath:indexPath];
             break;
         case IllustratorSection:
             if (indexPath.row == self.detailItem.illustrators.count)
                 [self loadPersonViewControllerForPersonType:Illustrator];
+            else
+                [self loadPersonDetailViewForPersonType:Illustrator atIndexPath:indexPath];
             break;
         case ContributorSection:
             if (indexPath.row == self.detailItem.contributors.count)
                 [self loadPersonViewControllerForPersonType:Contributor];
+            else
+                [self loadPersonDetailViewForPersonType:Contributor atIndexPath:indexPath];
             break;
         case BookSection:
             break;
@@ -502,14 +511,11 @@
             case NameSection:
                 return nil;
             case EditionSection:
-                return indexPath;
             case AuthorSection:
             case EditorSection:
             case IllustratorSection:
             case ContributorSection:
-                return nil;
             case BookSection:
-                return indexPath;
             case CollectionSection:
                 return indexPath;
             default:
@@ -564,6 +570,7 @@
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
     if(self.editing && indexPath.row == self.detailItem.authors.count)
@@ -587,6 +594,7 @@
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
     if(self.editing && indexPath.row == self.detailItem.editors.count)
@@ -610,6 +618,7 @@
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
     if(self.editing && indexPath.row == self.detailItem.illustrators.count)
@@ -633,6 +642,7 @@
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
     if(self.editing && indexPath.row == self.detailItem.contributors.count)
@@ -742,6 +752,36 @@
     personViewController.personSelectionType = type;
     
     [self.navigationController pushViewController:personViewController animated:YES];
+}
+
+-(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath
+{
+    PersonDetailViewController* personDetailViewController = [[PersonDetailViewController alloc] initWithNibName:@"PersonDetailViewController" bundle:nil];
+    Person* selectedPerson = nil;
+    
+    switch (type)
+    {
+        case Author:
+            selectedPerson = [self sortedPersonFromSet:self.detailItem.authors atIndexPath:indexPath];
+            break;
+        case Editor:
+            selectedPerson = [self sortedPersonFromSet:self.detailItem.editors atIndexPath:indexPath];
+            break;
+        case Illustrator:
+            selectedPerson = [self sortedPersonFromSet:self.detailItem.illustrators atIndexPath:indexPath];
+            break;
+        case Contributor:
+            selectedPerson = [self sortedPersonFromSet:self.detailItem.contributors atIndexPath:indexPath];
+            break;
+        default:
+            break;
+    }
+    
+    if (selectedPerson)
+    {
+        personDetailViewController.detailItem = selectedPerson;
+        [self.navigationController pushViewController:personDetailViewController animated:YES];
+    }
 }
 
 @end

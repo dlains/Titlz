@@ -13,6 +13,10 @@
 @protocol NewPersonDelegate;
 
 @interface NewPersonViewController : UITableViewController
+{
+    UITextField* bornTextField;
+    UITextField* diedTextField;
+}
 
 @property(nonatomic, strong) Person* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;

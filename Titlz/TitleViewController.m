@@ -21,6 +21,9 @@
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize addingManagedObjectContext = __addingManagedObjectContext;
+@synthesize delegate = _delegate;
+@synthesize selectionMode = _selectionMode;
+@synthesize personSelectionType = _personSelectionType;
 
 -(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
@@ -115,7 +118,9 @@
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        if (!self.selectionMode)
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 
     [self configureCell:cell atIndexPath:indexPath];
@@ -162,14 +167,24 @@
 
 -(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    if (!self.titleDetailViewController)
+    if (self.selectionMode)
     {
-        self.titleDetailViewController = [[TitleDetailViewController alloc] initWithNibName:@"TitleDetailViewController" bundle:nil];
+        // Get the selected person and update the correct delegate.
+        Title* selectedTitle = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+        [self.delegate titleViewController:self didSelectTitle:selectedTitle forPersonType:self.personSelectionType];
+        [self.navigationController popViewControllerAnimated:YES];
     }
-    Title* selectedTitle = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    self.titleDetailViewController.detailItem = selectedTitle;
-    self.titleDetailViewController.managedObjectContext = self.managedObjectContext;
-    [self.navigationController pushViewController:self.titleDetailViewController animated:YES];
+    else
+    {
+        if (!self.titleDetailViewController)
+        {
+            self.titleDetailViewController = [[TitleDetailViewController alloc] initWithNibName:@"TitleDetailViewController" bundle:nil];
+        }
+        Title* selectedTitle = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+        self.titleDetailViewController.detailItem = selectedTitle;
+        self.titleDetailViewController.managedObjectContext = self.managedObjectContext;
+        [self.navigationController pushViewController:self.titleDetailViewController animated:YES];
+    }
 }
 
 -(NSString*) tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
@@ -317,16 +332,6 @@
 
 -(void) insertNewObject
 {
-    // Use a local TitleDetailViewController here to avoid problems with reusing it with the main navigation controller.
-    /*
-    TitleDetailViewController* titleDetailViewController = [[TitleDetailViewController alloc] initWithPrimaryManagedObjectContext:self.managedObjectContext];
-    titleDetailViewController.detailItem = nil;
-    titleDetailViewController.newRecord = YES;
-
-    UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:titleDetailViewController];
-    [self.navigationController presentModalViewController:navigationController animated:YES];
-    */
-    
     NewTitleViewController* newTitleViewController = [[NewTitleViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	newTitleViewController.delegate = self;
 	

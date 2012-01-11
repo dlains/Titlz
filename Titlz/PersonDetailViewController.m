@@ -7,17 +7,24 @@
 //
 
 #import "PersonDetailViewController.h"
+#import "TitleViewController.h"
+#import "TitleDetailViewController.h"
 #import "EditableTextCell.h"
 #import "Person.h"
+#import "Title.h"
 
 @interface PersonDetailViewController ()
 -(UITableViewCell*) configureDataCellForRow:(NSInteger)row;
 -(UITableViewCell*) configureAliasCell;
--(UITableViewCell*) configureAuthoredCell;
--(UITableViewCell*) configureEditedCell;
--(UITableViewCell*) configureIllustratedCell;
--(UITableViewCell*) configureContributedCell;
+-(UITableViewCell*) configureAuthoredCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configureEditedCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configureIllustratedCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configureContributedCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection;
+-(Title*) sortedTitleFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
+-(void) loadTitleViewForPersonType:(PersonType)type;
+-(void) loadTitleDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
 @end
 
 @implementation PersonDetailViewController
@@ -64,8 +71,8 @@
 {
     [super viewWillAppear:animated];
 
-    self.title = @"Person";
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self.tableView reloadData];
 }
 
 /*
@@ -97,6 +104,12 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+-(void) updateRightBarButtonItemState
+{
+	// Conditionally enable the right bar button item -- it should only be enabled if the title is in a valid state for saving.
+    self.navigationItem.rightBarButtonItem.enabled = [self.detailItem validateForUpdate:NULL];
 }
 
 #pragma mark - Undo Support
@@ -172,10 +185,27 @@
     [self becomeFirstResponder];
 }
 
--(void) updateRightBarButtonItemState
+-(void) datePickerValueChanged:(id)sender
 {
-	// Conditionally enable the right bar button item -- it should only be enabled if the title is in a valid state for saving.
-    self.navigationItem.rightBarButtonItem.enabled = [self.detailItem validateForUpdate:NULL];
+    UIDatePicker* datePicker = (UIDatePicker*)sender;
+    
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setTimeStyle:NSDateFormatterNoStyle];
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    
+    switch (datePicker.tag)
+    {
+        case BornRow:
+            self.detailItem.born = datePicker.date;
+            bornTextField.text = [formatter stringFromDate:datePicker.date];
+            break;
+        case DiedRow:
+            self.detailItem.died = datePicker.date;
+            diedTextField.text = [formatter stringFromDate:datePicker.date];
+            break;
+        default:
+            break;
+    }
 }
 
 #pragma mark - Table view data source
@@ -191,7 +221,7 @@
     NSIndexPath* authored      = [NSIndexPath indexPathForRow:self.detailItem.authored.count inSection:AuthoredSection];
     NSIndexPath* edited        = [NSIndexPath indexPathForRow:self.detailItem.edited.count inSection:EditedSection];
     NSIndexPath* illustrated   = [NSIndexPath indexPathForRow:self.detailItem.illustrated.count inSection:IllustratedSection];
-    NSIndexPath* contributed = [NSIndexPath indexPathForRow:self.detailItem.contributed.count inSection:ContributedSection];
+    NSIndexPath* contributed   = [NSIndexPath indexPathForRow:self.detailItem.contributed.count inSection:ContributedSection];
         
     NSArray* paths = [NSArray arrayWithObjects:alias, authored, edited, illustrated, contributed, nil];
         
@@ -261,16 +291,16 @@
             cell = [self configureAliasCell];
             break;
         case AuthoredSection:
-            cell = [self configureAuthoredCell];
+            cell = [self configureAuthoredCellAtIndexPath:indexPath];
             break;
         case EditedSection:
-            cell = [self configureEditedCell];
+            cell = [self configureEditedCellAtIndexPath:indexPath];
             break;
         case IllustratedSection:
-            cell = [self configureIllustratedCell];
+            cell = [self configureIllustratedCellAtIndexPath:indexPath];
             break;
         case ContributedSection:
-            cell = [self configureContributedCell];
+            cell = [self configureContributedCellAtIndexPath:indexPath];
             break;
         default:
             DLog(@"Invalid PersonDetailViewController section found: %i.", indexPath.section);
@@ -305,47 +335,12 @@
 
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection
 {
-    NSInteger insertionRow = 0;
-    
-    if(self.editing)
-        insertionRow = 1;
-    
     // The last row should be the insert style, all others should be delete.
-    if(collection.count == 0 || row == collection.count + insertionRow)
+    if(collection.count == 0 || row == collection.count)
         return UITableViewCellEditingStyleInsert;
     else
         return UITableViewCellEditingStyleDelete;
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
 
 /*
 // Override to support conditional rearranging of the table view.
@@ -358,15 +353,88 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+-(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    switch (indexPath.section)
+    {
+        case DataSection:
+            break;
+        case AliasSection:
+            break;
+        case AuthoredSection:
+            if (indexPath.row == self.detailItem.authored.count)
+                [self loadTitleViewForPersonType:Author];
+            else
+                [self loadTitleDetailViewForPersonType:Author atIndexPath:indexPath];
+            break;
+        case EditedSection:
+            if (indexPath.row == self.detailItem.edited.count)
+                [self loadTitleViewForPersonType:Editor];
+            else
+                [self loadTitleDetailViewForPersonType:Editor atIndexPath:indexPath];
+            break;
+        case IllustratedSection:
+            if (indexPath.row == self.detailItem.illustrated.count)
+                [self loadTitleViewForPersonType:Illustrator];
+            else
+                [self loadTitleDetailViewForPersonType:Illustrator atIndexPath:indexPath];
+            break;
+        case ContributedSection:
+            if (indexPath.row == self.detailItem.contributed.count)
+                [self loadTitleViewForPersonType:Contributor];
+            else
+                [self loadTitleDetailViewForPersonType:Contributor atIndexPath:indexPath];
+            break;
+        default:
+            DLog(@"Invalid TitleDetailViewController section found: %i.", indexPath.section);
+            break;
+    }
+}
+
+-(void) tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        switch (indexPath.section)
+        {
+            case DataSection:
+                // Never delete the data section rows.
+                break;
+            case AliasSection:
+                break;
+            case AuthoredSection:
+                [self.detailItem removeAuthoredObject:[self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
+                break;
+            case EditedSection:
+                [self.detailItem removeEditedObject:[self sortedTitleFromSet:self.detailItem.edited atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
+                break;
+            case IllustratedSection:
+                [self.detailItem removeIllustratedObject:[self sortedTitleFromSet:self.detailItem.illustrated atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
+                break;
+            case ContributedSection:
+                [self.detailItem removeContributedObject:[self sortedTitleFromSet:self.detailItem.contributed atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
+                break;
+            default:
+                break;
+        }
+        
+        // Save the context.
+        NSError *error = nil;
+        if (![self.detailItem.managedObjectContext save:&error])
+        {
+            /*
+             Replace this implementation with code to handle the error appropriately.
+             
+             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+             */
+            DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+    }   
 }
 
 // Section headers.
@@ -420,6 +488,15 @@
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
+    // Create the date picker to use for the Born and Died fields.
+    UIDatePicker* datePicker = [[UIDatePicker alloc] init];
+    datePicker.datePickerMode = UIDatePickerModeDate;
+    [datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setTimeStyle:NSDateFormatterNoStyle];
+    [formatter setDateStyle:NSDateFormatterLongStyle];
+
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
@@ -431,40 +508,36 @@
     switch (row)
     {
         case FirstNameRow:
-            if(self.editing && [self.detailItem.firstName length] <= 0)
-            {
-                cell.textField.placeholder = @"First";
-            }
-            else
-            {
-                cell.textField.text = self.detailItem.firstName;
-            }
-            cell.tag = FirstNameRow;
+            cell.textField.placeholder = @"First";
+            cell.textField.text = self.detailItem.firstName;
+            cell.textField.tag = FirstNameRow;
             break;
         case MiddleNameRow:
-            if(self.editing && [self.detailItem.middleName length] <= 0)
-            {
-                cell.textField.placeholder = @"Middle";
-            }
-            else
-            {
-                cell.textField.text = self.detailItem.middleName;
-            }
-            cell.tag = MiddleNameRow;
+            cell.textField.placeholder = @"Middle";
+            cell.textField.text = self.detailItem.middleName;
+            cell.textField.tag = MiddleNameRow;
             break;
         case LastNameRow:
-            if(self.editing && [self.detailItem.lastName length] <= 0)
-            {
-                cell.textField.placeholder = @"Last";
-            }
-            else
-            {
-                cell.textField.text = self.detailItem.lastName;
-            }
-            cell.tag = LastNameRow;
+            cell.textField.placeholder = @"Last";
+            cell.textField.text = self.detailItem.lastName;
+            cell.textField.tag = LastNameRow;
             break;
         case BornRow:
+            cell.textField.placeholder = @"Born";
+            bornTextField = cell.textField;
+            cell.textField.tag = 3;
+            datePicker.tag = 3;
+            cell.textField.inputView = datePicker;
+            cell.textField.text = [formatter stringFromDate:self.detailItem.born];
+            break;
         case DiedRow:
+            cell.textField.placeholder = @"Died";
+            diedTextField = cell.textField;
+            cell.textField.tag = 4;
+            datePicker.tag = 4;
+            cell.textField.inputView = datePicker;
+            cell.textField.text = [formatter stringFromDate:self.detailItem.died];
+            break;
         default:
             break;
     }
@@ -489,24 +562,30 @@
     return cell;
 }
 
--(UITableViewCell*) configureAuthoredCell
+-(UITableViewCell*) configureAuthoredCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"AuthorCell";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editing)
-        cell.textLabel.text = @"Add New Authored Title...";
+    if(self.editing && indexPath.row == self.detailItem.authored.count)
+    {
+        cell.textLabel.text = @"Add Authored Title...";
+    }
+    else
+    {
+        Title* title = [self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath];
+        cell.textLabel.text = title.name;
+    }
     
     return cell;
 }
 
--(UITableViewCell*) configureEditedCell
+-(UITableViewCell*) configureEditedCellAtIndexPath:(NSIndexPath*)indexPath
 {
     static NSString* CellIdentifier = @"Cell";
     
@@ -517,13 +596,20 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editing)
-        cell.textLabel.text = @"Add New Edited Title...";
+    if(self.editing && indexPath.row == self.detailItem.edited.count)
+    {
+        cell.textLabel.text = @"Add Edited Title...";
+    }
+    else
+    {
+        Title* title = [self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath];
+        cell.textLabel.text = title.name;
+    }
     
     return cell;
 }
 
--(UITableViewCell*) configureIllustratedCell
+-(UITableViewCell*) configureIllustratedCellAtIndexPath:(NSIndexPath*)indexPath
 {
     static NSString* CellIdentifier = @"Cell";
     
@@ -534,13 +620,20 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editing)
-        cell.textLabel.text = @"Add New Illustrated Title...";
+    if(self.editing && indexPath.row == self.detailItem.illustrated.count)
+    {
+        cell.textLabel.text = @"Add Illustrated Title...";
+    }
+    else
+    {
+        Title* title = [self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath];
+        cell.textLabel.text = title.name;
+    }
     
     return cell;
 }
 
--(UITableViewCell*) configureContributedCell
+-(UITableViewCell*) configureContributedCellAtIndexPath:(NSIndexPath*)indexPath
 {
     static NSString* CellIdentifier = @"Cell";
     
@@ -551,10 +644,110 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editing)
-        cell.textLabel.text = @"Add New Contributed To Title...";
+    if(self.editing && indexPath.row == self.detailItem.contributed.count)
+    {
+        cell.textLabel.text = @"Add Contributed Title...";
+    }
+    else
+    {
+        Title* title = [self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath];
+        cell.textLabel.text = title.name;
+    }
     
     return cell;
+}
+
+#pragma mark - Title Selection Delegate Method
+
+-(void) titleViewController:(TitleViewController *)controller didSelectTitle:(Title *)title forPersonType:(PersonType)type
+{
+    switch (type)
+    {
+        case Author:
+            [self.detailItem addAuthoredObject:title];
+            break;
+        case Editor:
+            [self.detailItem addEditedObject:title];
+            break;
+        case Illustrator:
+            [self.detailItem addIllustratedObject:title];
+            break;
+        case Contributor:
+            [self.detailItem addContributedObject:title];
+            break;
+        default:
+            DLog(@"Invalid PersonType found in PersonDetailViewController: %i.", type);
+            break;
+    }
+    
+    NSError* error;
+    if (![self.detailItem.managedObjectContext save:&error])
+    {
+        // Update to handle the error appropriately.
+        DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        exit(-1);  // Fail
+    }
+    
+    [self.tableView reloadData];
+}
+
+#pragma mark - Local Helper Methods
+
+-(Title*) sortedTitleFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedTitles = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedTitles objectAtIndex:indexPath.row];
+}
+
+-(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    NSIndexPath* path = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section];
+    NSArray* paths = [NSArray arrayWithObjects:path, nil];
+    
+    [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
+}
+
+-(void) loadTitleViewForPersonType:(PersonType)type
+{
+    TitleViewController* titleViewController = [[TitleViewController alloc] initWithNibName:@"TitleViewController" bundle:nil];
+    titleViewController.managedObjectContext = self.detailItem.managedObjectContext;
+    titleViewController.delegate = self;
+    titleViewController.selectionMode = TRUE;
+    titleViewController.personSelectionType = type;
+    
+    [self.navigationController pushViewController:titleViewController animated:YES];
+}
+
+-(void) loadTitleDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath
+{
+    TitleDetailViewController* titleDetailViewController = [[TitleDetailViewController alloc] initWithNibName:@"TitleDetailViewController" bundle:nil];
+    Title* selectedTitle = nil;
+    
+    switch (type)
+    {
+        case Author:
+            selectedTitle = [self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath];
+            break;
+        case Editor:
+            selectedTitle = [self sortedTitleFromSet:self.detailItem.edited atIndexPath:indexPath];
+            break;
+        case Illustrator:
+            selectedTitle = [self sortedTitleFromSet:self.detailItem.illustrated atIndexPath:indexPath];
+            break;
+        case Contributor:
+            selectedTitle = [self sortedTitleFromSet:self.detailItem.contributed atIndexPath:indexPath];
+            break;
+        default:
+            break;
+    }
+    
+    if (selectedTitle)
+    {
+        titleDetailViewController.detailItem = selectedTitle;
+        [self.navigationController pushViewController:titleDetailViewController animated:YES];
+    }
 }
 
 @end

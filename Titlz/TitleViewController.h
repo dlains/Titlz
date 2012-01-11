@@ -11,6 +11,8 @@
 
 #import "NewTitleViewController.h"
 
+@protocol TitleSelectedDelegate;
+
 @class TitleDetailViewController;
 
 @interface TitleViewController : UITableViewController <NSFetchedResultsControllerDelegate, NewTitleDelegate>
@@ -20,5 +22,14 @@
 @property(nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
 @property(nonatomic, strong) NSManagedObjectContext* managedObjectContext;
 @property(nonatomic, retain) NSManagedObjectContext *addingManagedObjectContext;
+@property(nonatomic, assign) id <TitleSelectedDelegate> delegate;
+@property(nonatomic, assign) BOOL selectionMode;
+@property(nonatomic, assign) PersonType personSelectionType;
+
+@end
+
+@protocol TitleSelectedDelegate <NSObject>
+
+-(void) titleViewController:(TitleViewController*)controller didSelectTitle:(Title*)title forPersonType:(PersonType)type;
 
 @end

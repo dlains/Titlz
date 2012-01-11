@@ -117,6 +117,7 @@
 
 -(void) textFieldDidEndEditing:(UITextField*)textField
 {
+    
     switch (textField.tag)
     {
         case 0:
@@ -128,15 +129,34 @@
         case 2:
             self.detailItem.lastName = textField.text;
             break;
-        case 3:
-            break;
-        case 4:
-            break;
         default:
             break;
     }
     
     [self becomeFirstResponder];
+}
+
+-(void) datePickerValueChanged:(id)sender
+{
+    UIDatePicker* datePicker = (UIDatePicker*)sender;
+
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setTimeStyle:NSDateFormatterNoStyle];
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    
+    switch (datePicker.tag)
+    {
+        case 3:
+            self.detailItem.born = datePicker.date;
+            bornTextField.text = [formatter stringFromDate:datePicker.date];
+            break;
+        case 4:
+            self.detailItem.died = datePicker.date;
+            diedTextField.text = [formatter stringFromDate:datePicker.date];
+            break;
+        default:
+            break;
+    }
 }
 
 -(IBAction) cancel:(id)sender
@@ -164,7 +184,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
-    
+
+    // Create the date picker to use for the Born and Died fields.
+    UIDatePicker* datePicker = [[UIDatePicker alloc] init];
+    datePicker.datePickerMode = UIDatePickerModeDate;
+    [datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
@@ -189,11 +214,17 @@
             break;
         case 3:
             cell.textField.placeholder = @"Born";
+            bornTextField = cell.textField;
             cell.textField.tag = 3;
+            datePicker.tag = 3;
+            cell.textField.inputView = datePicker;
             break;
         case 4:
             cell.textField.placeholder = @"Died";
+            diedTextField = cell.textField;
             cell.textField.tag = 4;
+            datePicker.tag = 4;
+            cell.textField.inputView = datePicker;
             break;
     }
     return cell;
