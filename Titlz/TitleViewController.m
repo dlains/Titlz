@@ -30,7 +30,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        self.title = NSLocalizedString(@"Titles", @"Titles");
+        self.title = NSLocalizedString(@"Titles", @"TitleViewController header bar title.");
     }
     return self;
 }
@@ -112,7 +112,7 @@
 // Customize the appearance of table view cells.
 -(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"TitlesCell";
     
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)

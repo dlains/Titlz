@@ -32,7 +32,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        self.title = NSLocalizedString(@"People", @"People");
+        self.title = NSLocalizedString(@"People", @"PersonViewController header bar title.");
     }
     return self;
 }
@@ -116,7 +116,7 @@
 
 -(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"PersonCell";
     
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)

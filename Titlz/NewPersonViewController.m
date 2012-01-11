@@ -30,7 +30,7 @@
 {
     [super viewDidLoad];
 
-    self.title = @"New Person";
+    self.title = NSLocalizedString(@"New Person", @"NewPersonViewController header bar title.");
     
     UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
@@ -201,26 +201,26 @@
     switch (indexPath.row)
     {
         case 0:
-            cell.fieldLabel.text = @"First";
+            cell.fieldLabel.text = NSLocalizedString(@"First", @"NewPersonViewController firstName data field label.");
             cell.textField.tag = 0;
             break;
         case 1:
-            cell.fieldLabel.text = @"Middle";
+            cell.fieldLabel.text = NSLocalizedString(@"Middle", @"NewPersonViewController middleName data field label.");
             cell.textField.tag = 1;
             break;
         case 2:
-            cell.fieldLabel.text = @"Last";
+            cell.fieldLabel.text = NSLocalizedString(@"Last", @"NewPersonViewController lastName data field label.");
             cell.textField.tag = 2;
             break;
         case 3:
-            cell.fieldLabel.text = @"Born";
+            cell.fieldLabel.text = NSLocalizedString(@"Born", @"NewPersonViewController born data field label.");
             bornTextField = cell.textField;
             cell.textField.tag = 3;
             datePicker.tag = 3;
             cell.textField.inputView = datePicker;
             break;
         case 4:
-            cell.fieldLabel.text = @"Died";
+            cell.fieldLabel.text = NSLocalizedString(@"Died", @"NewPersonViewController died data field label.");
             diedTextField = cell.textField;
             cell.textField.tag = 4;
             datePicker.tag = 4;

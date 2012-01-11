@@ -45,7 +45,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        self.title = NSLocalizedString(@"Person", @"Person");
+        self.title = NSLocalizedString(@"Person", @"PersonDetailViewController header bar title.");
     }
     return self;
 }
@@ -472,37 +472,37 @@
         case AliasSection:
             if (self.detailItem.aliases.count > 0 || self.editing)
             {
-                header = [NSString stringWithString:@"Aliases"];
+                header = NSLocalizedString(@"Aliases", @"PersonDetailViewController Alias section header.");
             }
             break;
         case AliasOfSection:
             if (self.detailItem.aliasOf)
             {
-                header = [NSString stringWithString:@"Alias Of"];
+                header = NSLocalizedString(@"Alias Of", @"PersonDetailViewController Alias Of section header.");
             }
             break;
         case AuthoredSection:
             if (self.detailItem.authored.count > 0 || self.editing)
             {
-                header = [NSString stringWithString:@"Authored"];
+                header = NSLocalizedString(@"Authored", @"PersonDetailViewController Authored section header.");
             }
             break;
         case EditedSection:
             if (self.detailItem.edited.count > 0 || self.editing)
             {
-                header = [NSString stringWithString:@"Edited"];
+                header = NSLocalizedString(@"Edited", @"PersonDetailViewController Edited Of section header.");
             }
             break;
         case IllustratedSection:
             if (self.detailItem.illustrated.count > 0 || self.editing)
             {
-                header = [NSString stringWithString:@"Illustrated"];
+                header = NSLocalizedString(@"Illustrated", @"PersonDetailViewController Illustrated section header.");
             }
             break;
         case ContributedSection:
             if (self.detailItem.contributed.count > 0 || self.editing)
             {
-                header = [NSString stringWithString:@"Contributed To"];
+                header = NSLocalizedString(@"Contributed", @"PersonDetailViewController Contributed Of section header.");
             }
             break;
         default:
@@ -537,22 +537,22 @@
     switch (row)
     {
         case FirstNameRow:
-            cell.fieldLabel.text = @"First";
+            cell.fieldLabel.text = NSLocalizedString(@"First", @"PersonDetailViewController firstName data field label.");
             cell.textField.text = self.detailItem.firstName;
             cell.textField.tag = FirstNameRow;
             break;
         case MiddleNameRow:
-            cell.fieldLabel.text = @"Middle";
+            cell.fieldLabel.text = NSLocalizedString(@"Middle", @"PersonDetailViewController middleName data field label.");
             cell.textField.text = self.detailItem.middleName;
             cell.textField.tag = MiddleNameRow;
             break;
         case LastNameRow:
-            cell.fieldLabel.text = @"Last";
+            cell.fieldLabel.text = NSLocalizedString(@"Last", @"PersonDetailViewController lastName data field label.");
             cell.textField.text = self.detailItem.lastName;
             cell.textField.tag = LastNameRow;
             break;
         case BornRow:
-            cell.fieldLabel.text = @"Born";
+            cell.fieldLabel.text = NSLocalizedString(@"Born", @"PersonDetailViewController born data field label.");
             bornTextField = cell.textField;
             cell.textField.tag = 3;
             datePicker.tag = 3;
@@ -560,7 +560,7 @@
             cell.textField.text = [formatter stringFromDate:self.detailItem.born];
             break;
         case DiedRow:
-            cell.fieldLabel.text = @"Died";
+            cell.fieldLabel.text = NSLocalizedString(@"Died", @"PersonDetailViewController died data field label.");
             diedTextField = cell.textField;
             cell.textField.tag = 4;
             datePicker.tag = 4;
@@ -587,7 +587,7 @@
     
     if(self.editing && indexPath.row == self.detailItem.aliases.count)
     {
-        cell.textLabel.text = @"Add Alias...";
+        cell.textLabel.text = NSLocalizedString(@"Add Alias...", @"PersonDetailViewController add Alias insertion row text.");
     }
     else
     {
@@ -626,7 +626,7 @@
     
     if(self.editing && indexPath.row == self.detailItem.authored.count)
     {
-        cell.textLabel.text = @"Add Authored Title...";
+        cell.textLabel.text = NSLocalizedString(@"Add Authored Title...", @"PersonDetailViewController add Authored insertion row text.");
     }
     else
     {
@@ -639,7 +639,7 @@
 
 -(UITableViewCell*) configureEditedCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"EditorCell";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -650,7 +650,7 @@
     
     if(self.editing && indexPath.row == self.detailItem.edited.count)
     {
-        cell.textLabel.text = @"Add Edited Title...";
+        cell.textLabel.text = NSLocalizedString(@"Add Edited Title...", @"PersonDetailViewController add Edited insertion row text.");
     }
     else
     {
@@ -663,7 +663,7 @@
 
 -(UITableViewCell*) configureIllustratedCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"IllustratorCell";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -674,7 +674,7 @@
     
     if(self.editing && indexPath.row == self.detailItem.illustrated.count)
     {
-        cell.textLabel.text = @"Add Illustrated Title...";
+        cell.textLabel.text = NSLocalizedString(@"Add Illustrated Title...", @"PersonDetailViewController add Illustrated insertion row text.");
     }
     else
     {
@@ -687,7 +687,7 @@
 
 -(UITableViewCell*) configureContributedCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"ContributorCell";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -698,7 +698,7 @@
     
     if(self.editing && indexPath.row == self.detailItem.contributed.count)
     {
-        cell.textLabel.text = @"Add Contributed Title...";
+        cell.textLabel.text = NSLocalizedString(@"Add Contributed Title...", @"PersonDetailViewController add Contributed insertion row text.");
     }
     else
     {

@@ -42,7 +42,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        self.title = NSLocalizedString(@"Title", @"Title");
+        self.title = NSLocalizedString(@"Title", @"TitleDetailViewController header bar title.");
     }
     return self;
 }
@@ -455,43 +455,43 @@
         case EditionSection:
             if (self.detailItem.editions.count > 0 || self.editing)
             {
-                header = [NSString stringWithString:@"Editions"];
+                header = NSLocalizedString(@"Editions", @"TitleDetailViewController Editions section header.");
             }
             break;
         case AuthorSection:
             if (self.detailItem.authors.count > 0 || self.editing)
             {
-                header = [NSString stringWithString:@"Authors"];
+                header = NSLocalizedString(@"Authors", @"TitleDetailViewController Authors section header.");
             }
             break;
         case EditorSection:
             if (self.detailItem.editors.count > 0 || self.editing)
             {
-                header = [NSString stringWithString:@"Editors"];
+                header = NSLocalizedString(@"Editors", @"TitleDetailViewController Editors section header.");
             }
             break;
         case IllustratorSection:
             if (self.detailItem.illustrators.count > 0 || self.editing)
             {
-                header = [NSString stringWithString:@"Illustrators"];
+                header = NSLocalizedString(@"Illustrators", @"TitleDetailViewController Illustrators section header.");
             }
             break;
         case ContributorSection:
             if (self.detailItem.contributors.count > 0 || self.editing)
             {
-                header = [NSString stringWithString:@"Contributors"];
+                header = NSLocalizedString(@"Contributors", @"TitleDetailViewController Contributors section header.");
             }
             break;
         case BookSection:
             if (self.detailItem.books.count > 0 || self.editing)
             {
-                header = [NSString stringWithString:@"Books"];
+                header = NSLocalizedString(@"Books", @"TitleDetailViewController Books section header.");
             }
             break;
         case CollectionSection:
             if (self.detailItem.collections.count > 0 || self.editing)
             {
-                header = [NSString stringWithString:@"Collections"];
+                header = NSLocalizedString(@"Collections", @"TitleDetailViewController Collections section header.");
             }
             break;
         default:
@@ -541,14 +541,14 @@
         cell.textField.enabled = NO;
     }
 
-    cell.fieldLabel.text = @"Title";
+    cell.fieldLabel.text = NSLocalizedString(@"Title", @"TitleDetailViewController name data field label.");
     cell.textField.text = self.detailItem.name;
     return cell;
 }
 
 -(UITableViewCell*) configureEditionCell
 {
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"EditionCell";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -558,7 +558,7 @@
     }
     
     if(self.editing)
-        cell.textLabel.text = @"Add New Edition...";
+        cell.textLabel.text = NSLocalizedString(@"Add Edition...", @"TitleDetailViewController add Edition insertion row text.");
     
     return cell;
 }
@@ -576,7 +576,7 @@
     
     if(self.editing && indexPath.row == self.detailItem.authors.count)
     {
-        cell.textLabel.text = @"Add Author...";
+        cell.textLabel.text = NSLocalizedString(@"Add Author...", @"TitleDetailViewController add Author insertion row text.");
     }
     else
     {
@@ -600,7 +600,7 @@
     
     if(self.editing && indexPath.row == self.detailItem.editors.count)
     {
-        cell.textLabel.text = @"Add Editor...";
+        cell.textLabel.text = NSLocalizedString(@"Add Editor...", @"TitleDetailViewController add Editor insertion row text.");
     }
     else
     {
@@ -624,7 +624,7 @@
     
     if(self.editing && indexPath.row == self.detailItem.illustrators.count)
     {
-        cell.textLabel.text = @"Add Illustrator...";
+        cell.textLabel.text = NSLocalizedString(@"Add Illustrator...", @"TitleDetailViewController add Illustrator insertion row text.");
     }
     else
     {
@@ -648,7 +648,7 @@
     
     if(self.editing && indexPath.row == self.detailItem.contributors.count)
     {
-        cell.textLabel.text = @"Add Contributor...";
+        cell.textLabel.text = NSLocalizedString(@"Add Contributor...", @"TitleDetailViewController add Contributor insertion row text.");
     }
     else
     {
@@ -670,7 +670,7 @@
     }
     
     if(self.editing)
-        cell.textLabel.text = @"Add New Book...";
+        cell.textLabel.text = NSLocalizedString(@"Add Book...", @"TitleDetailViewController add Book insertion row text.");
     
     return cell;
 }
@@ -687,7 +687,7 @@
     }
     
     if(self.editing)
-        cell.textLabel.text = @"Add New Collection...";
+        cell.textLabel.text = NSLocalizedString(@"Add Collection...", @"TitleDetailViewController add Collection insertion row text.");
     
     return cell;
 }

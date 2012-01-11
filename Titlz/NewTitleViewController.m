@@ -130,16 +130,8 @@
         cell.textField.enabled = NO;
     }
     
-    cell.fieldLabel.text = @"Title";
-    
-    if(self.editing && [self.detailItem.name length] <= 0)
-    {
-        cell.textField.placeholder = @"New Title";
-    }
-    else
-    {
-        cell.textField.text = self.detailItem.name;
-    }
+    cell.fieldLabel.text = NSLocalizedString(@"Title", @"NewTitleViewController name data field label.");
+    cell.textField.text = self.detailItem.name;
     return cell;
 }
 
