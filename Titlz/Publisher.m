@@ -12,19 +12,31 @@
 
 @implementation Publisher
 
-@dynamic address;
-@dynamic address1;
+@dynamic name;
+@dynamic parent;
+@dynamic street;
+@dynamic street1;
 @dynamic city;
 @dynamic country;
-@dynamic name;
-@dynamic phone;
 @dynamic state;
-@dynamic zip;
+@dynamic postalCode;
 @dynamic editions;
 
 +(id) publisherInManagedObjectContext:(NSManagedObjectContext*)context
 {
     return [NSEntityDescription insertNewObjectForEntityForName:@"Publisher" inManagedObjectContext:context];
+}
+
+-(NSString*) firstLetterOfName
+{
+    [self willAccessValueForKey:@"firstLetterOfName"];
+    
+    NSString* value = [[self valueForKey:@"name"] uppercaseString];
+    
+    NSString* result = [value substringWithRange:[value rangeOfComposedCharacterSequenceAtIndex:0]];
+    
+    [self didAccessValueForKey:@"firstLetterOfName"];
+    return result;
 }
 
 @end

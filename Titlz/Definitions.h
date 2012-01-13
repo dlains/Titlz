@@ -18,7 +18,6 @@ typedef enum PersonTypeEnum
     Alias,
 } PersonType;
 
-
 typedef enum TitleDetailSectionsEnum
 {
     TitleNameSection = 0,
@@ -67,13 +66,31 @@ typedef enum EditionDataSectionRowsEnum
 {
     EditionNameRow = 0,
     EditionFormatRow,
-    EditionIsbn10Row,
-    EditionIsbn13Row,
+    EditionIsbnRow,
     EditionPagesRow,
     EditionPrintRunRow,
     EditionReleaseDateRow,
     EditionDataSectionRowCount
 } EditionDataSectionRows;
 
+typedef enum PublisherDetailSectionsEnum
+{
+    PublisherDataSection = 0,
+    PublisherEditionsSection,
+    PublisherDetailSectionCount
+} PublisherDetailSections;
+
+typedef enum PublisherDataSectionRowsEnum
+{
+    PublisherNameRow = 0,
+    PublisherParentRow,
+    PublisherStreetRow,
+    PublisherStreet1Row,
+    PublisherCityRow,
+    PublisherStateRow,
+    PublisherPostalCodeRow,
+    PublisherCountryRow,
+    PublisherDataSectionRowCount
+} PublisherDataSectionRows;
 
 #endif

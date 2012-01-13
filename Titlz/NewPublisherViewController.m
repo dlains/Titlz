@@ -1,17 +1,17 @@
 //
-//  NewEditionViewController.m
+//  NewPublisherViewController.m
 //  Titlz
 //
-//  Created by David Lains on 1/11/12.
+//  Created by David Lains on 1/13/12.
 //  Copyright (c) 2012 Dagger Lake Software. All rights reserved.
 //
 
-#import "NewEditionViewController.h"
-#import "EditionDetailViewController.h"
+#import "NewPublisherViewController.h"
 #import "EditableTextCell.h"
-#import "Edition.h"
+#import "Publisher.h"
 
-@implementation NewEditionViewController
+
+@implementation NewPublisherViewController
 
 @synthesize detailItem = _detailItem;
 @synthesize undoManager = _undoManager;
@@ -31,7 +31,7 @@
 {
     [super viewDidLoad];
     
-    self.title = NSLocalizedString(@"New Edition", @"NewEditionViewController header bar title.");
+    self.title = NSLocalizedString(@"New Publisher", @"NewPublisherViewController header bar title.");
     
     UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
@@ -118,23 +118,31 @@
 
 -(void) textFieldDidEndEditing:(UITextField*)textField
 {
-    
     switch (textField.tag)
     {
-        case EditionNameRow:
+        case PublisherNameRow:
             self.detailItem.name = textField.text;
             break;
-        case EditionFormatRow:
-            self.detailItem.format = textField.text;
+        case PublisherParentRow:
+            self.detailItem.parent = textField.text;
             break;
-        case EditionIsbnRow:
-            self.detailItem.isbn = textField.text;
+        case PublisherStreetRow:
+            self.detailItem.street = textField.text;
             break;
-        case EditionPagesRow:
-            self.detailItem.pages = textField.text;
+        case PublisherStreet1Row:
+            self.detailItem.street1 = textField.text;
             break;
-        case EditionPrintRunRow:
-            self.detailItem.printRun = textField.text;
+        case PublisherCityRow:
+            self.detailItem.city = textField.text;
+            break;
+        case PublisherStateRow:
+            self.detailItem.state = textField.text;
+            break;
+        case PublisherPostalCodeRow:
+            self.detailItem.postalCode = textField.text;
+            break;
+        case PublisherCountryRow:
+            self.detailItem.country = textField.text;
             break;
         default:
             break;
@@ -143,33 +151,14 @@
     [self becomeFirstResponder];
 }
 
--(void) datePickerValueChanged:(id)sender
-{
-    UIDatePicker* datePicker = (UIDatePicker*)sender;
-    
-    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    [formatter setTimeStyle:NSDateFormatterNoStyle];
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    
-    switch (datePicker.tag)
-    {
-        case EditionReleaseDateRow:
-            self.detailItem.releaseDate = datePicker.date;
-            releaseDateTextField.text = [formatter stringFromDate:datePicker.date];
-            break;
-        default:
-            break;
-    }
-}
-
 -(IBAction) cancel:(id)sender
 {
-    [self.delegate newEditionViewController:self didFinishWithSave:NO];
+    [self.delegate newPublisherViewController:self didFinishWithSave:NO];
 }
 
 -(IBAction) save:(id)sender
 {
-    [self.delegate newEditionViewController:self didFinishWithSave:YES];
+    [self.delegate newPublisherViewController:self didFinishWithSave:YES];
 }
 
 #pragma mark - Table view data source
@@ -181,17 +170,12 @@
 
 -(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return EditionDataSectionRowCount;
+    return PublisherDataSectionRowCount;
 }
 
 -(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
-    
-    // Create the date picker to use for the Born and Died fields.
-    UIDatePicker* datePicker = [[UIDatePicker alloc] init];
-    datePicker.datePickerMode = UIDatePickerModeDate;
-    [datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
     
     if(cell == nil)
     {
@@ -203,32 +187,37 @@
     
     switch (indexPath.row)
     {
-        case EditionNameRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Name", @"NewEditionViewController name data field label.");
-            cell.textField.tag = EditionNameRow;
+        case PublisherNameRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Name", @"NewPublisherViewController name data field label.");
+            cell.textField.tag = PublisherNameRow;
             break;
-        case EditionFormatRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Format", @"NewEditionViewController format data field label.");
-            cell.textField.tag = EditionFormatRow;
+        case PublisherParentRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Parent", @"NewPublisherViewController parent data field label.");
+            cell.textField.tag = PublisherParentRow;
             break;
-        case EditionIsbnRow:
-            cell.fieldLabel.text = NSLocalizedString(@"ISBN", @"NewEditionViewController isbn data field label.");
-            cell.textField.tag = EditionIsbnRow;
+        case PublisherStreetRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Street", @"NewPublisherViewController street data field label.");
+            cell.textField.tag = PublisherStreetRow;
             break;
-        case EditionPagesRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Pages", @"NewEditionViewController pages data field label.");
-            cell.textField.tag = EditionPagesRow;
+        case PublisherStreet1Row:
+            cell.fieldLabel.text = NSLocalizedString(@"Street", @"NewPublisherViewController street data field label.");
+            cell.textField.tag = PublisherStreet1Row;
             break;
-        case EditionPrintRunRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Print Run", @"NewEditionViewController printRun data field label.");
-            cell.textField.tag = EditionPrintRunRow;
+        case PublisherCityRow:
+            cell.fieldLabel.text = NSLocalizedString(@"City", @"NewPublisherViewController city data field label.");
+            cell.textField.tag = PublisherCityRow;
             break;
-        case EditionReleaseDateRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Released", @"NewEditionViewController releaseDate data field label.");
-            releaseDateTextField = cell.textField;
-            cell.textField.tag = EditionReleaseDateRow;
-            datePicker.tag = EditionReleaseDateRow;
-            cell.textField.inputView = datePicker;
+        case PublisherStateRow:
+            cell.fieldLabel.text = NSLocalizedString(@"State", @"NewPublisherViewController state data field label.");
+            cell.textField.tag = PublisherStateRow;
+            break;
+        case PublisherPostalCodeRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Postal Code", @"NewPublisherViewController postalCode data field label.");
+            cell.textField.tag = PublisherPostalCodeRow;
+            break;
+        case PublisherCountryRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Country", @"NewPublisherViewController country data field label.");
+            cell.textField.tag = PublisherCountryRow;
             break;
         default:
             break;

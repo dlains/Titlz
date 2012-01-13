@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PublisherViewController.h"
 
 @class Edition;
 
-@interface EditionDetailViewController : UITableViewController
+@interface EditionDetailViewController : UITableViewController <PublisherSelectedDelegate>
 {
     UITextField* releaseDateTextField;
 }

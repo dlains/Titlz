@@ -14,8 +14,7 @@
 
 @dynamic name;
 @dynamic format;
-@dynamic isbn10;
-@dynamic isbn13;
+@dynamic isbn;
 @dynamic pages;
 @dynamic printRun;
 @dynamic releaseDate;

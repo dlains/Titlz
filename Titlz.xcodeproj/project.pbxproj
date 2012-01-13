@@ -29,6 +29,11 @@
 		55A99EB214A949FA00836F4E /* TitleDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A99EB114A949FA00836F4E /* TitleDetailViewController.m */; };
 		55A99EB514A949FA00836F4E /* TitleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55A99EB314A949FA00836F4E /* TitleViewController.xib */; };
 		55A99EB814A949FA00836F4E /* TitleDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55A99EB614A949FA00836F4E /* TitleDetailViewController.xib */; };
+		55C123E514C0AB1700827F61 /* PublisherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C123E314C0AB1700827F61 /* PublisherViewController.m */; };
+		55C123E614C0AB1700827F61 /* PublisherViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55C123E414C0AB1700827F61 /* PublisherViewController.xib */; };
+		55C123EA14C0B29D00827F61 /* PublisherDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C123E814C0B29D00827F61 /* PublisherDetailViewController.m */; };
+		55C123EB14C0B29D00827F61 /* PublisherDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55C123E914C0B29D00827F61 /* PublisherDetailViewController.xib */; };
+		55C123EE14C0B2DD00827F61 /* NewPublisherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C123ED14C0B2DD00827F61 /* NewPublisherViewController.m */; };
 		55C6968C14B2D23B00DA4172 /* NewTitleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C6968A14B2D23B00DA4172 /* NewTitleViewController.m */; };
 		55D4A74C14B55BED00BAA15E /* PersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D4A74A14B55BED00BAA15E /* PersonViewController.m */; };
 		55D4A74D14B55BED00BAA15E /* PersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55D4A74B14B55BED00BAA15E /* PersonViewController.xib */; };
@@ -77,6 +82,14 @@
 		55A99EB114A949FA00836F4E /* TitleDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TitleDetailViewController.m; sourceTree = "<group>"; };
 		55A99EB414A949FA00836F4E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TitleViewController.xib; sourceTree = "<group>"; };
 		55A99EB714A949FA00836F4E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TitleDetailViewController.xib; sourceTree = "<group>"; };
+		55C123E214C0AB1700827F61 /* PublisherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublisherViewController.h; sourceTree = "<group>"; };
+		55C123E314C0AB1700827F61 /* PublisherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublisherViewController.m; sourceTree = "<group>"; };
+		55C123E414C0AB1700827F61 /* PublisherViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PublisherViewController.xib; sourceTree = "<group>"; };
+		55C123E714C0B29D00827F61 /* PublisherDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublisherDetailViewController.h; sourceTree = "<group>"; };
+		55C123E814C0B29D00827F61 /* PublisherDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublisherDetailViewController.m; sourceTree = "<group>"; };
+		55C123E914C0B29D00827F61 /* PublisherDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PublisherDetailViewController.xib; sourceTree = "<group>"; };
+		55C123EC14C0B2DD00827F61 /* NewPublisherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPublisherViewController.h; sourceTree = "<group>"; };
+		55C123ED14C0B2DD00827F61 /* NewPublisherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewPublisherViewController.m; sourceTree = "<group>"; };
 		55C6968914B2D23B00DA4172 /* NewTitleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewTitleViewController.h; sourceTree = "<group>"; };
 		55C6968A14B2D23B00DA4172 /* NewTitleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewTitleViewController.m; sourceTree = "<group>"; };
 		55D4A74914B55BED00BAA15E /* PersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonViewController.h; sourceTree = "<group>"; };
@@ -195,6 +208,7 @@
 				55C6968F14B2D25F00DA4172 /* Title */,
 				558F6AE614BE51CE00DD1965 /* Edition */,
 				55D4A74814B51C2700BAA15E /* Person */,
+				55C123E014C0AAD300827F61 /* Publisher */,
 				55EB3C3B14B0CC1300721D42 /* DLog.h */,
 				55EB3C3C14B0CC1300721D42 /* DLog.m */,
 				5591513A14BF9F6F00F1C01E /* Definitions.h */,
@@ -214,6 +228,8 @@
 				558F6AEF14BE526400DD1965 /* EditionDetailViewController.xib */,
 				55D4A74B14B55BED00BAA15E /* PersonViewController.xib */,
 				55EB3C4114B13D1D00721D42 /* PersonDetailViewController.xib */,
+				55C123E414C0AB1700827F61 /* PublisherViewController.xib */,
+				55C123E914C0B29D00827F61 /* PublisherDetailViewController.xib */,
 				552C741714AE8EBB00595DE9 /* EditableTextCell.xib */,
 			);
 			name = Views;
@@ -225,6 +241,19 @@
 				55A99EAA14A949FA00836F4E /* Titlz.xcdatamodeld */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		55C123E014C0AAD300827F61 /* Publisher */ = {
+			isa = PBXGroup;
+			children = (
+				55C123E214C0AB1700827F61 /* PublisherViewController.h */,
+				55C123E314C0AB1700827F61 /* PublisherViewController.m */,
+				55C123E714C0B29D00827F61 /* PublisherDetailViewController.h */,
+				55C123E814C0B29D00827F61 /* PublisherDetailViewController.m */,
+				55C123EC14C0B2DD00827F61 /* NewPublisherViewController.h */,
+				55C123ED14C0B2DD00827F61 /* NewPublisherViewController.m */,
+			);
+			name = Publisher;
 			sourceTree = "<group>";
 		};
 		55C6968F14B2D25F00DA4172 /* Title */ = {
@@ -311,6 +340,8 @@
 				55EB3C4314B13D1D00721D42 /* PersonDetailViewController.xib in Resources */,
 				55D4A74D14B55BED00BAA15E /* PersonViewController.xib in Resources */,
 				558F6AF114BE526400DD1965 /* EditionDetailViewController.xib in Resources */,
+				55C123E614C0AB1700827F61 /* PublisherViewController.xib in Resources */,
+				55C123EB14C0B29D00827F61 /* PublisherDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +371,9 @@
 				5591512F14BF5B2900F1C01E /* Publisher.m in Sources */,
 				5591513614BF5F2800F1C01E /* DLPoint.m in Sources */,
 				5591513914BF60C000F1C01E /* Book.m in Sources */,
+				55C123E514C0AB1700827F61 /* PublisherViewController.m in Sources */,
+				55C123EA14C0B29D00827F61 /* PublisherDetailViewController.m in Sources */,
+				55C123EE14C0B2DD00827F61 /* NewPublisherViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

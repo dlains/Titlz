@@ -27,14 +27,13 @@
     </entity>
     <entity name="Edition" representedClassName="Edition" syncable="YES">
         <attribute name="format" attributeType="String" syncable="YES"/>
-        <attribute name="isbn10" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="isbn13" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isbn" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="pages" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="printRun" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="releaseDate" optional="YES" attributeType="Date" syncable="YES"/>
-        <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="edition" inverseEntity="Book" syncable="YES"/>
-        <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Point" inverseName="edition" inverseEntity="Point" syncable="YES"/>
+        <relationship name="books" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Book" inverseName="edition" inverseEntity="Book" syncable="YES"/>
+        <relationship name="points" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Point" inverseName="edition" inverseEntity="Point" syncable="YES"/>
         <relationship name="publisher" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Publisher" inverseName="editions" inverseEntity="Publisher" syncable="YES"/>
         <relationship name="title" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Title" inverseName="editions" inverseEntity="Title" syncable="YES"/>
     </entity>
@@ -58,14 +57,14 @@
         <relationship name="edition" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Edition" inverseName="points" inverseEntity="Edition" syncable="YES"/>
     </entity>
     <entity name="Publisher" representedClassName="Publisher" syncable="YES">
-        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="address1" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
-        <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parent" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="postalCode" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="zip" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="street" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="street1" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="editions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Edition" inverseName="publisher" inverseEntity="Edition" syncable="YES"/>
     </entity>
     <entity name="Seller" syncable="YES">
@@ -101,7 +100,7 @@
         <element name="Award" positionX="-8937" positionY="-7893" width="128" height="105"/>
         <element name="Book" positionX="-8973" positionY="-7746" width="137" height="225"/>
         <element name="Collection" positionX="-8964" positionY="-7434" width="128" height="75"/>
-        <element name="Edition" positionX="-8669" positionY="-7218" width="128" height="210"/>
+        <element name="Edition" positionX="-8669" positionY="-7218" width="128" height="195"/>
         <element name="Person" positionX="-8244" positionY="-7524" width="128" height="225"/>
         <element name="Point" positionX="-8417" positionY="-7047" width="128" height="90"/>
         <element name="Publisher" positionX="-8417" positionY="-7263" width="128" height="180"/>

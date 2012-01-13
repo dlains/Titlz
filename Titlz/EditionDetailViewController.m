@@ -7,6 +7,7 @@
 //
 
 #import "EditionDetailViewController.h"
+#import "PublisherDetailViewController.h"
 #import "EditableTextCell.h"
 #import "Edition.h"
 #import "Publisher.h"
@@ -19,6 +20,9 @@
 -(UITableViewCell*) configurePointsCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureBooksCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection;
+-(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
+-(void) loadPublisherView;
+-(void) loadPublisherDetailViewForPublisher:(Publisher*)publisher;
 @end
 
 @implementation EditionDetailViewController
@@ -165,11 +169,14 @@
         case EditionFormatRow:
             self.detailItem.format = textField.text;
             break;
-        case EditionIsbn10Row:
-            self.detailItem.isbn10 = textField.text;
+        case EditionIsbnRow:
+            self.detailItem.isbn = textField.text;
             break;
-        case EditionIsbn13Row:
-            self.detailItem.isbn13 = textField.text;
+        case EditionPagesRow:
+            self.detailItem.pages = textField.text;
+            break;
+        case EditionPrintRunRow:
+            self.detailItem.printRun = textField.text;
             break;
         default:
             break;
@@ -320,12 +327,17 @@
 
 -(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
+    NSInteger publisherInsertionRow = (self.detailItem.publisher != nil) ? 1 : 0;
+    
     switch (indexPath.section)
     {
         case EditionDataSection:
             break;
         case EditionPublisherSection:
-            // [self loadPublisherDetailViewForPublisher:self.detailItem.publisher];
+            if (indexPath.row == publisherInsertionRow)
+                [self loadPublisherView];
+            else
+                [self loadPublisherDetailViewForPublisher:self.detailItem.publisher];
             break;
         case EditionPointsSection:
             //if (indexPath.row == self.detailItem.points.count)
@@ -347,8 +359,6 @@
 
 -(void) tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    // TODO: Finish this when the subviews are done.
-    /*
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
         switch (indexPath.section)
@@ -360,14 +370,14 @@
                 self.detailItem.publisher = nil;
                 [self deleteRowAtIndexPath:indexPath];
                 break;
-            case EditionPointsSection:
-                [self.detailItem removePointsObject:[self sortedPointFromSet:self.detailItem.points atIndexPath:indexPath]];
-                [self deleteRowAtIndexPath:indexPath];
-                break;
-            case EditionBooksSection:
-                [self.detailItem removeBooksObject:[self sortedBookFromSet:self.detailItem.books atIndexPath:indexPath]];
-                [self deleteRowAtIndexPath:indexPath];
-                break;
+//            case EditionPointsSection:
+//                [self.detailItem removePointsObject:[self sortedPointFromSet:self.detailItem.points atIndexPath:indexPath]];
+//                [self deleteRowAtIndexPath:indexPath];
+//                break;
+//            case EditionBooksSection:
+//                [self.detailItem removeBooksObject:[self sortedBookFromSet:self.detailItem.books atIndexPath:indexPath]];
+//                [self deleteRowAtIndexPath:indexPath];
+//                break;
             default:
                 break;
         }
@@ -383,7 +393,6 @@
             abort();
         }
     }   
-    */
 }
 
 // Section headers.
@@ -454,15 +463,10 @@
             cell.textField.text = self.detailItem.format;
             cell.textField.tag = EditionFormatRow;
             break;
-        case EditionIsbn10Row:
-            cell.fieldLabel.text = NSLocalizedString(@"ISBN-10", @"EditionDetailViewController isbn10 data field label.");
-            cell.textField.text = self.detailItem.isbn10;
-            cell.textField.tag = EditionIsbn10Row;
-            break;
-        case EditionIsbn13Row:
-            cell.fieldLabel.text = NSLocalizedString(@"ISBN-13", @"EditionDetailViewController isbn13 data field label.");
-            cell.textField.text = self.detailItem.isbn13;
-            cell.textField.tag = EditionIsbn13Row;
+        case EditionIsbnRow:
+            cell.fieldLabel.text = NSLocalizedString(@"ISBN", @"EditionDetailViewController isbn data field label.");
+            cell.textField.text = self.detailItem.isbn;
+            cell.textField.tag = EditionIsbnRow;
             break;
         case EditionPagesRow:
             cell.fieldLabel.text = NSLocalizedString(@"Pages", @"EditionDetailViewController pages data field label.");
@@ -505,11 +509,18 @@
     
     if (self.editing && indexPath.row == insertionRow)
     {
-        cell.textLabel.text = NSLocalizedString(@"Add Publisher...", @"EditionDetailViewController add Publisher insertion row text.");
+        if (indexPath.row == 0)
+        {
+            cell.textLabel.text = NSLocalizedString(@"Add Publisher...", @"EditionDetailViewController add Publisher insertion row text.");
+        }
+        else
+        {
+            cell.textLabel.text = NSLocalizedString(@"Replace Publisher...", @"EditionDetailViewController replace Publisher insertion row text.");
+        }
     }
     else
     {
-        //cell.textLabel.text = self.detailItem.publisher.name;
+        cell.textLabel.text = self.detailItem.publisher.name;
     }
     
     return cell;
@@ -560,6 +571,53 @@
     }
     
     return cell;
+}
+
+#pragma mark - Publisher Selection Delegate Method
+
+-(void) publisherViewController:(PublisherViewController *)controller didSelectPublisher:(Publisher *)publisher
+{
+    self.detailItem.publisher = publisher;
+    
+    NSError* error;
+    if (![self.detailItem.managedObjectContext save:&error])
+    {
+        // Update to handle the error appropriately.
+        DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        exit(-1);  // Fail
+    }
+    
+    [self.tableView reloadData];
+}
+
+#pragma mark - Local Helper Methods
+
+-(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    NSIndexPath* path = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section];
+    NSArray* paths = [NSArray arrayWithObjects:path, nil];
+    
+    [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
+}
+
+-(void) loadPublisherView
+{
+    PublisherViewController* publisherViewController = [[PublisherViewController alloc] initWithNibName:@"PublisherViewController" bundle:nil];
+    publisherViewController.delegate = self;
+    publisherViewController.managedObjectContext = self.detailItem.managedObjectContext;
+    publisherViewController.selectionMode = TRUE;
+    
+    [self.navigationController pushViewController:publisherViewController animated:YES];
+}
+
+-(void) loadPublisherDetailViewForPublisher:(Publisher*)publisher
+{
+    if (publisher)
+    {
+        PublisherDetailViewController* publisherDetailViewController = [[PublisherDetailViewController alloc] initWithNibName:@"PublisherDetailViewController" bundle:nil];
+        publisherDetailViewController.detailItem = publisher;
+        [self.navigationController pushViewController:publisherDetailViewController animated:YES];
+    }
 }
 
 @end

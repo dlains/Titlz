@@ -10,19 +10,19 @@
 #import <CoreData/CoreData.h>
 
 @class Title;
+@class Publisher;
 
 @interface Edition : NSManagedObject
 
 @property (nonatomic, retain) NSString* name;
 @property (nonatomic, retain) NSString* format;
-@property (nonatomic, retain) NSString* isbn10;
-@property (nonatomic, retain) NSString* isbn13;
+@property (nonatomic, retain) NSString* isbn;
 @property (nonatomic, retain) NSString* pages;
 @property (nonatomic, retain) NSString* printRun;
 @property (nonatomic, retain) NSDate* releaseDate;
 @property (nonatomic, retain) NSSet* books;
 @property (nonatomic, retain) NSSet* points;
-@property (nonatomic, retain) NSManagedObject* publisher;
+@property (nonatomic, retain) Publisher* publisher;
 @property (nonatomic, retain) Title* title;
 
 +(id) editionInManagedObjectContext:(NSManagedObjectContext*)context;
