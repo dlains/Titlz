@@ -30,7 +30,7 @@
 {
     [super viewDidLoad];
 
-    self.title = @"New Title";
+    self.title = NSLocalizedString(@"New Title", @"NewTitleViewController header bar title.");
     
     UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancelButton;

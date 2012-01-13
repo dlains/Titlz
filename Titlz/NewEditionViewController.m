@@ -1,22 +1,23 @@
 //
-//  NewPersonViewController.m
+//  NewEditionViewController.m
 //  Titlz
 //
-//  Created by David Lains on 1/4/12.
+//  Created by David Lains on 1/11/12.
 //  Copyright (c) 2012 Dagger Lake Software. All rights reserved.
 //
 
-#import "NewPersonViewController.h"
+#import "NewEditionViewController.h"
+#import "EditionDetailViewController.h"
 #import "EditableTextCell.h"
-#import "Person.h"
+#import "Edition.h"
 
-@implementation NewPersonViewController
+@implementation NewEditionViewController
 
 @synthesize detailItem = _detailItem;
 @synthesize undoManager = _undoManager;
 @synthesize delegate = _delegate;
 
-- (void)didReceiveMemoryWarning
+-(void) didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -26,11 +27,11 @@
 
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad
+-(void) viewDidLoad
 {
     [super viewDidLoad];
-
-    self.title = NSLocalizedString(@"New Person", @"NewPersonViewController header bar title.");
+    
+    self.title = NSLocalizedString(@"New Edition", @"NewEditionViewController header bar title.");
     
     UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
@@ -43,33 +44,33 @@
 	self.editing = YES;
 }
 
-- (void)viewDidUnload
+-(void) viewDidUnload
 {
     [super viewDidUnload];
 	[self cleanUpUndoManager];	
 }
 
-- (void)viewWillAppear:(BOOL)animated
+-(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+-(void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
+-(void) viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+-(void) viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+-(BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -91,10 +92,10 @@
 	}
 	
 	// Register as an observer of the title's context's undo manager.
-	NSUndoManager* titleUndoManager = self.detailItem.managedObjectContext.undoManager;
+	NSUndoManager* editionUndoManager = self.detailItem.managedObjectContext.undoManager;
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidUndo:) name:NSUndoManagerDidUndoChangeNotification object:titleUndoManager];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidRedo:) name:NSUndoManagerDidRedoChangeNotification object:titleUndoManager];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidUndo:) name:NSUndoManagerDidUndoChangeNotification object:editionUndoManager];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidRedo:) name:NSUndoManagerDidRedoChangeNotification object:editionUndoManager];
 }
 
 -(void) cleanUpUndoManager
@@ -120,14 +121,23 @@
     
     switch (textField.tag)
     {
-        case 0:
-            self.detailItem.firstName = textField.text;
+        case EditionNameRow:
+            self.detailItem.name = textField.text;
             break;
-        case 1:
-            self.detailItem.middleName = textField.text;
+        case EditionFormatRow:
+            self.detailItem.format = textField.text;
             break;
-        case 2:
-            self.detailItem.lastName = textField.text;
+        case EditionIsbn10Row:
+            self.detailItem.isbn10 = textField.text;
+            break;
+        case EditionIsbn13Row:
+            self.detailItem.isbn13 = textField.text;
+            break;
+        case EditionPagesRow:
+            self.detailItem.pages = textField.text;
+            break;
+        case EditionPrintRunRow:
+            self.detailItem.printRun = textField.text;
             break;
         default:
             break;
@@ -139,20 +149,16 @@
 -(void) datePickerValueChanged:(id)sender
 {
     UIDatePicker* datePicker = (UIDatePicker*)sender;
-
+    
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
     [formatter setTimeStyle:NSDateFormatterNoStyle];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     
     switch (datePicker.tag)
     {
-        case 3:
-            self.detailItem.born = datePicker.date;
-            bornTextField.text = [formatter stringFromDate:datePicker.date];
-            break;
-        case 4:
-            self.detailItem.died = datePicker.date;
-            diedTextField.text = [formatter stringFromDate:datePicker.date];
+        case EditionReleaseDateRow:
+            self.detailItem.releaseDate = datePicker.date;
+            releaseDateTextField.text = [formatter stringFromDate:datePicker.date];
             break;
         default:
             break;
@@ -161,35 +167,35 @@
 
 -(IBAction) cancel:(id)sender
 {
-    [self.delegate newPersonViewController:self didFinishWithSave:NO];
+    [self.delegate newEditionViewController:self didFinishWithSave:NO];
 }
 
 -(IBAction) save:(id)sender
 {
-    [self.delegate newPersonViewController:self didFinishWithSave:YES];
+    [self.delegate newEditionViewController:self didFinishWithSave:YES];
 }
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+-(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
 {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+-(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return PersonDataSectionRowCount;
+    return EditionDataSectionRowCount;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+-(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
-
+    
     // Create the date picker to use for the Born and Died fields.
     UIDatePicker* datePicker = [[UIDatePicker alloc] init];
     datePicker.datePickerMode = UIDatePickerModeDate;
     [datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
-
+    
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
@@ -200,31 +206,38 @@
     
     switch (indexPath.row)
     {
-        case PersonFirstNameRow:
-            cell.fieldLabel.text = NSLocalizedString(@"First", @"NewPersonViewController firstName data field label.");
-            cell.textField.tag = PersonFirstNameRow;
+        case EditionNameRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Name", @"NewEditionViewController name data field label.");
+            cell.textField.tag = EditionNameRow;
             break;
-        case PersonMiddleNameRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Middle", @"NewPersonViewController middleName data field label.");
-            cell.textField.tag = PersonMiddleNameRow;
+        case EditionFormatRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Format", @"NewEditionViewController format data field label.");
+            cell.textField.tag = EditionFormatRow;
             break;
-        case PersonLastNameRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Last", @"NewPersonViewController lastName data field label.");
-            cell.textField.tag = PersonLastNameRow;
+        case EditionIsbn10Row:
+            cell.fieldLabel.text = NSLocalizedString(@"ISBN 10", @"NewEditionViewController isbn10 data field label.");
+            cell.textField.tag = EditionIsbn10Row;
             break;
-        case PersonBornRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Born", @"NewPersonViewController born data field label.");
-            bornTextField = cell.textField;
-            cell.textField.tag = PersonBornRow;
-            datePicker.tag = PersonBornRow;
+        case EditionIsbn13Row:
+            cell.fieldLabel.text = NSLocalizedString(@"ISBN 13", @"NewEditionViewController isbn13 data field label.");
+            cell.textField.tag = EditionIsbn13Row;
+            break;
+        case EditionPagesRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Pages", @"NewEditionViewController pages data field label.");
+            cell.textField.tag = EditionPagesRow;
+            break;
+        case EditionPrintRunRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Print Run", @"NewEditionViewController printRun data field label.");
+            cell.textField.tag = EditionPrintRunRow;
+            break;
+        case EditionReleaseDateRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Released", @"NewEditionViewController releaseDate data field label.");
+            releaseDateTextField = cell.textField;
+            cell.textField.tag = EditionReleaseDateRow;
+            datePicker.tag = EditionReleaseDateRow;
             cell.textField.inputView = datePicker;
             break;
-        case PersonDiedRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Died", @"NewPersonViewController died data field label.");
-            diedTextField = cell.textField;
-            cell.textField.tag = PersonDiedRow;
-            datePicker.tag = PersonDiedRow;
-            cell.textField.inputView = datePicker;
+        default:
             break;
     }
     return cell;

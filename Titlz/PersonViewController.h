@@ -11,15 +11,6 @@
 
 #import "NewPersonViewController.h"
 
-typedef enum PersonTypeEnum
-{
-    Author = 0,
-    Editor,
-    Illustrator,
-    Contributor,
-    Alias,
-} PersonType;
-
 @protocol PersonSelectedDelegate;
 
 @class PersonDetailViewController;

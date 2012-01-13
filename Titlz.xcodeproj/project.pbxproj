@@ -10,6 +10,13 @@
 		552C741814AE8EBB00595DE9 /* EditableTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552C741714AE8EBB00595DE9 /* EditableTextCell.xib */; };
 		552C741C14AE926600595DE9 /* EditableTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C741B14AE926600595DE9 /* EditableTextCell.m */; };
 		5562329F14AAF3680099765E /* Title.m in Sources */ = {isa = PBXBuildFile; fileRef = 5562329E14AAF3680099765E /* Title.m */; };
+		558F6AEB14BE521600DD1965 /* NewEditionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F6AE914BE521600DD1965 /* NewEditionViewController.m */; };
+		558F6AF014BE526400DD1965 /* EditionDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F6AEE14BE526400DD1965 /* EditionDetailViewController.m */; };
+		558F6AF114BE526400DD1965 /* EditionDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558F6AEF14BE526400DD1965 /* EditionDetailViewController.xib */; };
+		558F6AF414BE54AD00DD1965 /* Edition.m in Sources */ = {isa = PBXBuildFile; fileRef = 558F6AF314BE54AD00DD1965 /* Edition.m */; };
+		5591512F14BF5B2900F1C01E /* Publisher.m in Sources */ = {isa = PBXBuildFile; fileRef = 5591512E14BF5B2900F1C01E /* Publisher.m */; };
+		5591513614BF5F2800F1C01E /* DLPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 5591513514BF5F2800F1C01E /* DLPoint.m */; };
+		5591513914BF60C000F1C01E /* Book.m in Sources */ = {isa = PBXBuildFile; fileRef = 5591513814BF60C000F1C01E /* Book.m */; };
 		55A99E9714A949FA00836F4E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A99E9614A949FA00836F4E /* UIKit.framework */; };
 		55A99E9914A949FA00836F4E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A99E9814A949FA00836F4E /* Foundation.framework */; };
 		55A99E9B14A949FA00836F4E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A99E9A14A949FA00836F4E /* CoreGraphics.framework */; };
@@ -38,6 +45,20 @@
 		552C741B14AE926600595DE9 /* EditableTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditableTextCell.m; sourceTree = "<group>"; };
 		5562329D14AAF3680099765E /* Title.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Title.h; sourceTree = "<group>"; };
 		5562329E14AAF3680099765E /* Title.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Title.m; sourceTree = "<group>"; };
+		558F6AE814BE521600DD1965 /* NewEditionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewEditionViewController.h; sourceTree = "<group>"; };
+		558F6AE914BE521600DD1965 /* NewEditionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewEditionViewController.m; sourceTree = "<group>"; };
+		558F6AED14BE526400DD1965 /* EditionDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditionDetailViewController.h; sourceTree = "<group>"; };
+		558F6AEE14BE526400DD1965 /* EditionDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditionDetailViewController.m; sourceTree = "<group>"; };
+		558F6AEF14BE526400DD1965 /* EditionDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditionDetailViewController.xib; sourceTree = "<group>"; };
+		558F6AF214BE54AD00DD1965 /* Edition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Edition.h; sourceTree = "<group>"; };
+		558F6AF314BE54AD00DD1965 /* Edition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Edition.m; sourceTree = "<group>"; };
+		5591512D14BF5B2900F1C01E /* Publisher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Publisher.h; sourceTree = "<group>"; };
+		5591512E14BF5B2900F1C01E /* Publisher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Publisher.m; sourceTree = "<group>"; };
+		5591513414BF5F2800F1C01E /* DLPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLPoint.h; sourceTree = "<group>"; };
+		5591513514BF5F2800F1C01E /* DLPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLPoint.m; sourceTree = "<group>"; };
+		5591513714BF60C000F1C01E /* Book.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Book.h; sourceTree = "<group>"; };
+		5591513814BF60C000F1C01E /* Book.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Book.m; sourceTree = "<group>"; };
+		5591513A14BF9F6F00F1C01E /* Definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Definitions.h; sourceTree = "<group>"; };
 		55A99E9214A949FA00836F4E /* Titlz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Titlz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		55A99E9614A949FA00836F4E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		55A99E9814A949FA00836F4E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -90,12 +111,31 @@
 		5562329C14AAF1FA0099765E /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				5591513714BF60C000F1C01E /* Book.h */,
+				5591513814BF60C000F1C01E /* Book.m */,
+				5591513414BF5F2800F1C01E /* DLPoint.h */,
+				5591513514BF5F2800F1C01E /* DLPoint.m */,
 				5562329D14AAF3680099765E /* Title.h */,
 				5562329E14AAF3680099765E /* Title.m */,
+				558F6AF214BE54AD00DD1965 /* Edition.h */,
+				558F6AF314BE54AD00DD1965 /* Edition.m */,
 				55EB3C4414B13E5600721D42 /* Person.h */,
 				55EB3C4514B13E5600721D42 /* Person.m */,
+				5591512D14BF5B2900F1C01E /* Publisher.h */,
+				5591512E14BF5B2900F1C01E /* Publisher.m */,
 			);
 			name = Entities;
+			sourceTree = "<group>";
+		};
+		558F6AE614BE51CE00DD1965 /* Edition */ = {
+			isa = PBXGroup;
+			children = (
+				558F6AED14BE526400DD1965 /* EditionDetailViewController.h */,
+				558F6AEE14BE526400DD1965 /* EditionDetailViewController.m */,
+				558F6AE814BE521600DD1965 /* NewEditionViewController.h */,
+				558F6AE914BE521600DD1965 /* NewEditionViewController.m */,
+			);
+			name = Edition;
 			sourceTree = "<group>";
 		};
 		55A99E8714A949FA00836F4E = {
@@ -153,9 +193,11 @@
 			isa = PBXGroup;
 			children = (
 				55C6968F14B2D25F00DA4172 /* Title */,
+				558F6AE614BE51CE00DD1965 /* Edition */,
 				55D4A74814B51C2700BAA15E /* Person */,
 				55EB3C3B14B0CC1300721D42 /* DLog.h */,
 				55EB3C3C14B0CC1300721D42 /* DLog.m */,
+				5591513A14BF9F6F00F1C01E /* Definitions.h */,
 				55A99EA714A949FA00836F4E /* AppDelegate.h */,
 				55A99EA814A949FA00836F4E /* AppDelegate.m */,
 				552C741A14AE926600595DE9 /* EditableTextCell.h */,
@@ -169,6 +211,7 @@
 			children = (
 				55A99EB314A949FA00836F4E /* TitleViewController.xib */,
 				55A99EB614A949FA00836F4E /* TitleDetailViewController.xib */,
+				558F6AEF14BE526400DD1965 /* EditionDetailViewController.xib */,
 				55D4A74B14B55BED00BAA15E /* PersonViewController.xib */,
 				55EB3C4114B13D1D00721D42 /* PersonDetailViewController.xib */,
 				552C741714AE8EBB00595DE9 /* EditableTextCell.xib */,
@@ -267,6 +310,7 @@
 				552C741814AE8EBB00595DE9 /* EditableTextCell.xib in Resources */,
 				55EB3C4314B13D1D00721D42 /* PersonDetailViewController.xib in Resources */,
 				55D4A74D14B55BED00BAA15E /* PersonViewController.xib in Resources */,
+				558F6AF114BE526400DD1965 /* EditionDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,6 +334,12 @@
 				55C6968C14B2D23B00DA4172 /* NewTitleViewController.m in Sources */,
 				55D4A74C14B55BED00BAA15E /* PersonViewController.m in Sources */,
 				55D4A75014B55CE700BAA15E /* NewPersonViewController.m in Sources */,
+				558F6AEB14BE521600DD1965 /* NewEditionViewController.m in Sources */,
+				558F6AF014BE526400DD1965 /* EditionDetailViewController.m in Sources */,
+				558F6AF414BE54AD00DD1965 /* Edition.m in Sources */,
+				5591512F14BF5B2900F1C01E /* Publisher.m in Sources */,
+				5591513614BF5F2800F1C01E /* DLPoint.m in Sources */,
+				5591513914BF60C000F1C01E /* Book.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

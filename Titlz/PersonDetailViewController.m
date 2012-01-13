@@ -174,13 +174,13 @@
 {
     switch (textField.tag)
     {
-        case FirstNameRow:
+        case PersonFirstNameRow:
             self.detailItem.firstName = textField.text;
             break;
-        case MiddleNameRow:
+        case PersonMiddleNameRow:
             self.detailItem.middleName = textField.text;
             break;
-        case LastNameRow:
+        case PersonLastNameRow:
             self.detailItem.lastName = textField.text;
             break;
         default:
@@ -200,11 +200,11 @@
     
     switch (datePicker.tag)
     {
-        case BornRow:
+        case PersonBornRow:
             self.detailItem.born = datePicker.date;
             bornTextField.text = [formatter stringFromDate:datePicker.date];
             break;
-        case DiedRow:
+        case PersonDiedRow:
             self.detailItem.died = datePicker.date;
             diedTextField.text = [formatter stringFromDate:datePicker.date];
             break;
@@ -222,11 +222,11 @@
 	// Hide the back button when editing starts, and show it again when editing finishes.
     [self.navigationItem setHidesBackButton:editing animated:animated];
 
-    NSIndexPath* alias         = [NSIndexPath indexPathForRow:self.detailItem.aliases.count inSection:AliasSection];
-    NSIndexPath* authored      = [NSIndexPath indexPathForRow:self.detailItem.authored.count inSection:AuthoredSection];
-    NSIndexPath* edited        = [NSIndexPath indexPathForRow:self.detailItem.edited.count inSection:EditedSection];
-    NSIndexPath* illustrated   = [NSIndexPath indexPathForRow:self.detailItem.illustrated.count inSection:IllustratedSection];
-    NSIndexPath* contributed   = [NSIndexPath indexPathForRow:self.detailItem.contributed.count inSection:ContributedSection];
+    NSIndexPath* alias         = [NSIndexPath indexPathForRow:self.detailItem.aliases.count inSection:PersonAliasSection];
+    NSIndexPath* authored      = [NSIndexPath indexPathForRow:self.detailItem.authored.count inSection:PersonAuthoredSection];
+    NSIndexPath* edited        = [NSIndexPath indexPathForRow:self.detailItem.edited.count inSection:PersonEditedSection];
+    NSIndexPath* illustrated   = [NSIndexPath indexPathForRow:self.detailItem.illustrated.count inSection:PersonIllustratedSection];
+    NSIndexPath* contributed   = [NSIndexPath indexPathForRow:self.detailItem.contributed.count inSection:PersonContributedSection];
         
     NSArray* paths = [NSArray arrayWithObjects:alias, authored, edited, illustrated, contributed, nil];
         
@@ -266,19 +266,19 @@
     
     switch (section)
     {
-        case DataSection:
+        case PersonDataSection:
             return 5;
-        case AliasSection:
+        case PersonAliasSection:
             return self.detailItem.aliases.count + insertionRow;
-        case AliasOfSection:
+        case PersonAliasOfSection:
             return (self.detailItem.aliasOf) ? 1 : 0;
-        case AuthoredSection:
+        case PersonAuthoredSection:
             return self.detailItem.authored.count + insertionRow;
-        case EditedSection:
+        case PersonEditedSection:
             return self.detailItem.edited.count + insertionRow;
-        case IllustratedSection:
+        case PersonIllustratedSection:
             return self.detailItem.illustrated.count + insertionRow;
-        case ContributedSection:
+        case PersonContributedSection:
             return self.detailItem.contributed.count + insertionRow;
         default:
             return 0;
@@ -291,25 +291,25 @@
     
     switch (indexPath.section)
     {
-        case DataSection:
+        case PersonDataSection:
             cell = [self configureDataCellForRow:indexPath.row];
             break;
-        case AliasSection:
+        case PersonAliasSection:
             cell = [self configureAliasCellAtIndexPath:indexPath];
             break;
-        case AliasOfSection:
+        case PersonAliasOfSection:
             cell = [self configureAliasOfCell];
             break;
-        case AuthoredSection:
+        case PersonAuthoredSection:
             cell = [self configureAuthoredCellAtIndexPath:indexPath];
             break;
-        case EditedSection:
+        case PersonEditedSection:
             cell = [self configureEditedCellAtIndexPath:indexPath];
             break;
-        case IllustratedSection:
+        case PersonIllustratedSection:
             cell = [self configureIllustratedCellAtIndexPath:indexPath];
             break;
-        case ContributedSection:
+        case PersonContributedSection:
             cell = [self configureContributedCellAtIndexPath:indexPath];
             break;
         default:
@@ -325,19 +325,19 @@
 {
     switch (indexPath.section)
     {
-        case DataSection:
+        case PersonDataSection:
             return UITableViewCellEditingStyleNone;
-        case AliasSection:
+        case PersonAliasSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.aliases];
-        case AliasOfSection:
+        case PersonAliasOfSection:
             return UITableViewCellEditingStyleNone;
-        case AuthoredSection:
+        case PersonAuthoredSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.authored];
-        case EditedSection:
+        case PersonEditedSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.edited];
-        case IllustratedSection:
+        case PersonIllustratedSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.illustrated];
-        case ContributedSection:
+        case PersonContributedSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.contributed];
         default:
             DLog(@"Invalid PersonDetailViewController section found: %i.", indexPath.section);
@@ -369,36 +369,36 @@
 {
     switch (indexPath.section)
     {
-        case DataSection:
+        case PersonDataSection:
             break;
-        case AliasSection:
+        case PersonAliasSection:
             if (indexPath.row == self.detailItem.aliases.count)
                 [self loadPersonViewForPersonType:Alias];
             else
                 [self loadPersonDetailViewForPersonType:Alias atIndexPath:indexPath];
             break;
-        case AliasOfSection:
+        case PersonAliasOfSection:
             [self loadPersonDetailViewForPerson:self.detailItem.aliasOf];
             break;
-        case AuthoredSection:
+        case PersonAuthoredSection:
             if (indexPath.row == self.detailItem.authored.count)
                 [self loadTitleViewForPersonType:Author];
             else
                 [self loadTitleDetailViewForPersonType:Author atIndexPath:indexPath];
             break;
-        case EditedSection:
+        case PersonEditedSection:
             if (indexPath.row == self.detailItem.edited.count)
                 [self loadTitleViewForPersonType:Editor];
             else
                 [self loadTitleDetailViewForPersonType:Editor atIndexPath:indexPath];
             break;
-        case IllustratedSection:
+        case PersonIllustratedSection:
             if (indexPath.row == self.detailItem.illustrated.count)
                 [self loadTitleViewForPersonType:Illustrator];
             else
                 [self loadTitleDetailViewForPersonType:Illustrator atIndexPath:indexPath];
             break;
-        case ContributedSection:
+        case PersonContributedSection:
             if (indexPath.row == self.detailItem.contributed.count)
                 [self loadTitleViewForPersonType:Contributor];
             else
@@ -416,28 +416,28 @@
     {
         switch (indexPath.section)
         {
-            case DataSection:
+            case PersonDataSection:
                 // Never delete the data section rows.
                 break;
-            case AliasSection:
+            case PersonAliasSection:
                 [self.detailItem removeAliasesObject:[self sortedPersonFromSet:self.detailItem.aliases atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
-            case AliasOfSection:
+            case PersonAliasOfSection:
                 break;
-            case AuthoredSection:
+            case PersonAuthoredSection:
                 [self.detailItem removeAuthoredObject:[self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
-            case EditedSection:
+            case PersonEditedSection:
                 [self.detailItem removeEditedObject:[self sortedTitleFromSet:self.detailItem.edited atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
-            case IllustratedSection:
+            case PersonIllustratedSection:
                 [self.detailItem removeIllustratedObject:[self sortedTitleFromSet:self.detailItem.illustrated atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
-            case ContributedSection:
+            case PersonContributedSection:
                 [self.detailItem removeContributedObject:[self sortedTitleFromSet:self.detailItem.contributed atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
@@ -467,39 +467,39 @@
     
     switch (section)
     {
-        case DataSection:
+        case PersonDataSection:
             break;
-        case AliasSection:
+        case PersonAliasSection:
             if (self.detailItem.aliases.count > 0 || self.editing)
             {
                 header = NSLocalizedString(@"Aliases", @"PersonDetailViewController Alias section header.");
             }
             break;
-        case AliasOfSection:
+        case PersonAliasOfSection:
             if (self.detailItem.aliasOf)
             {
                 header = NSLocalizedString(@"Alias Of", @"PersonDetailViewController Alias Of section header.");
             }
             break;
-        case AuthoredSection:
+        case PersonAuthoredSection:
             if (self.detailItem.authored.count > 0 || self.editing)
             {
                 header = NSLocalizedString(@"Authored", @"PersonDetailViewController Authored section header.");
             }
             break;
-        case EditedSection:
+        case PersonEditedSection:
             if (self.detailItem.edited.count > 0 || self.editing)
             {
                 header = NSLocalizedString(@"Edited", @"PersonDetailViewController Edited Of section header.");
             }
             break;
-        case IllustratedSection:
+        case PersonIllustratedSection:
             if (self.detailItem.illustrated.count > 0 || self.editing)
             {
                 header = NSLocalizedString(@"Illustrated", @"PersonDetailViewController Illustrated section header.");
             }
             break;
-        case ContributedSection:
+        case PersonContributedSection:
             if (self.detailItem.contributed.count > 0 || self.editing)
             {
                 header = NSLocalizedString(@"Contributed", @"PersonDetailViewController Contributed Of section header.");
@@ -536,34 +536,34 @@
     
     switch (row)
     {
-        case FirstNameRow:
+        case PersonFirstNameRow:
             cell.fieldLabel.text = NSLocalizedString(@"First", @"PersonDetailViewController firstName data field label.");
             cell.textField.text = self.detailItem.firstName;
-            cell.textField.tag = FirstNameRow;
+            cell.textField.tag = PersonFirstNameRow;
             break;
-        case MiddleNameRow:
+        case PersonMiddleNameRow:
             cell.fieldLabel.text = NSLocalizedString(@"Middle", @"PersonDetailViewController middleName data field label.");
             cell.textField.text = self.detailItem.middleName;
-            cell.textField.tag = MiddleNameRow;
+            cell.textField.tag = PersonMiddleNameRow;
             break;
-        case LastNameRow:
+        case PersonLastNameRow:
             cell.fieldLabel.text = NSLocalizedString(@"Last", @"PersonDetailViewController lastName data field label.");
             cell.textField.text = self.detailItem.lastName;
-            cell.textField.tag = LastNameRow;
+            cell.textField.tag = PersonLastNameRow;
             break;
-        case BornRow:
+        case PersonBornRow:
             cell.fieldLabel.text = NSLocalizedString(@"Born", @"PersonDetailViewController born data field label.");
             bornTextField = cell.textField;
-            cell.textField.tag = 3;
-            datePicker.tag = 3;
+            cell.textField.tag = PersonBornRow;
+            datePicker.tag = PersonBornRow;
             cell.textField.inputView = datePicker;
             cell.textField.text = [formatter stringFromDate:self.detailItem.born];
             break;
-        case DiedRow:
+        case PersonDiedRow:
             cell.fieldLabel.text = NSLocalizedString(@"Died", @"PersonDetailViewController died data field label.");
             diedTextField = cell.textField;
-            cell.textField.tag = 4;
-            datePicker.tag = 4;
+            cell.textField.tag = PersonDiedRow;
+            datePicker.tag = PersonDiedRow;
             cell.textField.inputView = datePicker;
             cell.textField.text = [formatter stringFromDate:self.detailItem.died];
             break;

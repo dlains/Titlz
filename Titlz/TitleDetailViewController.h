@@ -8,23 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "PersonViewController.h"
+#import "NewEditionViewController.h"
 
 @class Title;
 
-enum TitleDetailSections
-{
-    NameSection = 0,
-    EditionSection,
-    AuthorSection,
-    EditorSection,
-    IllustratorSection,
-    ContributorSection,
-    BookSection,
-    CollectionSection,
-    TitleDetailSectionCount
-};
-
-@interface TitleDetailViewController : UITableViewController <PersonSelectedDelegate>
+@interface TitleDetailViewController : UITableViewController <PersonSelectedDelegate, NewEditionDelegate>
 
 @property(nonatomic, strong) Title* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;

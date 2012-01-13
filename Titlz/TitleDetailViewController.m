@@ -9,13 +9,15 @@
 #import "TitleDetailViewController.h"
 #import "PersonViewController.h"
 #import "PersonDetailViewController.h"
+#import "EditionDetailViewController.h"
 #import "EditableTextCell.h"
 #import "Title.h"
 #import "Person.h"
+#import "Edition.h"
 
 @interface TitleDetailViewController ()
 -(UITableViewCell*) configureNameCell;
--(UITableViewCell*) configureEditionCell;
+-(UITableViewCell*) configureEditionCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureAuthorCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureEditorCellAtIndexPath:(NSIndexPath *)indexPath;
 -(UITableViewCell*) configureIllustratorCellAtIndexPath:(NSIndexPath *)indexPath;
@@ -24,9 +26,12 @@
 -(UITableViewCell*) configureCollectionCell;
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection;
 -(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(Edition*) sortedEditionFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
 -(void) loadPersonViewControllerForPersonType:(PersonType)type;
 -(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
+-(void) loadNewEditionView;
+-(void) loadEditionDetailViewForEditionAtIndexPath:(NSIndexPath*)indexPath;
 @end
 
 @implementation TitleDetailViewController
@@ -208,13 +213,13 @@
 	// Hide the back button when editing starts, and show it again when editing finishes.
     [self.navigationItem setHidesBackButton:editing animated:animated];
 
-    NSIndexPath* edition     = [NSIndexPath indexPathForRow:self.detailItem.editions.count inSection:EditionSection];
-    NSIndexPath* author      = [NSIndexPath indexPathForRow:self.detailItem.authors.count inSection:AuthorSection];
-    NSIndexPath* editor      = [NSIndexPath indexPathForRow:self.detailItem.editors.count inSection:EditorSection];
-    NSIndexPath* illustrator = [NSIndexPath indexPathForRow:self.detailItem.illustrators.count inSection:IllustratorSection];
-    NSIndexPath* contributor = [NSIndexPath indexPathForRow:self.detailItem.contributors.count inSection:ContributorSection];
-    NSIndexPath* book        = [NSIndexPath indexPathForRow:self.detailItem.books.count inSection:BookSection];
-    NSIndexPath* collection  = [NSIndexPath indexPathForRow:self.detailItem.collections.count inSection:CollectionSection];
+    NSIndexPath* edition     = [NSIndexPath indexPathForRow:self.detailItem.editions.count inSection:TitleEditionSection];
+    NSIndexPath* author      = [NSIndexPath indexPathForRow:self.detailItem.authors.count inSection:TitleAuthorSection];
+    NSIndexPath* editor      = [NSIndexPath indexPathForRow:self.detailItem.editors.count inSection:TitleEditorSection];
+    NSIndexPath* illustrator = [NSIndexPath indexPathForRow:self.detailItem.illustrators.count inSection:TitleIllustratorSection];
+    NSIndexPath* contributor = [NSIndexPath indexPathForRow:self.detailItem.contributors.count inSection:TitleContributorSection];
+    NSIndexPath* book        = [NSIndexPath indexPathForRow:self.detailItem.books.count inSection:TitleBookSection];
+    NSIndexPath* collection  = [NSIndexPath indexPathForRow:self.detailItem.collections.count inSection:TitleCollectionSection];
 
     NSArray* paths = [NSArray arrayWithObjects:edition, author, editor, illustrator, contributor, book, collection, nil];
 
@@ -254,21 +259,21 @@
     
     switch (section)
     {
-        case NameSection:
+        case TitleNameSection:
             return 1;
-        case EditionSection:
+        case TitleEditionSection:
             return self.detailItem.editions.count + insertionRow;
-        case AuthorSection:
+        case TitleAuthorSection:
             return self.detailItem.authors.count + insertionRow;
-        case EditorSection:
+        case TitleEditorSection:
             return self.detailItem.editors.count + insertionRow;
-        case IllustratorSection:
+        case TitleIllustratorSection:
             return self.detailItem.illustrators.count + insertionRow;
-        case ContributorSection:
+        case TitleContributorSection:
             return self.detailItem.contributors.count + insertionRow;
-        case BookSection:
+        case TitleBookSection:
             return self.detailItem.books.count + insertionRow;
-        case CollectionSection:
+        case TitleCollectionSection:
             return self.detailItem.collections.count + insertionRow;
         default:
             DLog(@"Invalid TitleDetailViewController section found: %i.", section);
@@ -283,28 +288,28 @@
     
     switch (indexPath.section)
     {
-        case NameSection:
+        case TitleNameSection:
             cell = [self configureNameCell];
             break;
-        case EditionSection:
-            cell = [self configureEditionCell];
+        case TitleEditionSection:
+            cell = [self configureEditionCellAtIndexPath:indexPath];
             break;
-        case AuthorSection:
+        case TitleAuthorSection:
             cell = [self configureAuthorCellAtIndexPath:indexPath];
             break;
-        case EditorSection:
+        case TitleEditorSection:
             cell = [self configureEditorCellAtIndexPath:indexPath];
             break;
-        case IllustratorSection:
+        case TitleIllustratorSection:
             cell = [self configureIllustratorCellAtIndexPath:indexPath];
             break;
-        case ContributorSection:
+        case TitleContributorSection:
             cell = [self configureContributorCellAtIndexPath:indexPath];
             break;
-        case BookSection:
+        case TitleBookSection:
             cell = [self configureBookCell];
             break;
-        case CollectionSection:
+        case TitleCollectionSection:
             cell = [self configureCollectionCell];
             break;
         default:
@@ -320,21 +325,21 @@
 {
     switch (indexPath.section)
     {
-        case NameSection:
+        case TitleNameSection:
             return UITableViewCellEditingStyleNone;
-        case EditionSection:
+        case TitleEditionSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.editions];
-        case AuthorSection:
+        case TitleAuthorSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.authors];
-        case EditorSection:
+        case TitleEditorSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.editors];
-        case IllustratorSection:
+        case TitleIllustratorSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.illustrators];
-        case ContributorSection:
+        case TitleContributorSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.contributors];
-        case BookSection:
+        case TitleBookSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.books];
-        case CollectionSection:
+        case TitleCollectionSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.collections];
         default:
             DLog(@"Invalid TitleDetailViewController section found: %i.", indexPath.section);
@@ -355,37 +360,41 @@
 {
     switch (indexPath.section)
     {
-        case NameSection:
+        case TitleNameSection:
             break;
-        case EditionSection:
+        case TitleEditionSection:
+            if (indexPath.row == self.detailItem.editions.count)
+                [self loadNewEditionView];
+            else
+                [self loadEditionDetailViewForEditionAtIndexPath:indexPath];
             break;
-        case AuthorSection:
+        case TitleAuthorSection:
             if (indexPath.row == self.detailItem.authors.count)
                 [self loadPersonViewControllerForPersonType:Author];
             else
                 [self loadPersonDetailViewForPersonType:Author atIndexPath:indexPath];
             break;
-        case EditorSection:
+        case TitleEditorSection:
             if (indexPath.row == self.detailItem.editors.count)
                 [self loadPersonViewControllerForPersonType:Editor];
             else
                 [self loadPersonDetailViewForPersonType:Editor atIndexPath:indexPath];
             break;
-        case IllustratorSection:
+        case TitleIllustratorSection:
             if (indexPath.row == self.detailItem.illustrators.count)
                 [self loadPersonViewControllerForPersonType:Illustrator];
             else
                 [self loadPersonDetailViewForPersonType:Illustrator atIndexPath:indexPath];
             break;
-        case ContributorSection:
+        case TitleContributorSection:
             if (indexPath.row == self.detailItem.contributors.count)
                 [self loadPersonViewControllerForPersonType:Contributor];
             else
                 [self loadPersonDetailViewForPersonType:Contributor atIndexPath:indexPath];
             break;
-        case BookSection:
+        case TitleBookSection:
             break;
-        case CollectionSection:
+        case TitleCollectionSection:
             break;
         default:
             DLog(@"Invalid TitleDetailViewController section found: %i.", indexPath.section);
@@ -399,30 +408,30 @@
     {
         switch (indexPath.section)
         {
-            case NameSection:
+            case TitleNameSection:
                 // Never delete the name.
                 break;
-            case EditionSection:
+            case TitleEditionSection:
                 break;
-            case AuthorSection:
+            case TitleAuthorSection:
                 [self.detailItem removeAuthorsObject:[self sortedPersonFromSet:self.detailItem.authors atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
-            case EditorSection:
+            case TitleEditorSection:
                 [self.detailItem removeEditorsObject:[self sortedPersonFromSet:self.detailItem.editors atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
-            case IllustratorSection:
+            case TitleIllustratorSection:
                 [self.detailItem removeIllustratorsObject:[self sortedPersonFromSet:self.detailItem.illustrators atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
-            case ContributorSection:
+            case TitleContributorSection:
                 [self.detailItem removeContributorsObject:[self sortedPersonFromSet:self.detailItem.contributors atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
-            case BookSection:
+            case TitleBookSection:
                 break;
-            case CollectionSection:
+            case TitleCollectionSection:
                 break;
             default:
                 break;
@@ -450,45 +459,45 @@
     
     switch (section)
     {
-        case NameSection:
+        case TitleNameSection:
             break;
-        case EditionSection:
+        case TitleEditionSection:
             if (self.detailItem.editions.count > 0 || self.editing)
             {
                 header = NSLocalizedString(@"Editions", @"TitleDetailViewController Editions section header.");
             }
             break;
-        case AuthorSection:
+        case TitleAuthorSection:
             if (self.detailItem.authors.count > 0 || self.editing)
             {
                 header = NSLocalizedString(@"Authors", @"TitleDetailViewController Authors section header.");
             }
             break;
-        case EditorSection:
+        case TitleEditorSection:
             if (self.detailItem.editors.count > 0 || self.editing)
             {
                 header = NSLocalizedString(@"Editors", @"TitleDetailViewController Editors section header.");
             }
             break;
-        case IllustratorSection:
+        case TitleIllustratorSection:
             if (self.detailItem.illustrators.count > 0 || self.editing)
             {
                 header = NSLocalizedString(@"Illustrators", @"TitleDetailViewController Illustrators section header.");
             }
             break;
-        case ContributorSection:
+        case TitleContributorSection:
             if (self.detailItem.contributors.count > 0 || self.editing)
             {
                 header = NSLocalizedString(@"Contributors", @"TitleDetailViewController Contributors section header.");
             }
             break;
-        case BookSection:
+        case TitleBookSection:
             if (self.detailItem.books.count > 0 || self.editing)
             {
                 header = NSLocalizedString(@"Books", @"TitleDetailViewController Books section header.");
             }
             break;
-        case CollectionSection:
+        case TitleCollectionSection:
             if (self.detailItem.collections.count > 0 || self.editing)
             {
                 header = NSLocalizedString(@"Collections", @"TitleDetailViewController Collections section header.");
@@ -508,15 +517,15 @@
     {
         switch (indexPath.section)
         {
-            case NameSection:
+            case TitleNameSection:
                 return nil;
-            case EditionSection:
-            case AuthorSection:
-            case EditorSection:
-            case IllustratorSection:
-            case ContributorSection:
-            case BookSection:
-            case CollectionSection:
+            case TitleEditionSection:
+            case TitleAuthorSection:
+            case TitleEditorSection:
+            case TitleIllustratorSection:
+            case TitleContributorSection:
+            case TitleBookSection:
+            case TitleCollectionSection:
                 return indexPath;
             default:
                 DLog(@"Invalid TitleDetailViewController section found: %i.", indexPath.section);
@@ -546,7 +555,7 @@
     return cell;
 }
 
--(UITableViewCell*) configureEditionCell
+-(UITableViewCell*) configureEditionCellAtIndexPath:(NSIndexPath*)indexPath
 {
     static NSString* CellIdentifier = @"EditionCell";
     
@@ -557,8 +566,15 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editing)
+    if(self.editing && indexPath.row == self.detailItem.editions.count)
+    {
         cell.textLabel.text = NSLocalizedString(@"Add Edition...", @"TitleDetailViewController add Edition insertion row text.");
+    }
+    else
+    {
+        Edition* edition = [self sortedEditionFromSet:self.detailItem.editions atIndexPath:indexPath];
+        cell.textLabel.text = edition.name;
+    }
     
     return cell;
 }
@@ -726,6 +742,27 @@
     [self.tableView reloadData];
 }
 
+#pragma mark - New Edition Delegate Method
+
+-(void) newEditionViewController:(NewEditionViewController *)controller didFinishWithSave:(BOOL)save
+{
+    if (save)
+    {
+        [self.detailItem addEditionsObject:controller.detailItem];
+        
+        NSError* error;
+        if (![self.detailItem.managedObjectContext save:&error])
+        {
+            // Update to handle the error appropriately.
+            DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            exit(-1);  // Fail
+        }
+        
+        [self dismissModalViewControllerAnimated:YES];
+        [self.tableView reloadData];
+    }
+}
+
 #pragma mark - Local Helper Methods
 
 -(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
@@ -734,6 +771,14 @@
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     NSArray* sortedPeople = [set sortedArrayUsingDescriptors:sortDescriptors];
     return [sortedPeople objectAtIndex:indexPath.row];
+}
+
+-(Edition*) sortedEditionFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedEditions = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedEditions objectAtIndex:indexPath.row];
 }
 
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath
@@ -782,6 +827,29 @@
     {
         personDetailViewController.detailItem = selectedPerson;
         [self.navigationController pushViewController:personDetailViewController animated:YES];
+    }
+}
+
+-(void) loadNewEditionView
+{
+    NewEditionViewController* newEditionViewController = [[NewEditionViewController alloc] initWithNibName:@"EditionDetailViewController" bundle:nil];
+    newEditionViewController.delegate = self;
+	newEditionViewController.detailItem = [Edition editionInManagedObjectContext:self.detailItem.managedObjectContext];
+	
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newEditionViewController];
+	
+    [self.navigationController presentModalViewController:navController animated:YES];
+}
+
+-(void) loadEditionDetailViewForEditionAtIndexPath:(NSIndexPath*)indexPath
+{
+    EditionDetailViewController* editionDetailViewController = [[EditionDetailViewController alloc] initWithNibName:@"EditionDetailViewController" bundle:nil];
+    Edition* selectedEdition = [self sortedEditionFromSet:self.detailItem.editions atIndexPath:indexPath];
+    
+    if (selectedEdition)
+    {
+        editionDetailViewController.detailItem = selectedEdition;
+        [self.navigationController pushViewController:editionDetailViewController animated:YES];
     }
 }
 

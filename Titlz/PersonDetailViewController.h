@@ -11,28 +11,6 @@
 
 @class Person;
 
-enum PersonDetailSections
-{
-    DataSection = 0,
-    AliasSection,
-    AliasOfSection,
-    AuthoredSection,
-    EditedSection,
-    IllustratedSection,
-    ContributedSection,
-    PersonDetailSectionCount
-};
-
-enum PersonDataSectionRows
-{
-    FirstNameRow = 0,
-    MiddleNameRow,
-    LastNameRow,
-    BornRow,
-    DiedRow,
-    PersonDataSectionRowCount
-};
-
 @interface PersonDetailViewController : UITableViewController <TitleSelectedDelegate, PersonSelectedDelegate>
 {
     UITextField* bornTextField;
