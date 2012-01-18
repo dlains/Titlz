@@ -119,13 +119,13 @@
 {
     switch (textField.tag)
     {
-        case 0:
+        case PersonFirstNameRow:
             self.detailItem.firstName = textField.text;
             break;
-        case 1:
+        case PersonMiddleNameRow:
             self.detailItem.middleName = textField.text;
             break;
-        case 2:
+        case PersonLastNameRow:
             self.detailItem.lastName = textField.text;
             break;
         default:
@@ -145,11 +145,11 @@
     
     switch (datePicker.tag)
     {
-        case 3:
+        case PersonBornRow:
             self.detailItem.born = datePicker.date;
             bornTextField.text = [formatter stringFromDate:datePicker.date];
             break;
-        case 4:
+        case PersonDiedRow:
             self.detailItem.died = datePicker.date;
             diedTextField.text = [formatter stringFromDate:datePicker.date];
             break;
