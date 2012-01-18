@@ -117,7 +117,6 @@
 
 -(void) textFieldDidEndEditing:(UITextField*)textField
 {
-    
     switch (textField.tag)
     {
         case 0:

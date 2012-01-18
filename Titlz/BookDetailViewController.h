@@ -9,13 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "PersonViewController.h"
 #import "PublisherViewController.h"
+#import "LookupViewController.h"
 
 @class Book;
 
-@interface BookDetailViewController : UITableViewController <PersonSelectedDelegate, PublisherSelectedDelegate>
+@interface BookDetailViewController : UITableViewController <PersonSelectedDelegate, PublisherSelectedDelegate, LookupValueSelectedDelegate>
 {
     UITextField* releaseDateTextField;
     UITextField* purchaseDateTextField;
+    UITextField* lookupTextField;
 }
 
 @property(nonatomic, strong) Book* detailItem;

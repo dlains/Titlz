@@ -8,15 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "BookDetailViewController.h"
+#import "LookupViewController.h"
 
 @class Book;
 
 @protocol NewBookDelegate;
 
-@interface NewBookViewController : UITableViewController
+@interface NewBookViewController : UITableViewController <LookupValueSelectedDelegate>
 {
     UITextField* releaseDateTextField;
     UITextField* purchaseDateTextField;
+    UITextField* lookupTextField;
 }
 
 @property(nonatomic, strong) Book* detailItem;

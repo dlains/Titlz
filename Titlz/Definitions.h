@@ -54,6 +54,16 @@ typedef enum BookDataSectionRowsEnum
     BookDataSectionRowCount
 } BookDataSectionRows;
 
+typedef enum LookupTypeEnum
+{
+    LookupTypeNone = 0,
+    LookupTypeEdition,
+    LookupTypeFormat,
+    LookupTypeCondition,
+    LookupTypeCountry,
+    LookupTypeState
+} LookupType;
+
 typedef enum PersonDetailSectionsEnum
 {
     PersonDataSection = 0,

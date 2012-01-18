@@ -18,13 +18,13 @@
         <attribute name="jacketCondition" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="number" optional="YES" attributeType="Integer 32" syncable="YES"/>
         <attribute name="originalPrice" optional="YES" attributeType="Decimal" syncable="YES"/>
-        <attribute name="pages" optional="YES" attributeType="Integer 32" minValueString="1" syncable="YES"/>
+        <attribute name="pages" optional="YES" attributeType="Integer 32" syncable="YES"/>
         <attribute name="pricePaid" optional="YES" attributeType="Decimal" syncable="YES"/>
-        <attribute name="printing" optional="YES" attributeType="Integer 32" minValueString="1" syncable="YES"/>
-        <attribute name="printRun" optional="YES" attributeType="Integer 32" minValueString="1" syncable="YES"/>
+        <attribute name="printing" optional="YES" attributeType="Integer 32" syncable="YES"/>
+        <attribute name="printRun" optional="YES" attributeType="Integer 32" syncable="YES"/>
         <attribute name="purchaseDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="releaseDate" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="title" attributeType="String" minValueString="1" indexed="YES" syncable="YES"/>
+        <attribute name="title" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="authors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="authored" inverseEntity="Person" syncable="YES"/>
         <relationship name="awards" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Award" inverseName="book" inverseEntity="Award" syncable="YES"/>
         <relationship name="boughtFrom" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Seller" inverseName="books" inverseEntity="Seller" syncable="YES"/>
@@ -39,7 +39,7 @@
         <attribute name="name" attributeType="String" syncable="YES"/>
         <relationship name="titles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="collections" inverseEntity="Book" syncable="YES"/>
     </entity>
-    <entity name="Lookup" syncable="YES">
+    <entity name="Lookup" representedClassName="Lookup" syncable="YES">
         <attribute name="type" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
     </entity>

@@ -10,6 +10,10 @@
 #import "EditableTextCell.h"
 #import "Book.h"
 
+@interface NewBookViewController ()
+-(void) showLookupViewControllerForLookupType:(LookupType)type;
+@end
+
 @implementation NewBookViewController
 
 @synthesize detailItem = _detailItem;
@@ -89,6 +93,28 @@
     return YES;
 }
 
+-(void) textFieldDidBeginEditing:(UITextField*)textField
+{
+    // Save the textField for updating when the selection is made.
+    lookupTextField = textField;
+    
+    switch (textField.tag)
+    {
+        case BookFormatRow:
+            [self showLookupViewControllerForLookupType:LookupTypeFormat];
+            break;
+        case BookEditionRow:
+            [self showLookupViewControllerForLookupType:LookupTypeEdition];
+            break;
+        case BookBookConditionRow:
+        case BookJacketConditionRow:
+            [self showLookupViewControllerForLookupType:LookupTypeCondition];
+            break;
+        default:
+            break;
+    }
+}
+
 -(void) textFieldDidEndEditing:(UITextField*)textField
 {
     switch (textField.tag)
@@ -97,10 +123,8 @@
             self.detailItem.title = textField.text;
             break;
         case BookFormatRow:
-            self.detailItem.format = textField.text;
             break;
         case BookEditionRow:
-            self.detailItem.edition = textField.text;
             break;
         case BookPrintingRow:
             self.detailItem.printing = [NSNumber numberWithInt:[textField.text intValue]];
@@ -124,10 +148,8 @@
             self.detailItem.currentValue = [NSDecimalNumber decimalNumberWithString:textField.text];
             break;
         case BookBookConditionRow:
-            self.detailItem.bookCondition = textField.text;
             break;
         case BookJacketConditionRow:
-            self.detailItem.jacketCondition = textField.text;
             break;
         case BookNumberRow:
             self.detailItem.number = [NSNumber numberWithInt:[textField.text intValue]];
@@ -167,6 +189,32 @@
         default:
             break;
     }
+}
+
+-(void) lookupViewController:(LookupViewController *)controller didSelectValue:(NSString *)value withLookupType:(LookupType)type
+{
+    switch (type)
+    {
+        case LookupTypeEdition:
+            self.detailItem.edition = value;
+            break;
+        case LookupTypeFormat:
+            self.detailItem.format = value;
+            break;
+        case LookupTypeCondition:
+            if (lookupTextField.tag == BookBookConditionRow)
+                self.detailItem.bookCondition = value;
+            else if (lookupTextField.tag == BookJacketConditionRow)
+                self.detailItem.jacketCondition = value;
+            else
+                DLog(@"Invalid textField.tag found for LookupTypeCondition selection: %i.", lookupTextField.tag);
+            break;
+        default:
+            DLog(@"Invalid LookupType found in NewBookViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
+            break;
+    }
+
+    lookupTextField.text = value;
 }
 
 -(IBAction) cancel:(id)sender
@@ -332,6 +380,16 @@
 -(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 {
 	return NO;
+}
+
+-(void) showLookupViewControllerForLookupType:(LookupType)type
+{
+    LookupViewController* controller = [[LookupViewController alloc] initWithLookupType:type];
+    controller.delegate = self;
+    controller.managedObjectContext = self.detailItem.managedObjectContext;
+    
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [self.navigationController presentModalViewController:navController animated:YES];
 }
 
 @end
