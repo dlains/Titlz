@@ -1,0 +1,1154 @@
+//
+//  BookDetailViewController.m
+//  Titlz
+//
+//  Created by David Lains on 12/26/11.
+//  Copyright (c) 2011 Dagger Lake Software. All rights reserved.
+//
+
+#import "BookDetailViewController.h"
+#import "PersonViewController.h"
+#import "PersonDetailViewController.h"
+#import "PublisherViewController.h"
+#import "PublisherDetailViewController.h"
+#import "EditableTextCell.h"
+#import "Book.h"
+#import "Person.h"
+#import "Publisher.h"
+
+@interface BookDetailViewController ()
+-(UITableViewCell*) configureDataCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configureAuthorCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configureEditorCellAtIndexPath:(NSIndexPath *)indexPath;
+-(UITableViewCell*) configureIllustratorCellAtIndexPath:(NSIndexPath *)indexPath;
+-(UITableViewCell*) configureContributorCellAtIndexPath:(NSIndexPath *)indexPath;
+-(UITableViewCell*) configureAwardCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configurePointCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configurePublisherCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configureBoughtFromCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configureCollectionCell;
+-(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection;
+-(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
+-(void) loadPersonViewControllerForPersonType:(PersonType)type;
+-(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
+-(void) loadPublisherView;
+-(void) loadPublisherDetailViewForPublisher:(Publisher*)publisher;
+@end
+
+@implementation BookDetailViewController
+
+@synthesize detailItem = _detailItem;
+@synthesize undoManager = _undoManager;
+@synthesize managedObjectContext = _managedObjectContext;
+
+#pragma mark - Initialization
+
+-(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self)
+    {
+        self.title = NSLocalizedString(@"Book", @"BookDetailViewController header bar title.");
+    }
+    return self;
+}
+
+#pragma mark - View lifecycle
+
+-(void) didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    self.detailItem = nil;
+}
+
+-(void) viewDidLoad
+{
+    [super viewDidLoad];
+}
+
+-(void) viewDidUnload
+{
+    [super viewDidUnload];
+
+    self.detailItem = nil;
+}
+
+-(void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self.tableView reloadData];
+}
+
+/*
+ The view controller must be first responder in order to be able to receive shake events for undo. It should resign first responder status when it disappears.
+ */
+-(BOOL) canBecomeFirstResponder
+{
+    return YES;
+}
+
+-(void) viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self becomeFirstResponder];
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    [self resignFirstResponder];
+	[super viewWillDisappear:animated];
+}
+
+-(void) viewDidDisappear:(BOOL)animated
+{
+	[super viewDidDisappear:animated];
+}
+
+-(BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+}
+
+-(void) updateRightBarButtonItemState
+{
+	// Conditionally enable the right bar button item -- it should only be enabled if the title is in a valid state for saving.
+    self.navigationItem.rightBarButtonItem.enabled = [self.detailItem validateForUpdate:NULL];
+}
+
+#pragma mark - Undo Support
+
+-(void) setUpUndoManager
+{
+	/*
+	 If the title's managed object context doesn't already have an undo manager, then create one and set it for the context and self.
+	 The view controller needs to keep a reference to the undo manager it creates so that it can determine whether to remove the undo manager when editing finishes.
+	 */
+	if (self.detailItem.managedObjectContext.undoManager == nil)
+    {
+		NSUndoManager* undoManager = [[NSUndoManager alloc] init];
+		[undoManager setLevelsOfUndo:3];
+		self.undoManager = undoManager;
+		
+		self.detailItem.managedObjectContext.undoManager = self.undoManager;
+	}
+	
+	// Register as an observer of the title's context's undo manager.
+	NSUndoManager* titleUndoManager = self.detailItem.managedObjectContext.undoManager;
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidUndo:) name:NSUndoManagerDidUndoChangeNotification object:titleUndoManager];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidRedo:) name:NSUndoManagerDidRedoChangeNotification object:titleUndoManager];
+}
+
+-(void) cleanUpUndoManager
+{
+	// Remove self as an observer.
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+    if (self.detailItem.managedObjectContext.undoManager == self.undoManager)
+    {
+        self.detailItem.managedObjectContext.undoManager = nil;
+        self.undoManager = nil;
+    }
+}
+
+-(NSUndoManager*) undoManager
+{
+    return self.detailItem.managedObjectContext.undoManager;
+}
+
+-(void) undoManagerDidUndo:(NSNotification*)notification
+{
+    [self.tableView reloadData];
+	[self updateRightBarButtonItemState];
+}
+
+-(void) undoManagerDidRedo:(NSNotification*)notification
+{
+    [self.tableView reloadData];
+	[self updateRightBarButtonItemState];
+}
+
+#pragma mark - Button Processing
+
+-(void) doneButtonPressed
+{
+    // Save the changes.
+    NSError* error = nil;
+    BOOL success = [[self.detailItem managedObjectContext] save:&error];
+    if(!success)
+    {
+        DLog(@"Error saving: %@.", error);
+    }
+    
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+}
+
+-(void) cancelButtonPressed
+{
+    [self becomeFirstResponder];
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+}
+
+-(BOOL) textFieldShouldReturn:(UITextField*)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
+-(void) textFieldDidEndEditing:(UITextField*)textField
+{
+    switch (textField.tag)
+    {
+        case BookTitleRow:
+            self.detailItem.title = textField.text;
+            break;
+        case BookFormatRow:
+            self.detailItem.format = textField.text;
+            break;
+        case BookEditionRow:
+            self.detailItem.edition = textField.text;
+            break;
+        case BookPrintingRow:
+            self.detailItem.printing = [NSNumber numberWithInt:[textField.text intValue]];
+            break;
+        case BookIsbnRow:
+            self.detailItem.isbn = textField.text;
+            break;
+        case BookPagesRow:
+            self.detailItem.pages = [NSNumber numberWithInt:[textField.text intValue]];
+            break;
+        case BookReleaseDateRow:
+        case BookPurchaseDateRow:
+            break;
+        case BookOriginalPriceRow:
+            self.detailItem.originalPrice = [NSDecimalNumber decimalNumberWithString:textField.text];
+            break;
+        case BookPricePaidRow:
+            self.detailItem.pricePaid = [NSDecimalNumber decimalNumberWithString:textField.text];
+            break;
+        case BookCurrentValueRow:
+            self.detailItem.currentValue = [NSDecimalNumber decimalNumberWithString:textField.text];
+            break;
+        case BookBookConditionRow:
+            self.detailItem.bookCondition = textField.text;
+            break;
+        case BookJacketConditionRow:
+            self.detailItem.jacketCondition = textField.text;
+            break;
+        case BookNumberRow:
+            self.detailItem.number = [NSNumber numberWithInt:[textField.text intValue]];
+            break;
+        case BookPrintRunRow:
+            self.detailItem.printRun = [NSNumber numberWithInt:[textField.text intValue]];
+            break;
+        case BookCommentsRow:
+            self.detailItem.comments = textField.text;
+            break;
+        default:
+            DLog(@"Invalid NewBookViewController textField.tag value found: %i.", textField.tag);
+            break;
+    }
+    
+    [self becomeFirstResponder];
+}
+
+-(void) datePickerValueChanged:(id)sender
+{
+    UIDatePicker* datePicker = (UIDatePicker*)sender;
+    
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setTimeStyle:NSDateFormatterNoStyle];
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    
+    switch (datePicker.tag)
+    {
+        case BookReleaseDateRow:
+            self.detailItem.releaseDate = datePicker.date;
+            releaseDateTextField.text = [formatter stringFromDate:datePicker.date];
+            break;
+        case BookPurchaseDateRow:
+            self.detailItem.purchaseDate = datePicker.date;
+            purchaseDateTextField.text = [formatter stringFromDate:datePicker.date];
+            break;
+        default:
+            break;
+    }
+}
+
+#pragma mark - Table View Methods.
+
+-(void) setEditing:(BOOL)editing animated:(BOOL)animated
+{
+    [super setEditing:editing animated:animated];
+    
+	// Hide the back button when editing starts, and show it again when editing finishes.
+    [self.navigationItem setHidesBackButton:editing animated:animated];
+
+    NSIndexPath* author      = [NSIndexPath indexPathForRow:self.detailItem.authors.count inSection:BookAuthorSection];
+    NSIndexPath* editor      = [NSIndexPath indexPathForRow:self.detailItem.editors.count inSection:BookEditorSection];
+    NSIndexPath* illustrator = [NSIndexPath indexPathForRow:self.detailItem.illustrators.count inSection:BookIllustratorSection];
+    NSIndexPath* contributor = [NSIndexPath indexPathForRow:self.detailItem.contributors.count inSection:BookContributorSection];
+    NSIndexPath* award       = [NSIndexPath indexPathForRow:self.detailItem.awards.count inSection:BookAwardSection];
+    NSIndexPath* point       = [NSIndexPath indexPathForRow:self.detailItem.points.count inSection:BookPointSection];
+    NSInteger publisherRow   = (self.detailItem.publisher != nil) ? 1 : 0;
+    NSIndexPath* publisher   = [NSIndexPath indexPathForRow:publisherRow inSection:BookPublisherSection];
+    NSInteger boughtFromRow  = (self.detailItem.boughtFrom != nil) ? 1 : 0;
+    NSIndexPath* boughtFrom  = [NSIndexPath indexPathForRow:boughtFromRow inSection:BookBoughtFromSection];
+    NSIndexPath* collection  = [NSIndexPath indexPathForRow:self.detailItem.collections.count inSection:BookCollectionSection];
+
+    NSArray* paths = [NSArray arrayWithObjects:author, editor, illustrator, contributor, award, point, publisher, boughtFrom, collection, nil];
+
+    if (editing)
+    {
+        [self setUpUndoManager];
+        [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationRight];
+    }
+    else
+    {
+		[self cleanUpUndoManager];
+		// Save the changes.
+		NSError* error;
+		if (![self.detailItem.managedObjectContext save:&error])
+        {
+			// Update to handle the error appropriately.
+			DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+			exit(-1);  // Fail
+		}
+        [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadData];
+    }
+}
+
+-(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
+{
+    return BookDetailSectionCount;
+}
+
+-(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
+{
+    NSInteger insertionRow = 0;
+    
+    // If the table is in editing mode add one row for inserting new records to most of the sections.
+    if(self.editing)
+        insertionRow = 1;
+    
+    switch (section)
+    {
+        case BookDataSection:
+            return BookDataSectionRowCount;
+        case BookAuthorSection:
+            return self.detailItem.authors.count + insertionRow;
+        case BookEditorSection:
+            return self.detailItem.editors.count + insertionRow;
+        case BookIllustratorSection:
+            return self.detailItem.illustrators.count + insertionRow;
+        case BookContributorSection:
+            return self.detailItem.contributors.count + insertionRow;
+        case BookAwardSection:
+            return self.detailItem.awards.count + insertionRow;
+        case BookPointSection:
+            return self.detailItem.points.count + insertionRow;
+        case BookPublisherSection:
+            return ((self.detailItem.publisher != nil) ? 1 : 0) + insertionRow;
+        case BookBoughtFromSection:
+            return ((self.detailItem.boughtFrom != nil) ? 1 : 0) + insertionRow;
+        case BookCollectionSection:
+            return self.detailItem.collections.count + insertionRow;
+        default:
+            DLog(@"Invalid BookDetailViewController section found: %i.", section);
+            return 0;
+    }
+}
+
+// Customize the appearance of table view cells.
+-(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    UITableViewCell* cell = nil;
+    
+    switch (indexPath.section)
+    {
+        case BookDataSection:
+            cell = [self configureDataCellAtIndexPath:indexPath];
+            break;
+        case BookAuthorSection:
+            cell = [self configureAuthorCellAtIndexPath:indexPath];
+            break;
+        case BookEditorSection:
+            cell = [self configureEditorCellAtIndexPath:indexPath];
+            break;
+        case BookIllustratorSection:
+            cell = [self configureIllustratorCellAtIndexPath:indexPath];
+            break;
+        case BookContributorSection:
+            cell = [self configureContributorCellAtIndexPath:indexPath];
+            break;
+        case BookAwardSection:
+            cell = [self configureAwardCellAtIndexPath:indexPath];
+            break;
+        case BookPointSection:
+            cell = [self configurePointCellAtIndexPath:indexPath];
+            break;
+        case BookPublisherSection:
+            cell = [self configurePublisherCellAtIndexPath:indexPath];
+            break;
+        case BookBoughtFromSection:
+            cell = [self configureBoughtFromCellAtIndexPath:indexPath];
+            break;
+        case BookCollectionSection:
+            cell = [self configureCollectionCell];
+            break;
+        default:
+            DLog(@"Invalid BookDetailViewController section found: %i.", indexPath.section);
+            break;
+    }
+    
+    return cell;
+}
+
+// Editing styles per row.
+-(UITableViewCellEditingStyle) tableView:(UITableView*)tableView editingStyleForRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    switch (indexPath.section)
+    {
+        case BookDataSection:
+            return UITableViewCellEditingStyleNone;
+        case BookAuthorSection:
+            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.authors];
+        case BookEditorSection:
+            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.editors];
+        case BookIllustratorSection:
+            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.illustrators];
+        case BookContributorSection:
+            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.contributors];
+        case BookAwardSection:
+            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.awards];
+        case BookPointSection:
+            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.points];
+        case BookPublisherSection:
+            return (self.detailItem.publisher != nil) ? ((indexPath.row == 1) ? UITableViewCellEditingStyleInsert : UITableViewCellEditingStyleDelete) : UITableViewCellEditingStyleInsert;
+        case BookBoughtFromSection:
+            return (self.detailItem.boughtFrom != nil) ? ((indexPath.row == 1) ? UITableViewCellEditingStyleInsert : UITableViewCellEditingStyleDelete) : UITableViewCellEditingStyleInsert;
+        case BookCollectionSection:
+            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.collections];
+        default:
+            DLog(@"Invalid BookDetailViewController section found: %i.", indexPath.section);
+            return UITableViewCellEditingStyleNone;
+    }
+}
+
+-(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection
+{
+    // The last row should be the insert style, all others should be delete.
+    if(collection.count == 0 || row == collection.count)
+        return UITableViewCellEditingStyleInsert;
+    else
+        return UITableViewCellEditingStyleDelete;
+}
+
+-(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    NSInteger publisherInsertionRow = (self.detailItem.publisher != nil) ? 1 : 0;
+
+    switch (indexPath.section)
+    {
+        case BookDataSection:
+            break;
+        case BookAuthorSection:
+            if (indexPath.row == self.detailItem.authors.count)
+                [self loadPersonViewControllerForPersonType:Author];
+            else
+                [self loadPersonDetailViewForPersonType:Author atIndexPath:indexPath];
+            break;
+        case BookEditorSection:
+            if (indexPath.row == self.detailItem.editors.count)
+                [self loadPersonViewControllerForPersonType:Editor];
+            else
+                [self loadPersonDetailViewForPersonType:Editor atIndexPath:indexPath];
+            break;
+        case BookIllustratorSection:
+            if (indexPath.row == self.detailItem.illustrators.count)
+                [self loadPersonViewControllerForPersonType:Illustrator];
+            else
+                [self loadPersonDetailViewForPersonType:Illustrator atIndexPath:indexPath];
+            break;
+        case BookContributorSection:
+            if (indexPath.row == self.detailItem.contributors.count)
+                [self loadPersonViewControllerForPersonType:Contributor];
+            else
+                [self loadPersonDetailViewForPersonType:Contributor atIndexPath:indexPath];
+            break;
+        case BookAwardSection:
+//            if (indexPath.row == self.detailItem.awards.count)
+//                [self loadNewAwardView];
+//            else
+//                [self loadAwardDetailViewForAwardAtIndexPath:indexPath];
+            break;
+        case BookPointSection:
+            break;
+        case BookPublisherSection:
+            if (indexPath.row == publisherInsertionRow)
+                [self loadPublisherView];
+            else
+                [self loadPublisherDetailViewForPublisher:self.detailItem.publisher];
+            break;
+        case BookBoughtFromSection:
+            break;
+        case BookCollectionSection:
+            break;
+        default:
+            DLog(@"Invalid BookDetailViewController section found: %i.", indexPath.section);
+            break;
+    }
+}
+
+-(void) tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        switch (indexPath.section)
+        {
+            case BookDataSection:
+                // Never delete the data section rows.
+                break;
+            case BookAuthorSection:
+                [self.detailItem removeAuthorsObject:[self sortedPersonFromSet:self.detailItem.authors atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
+                break;
+            case BookEditorSection:
+                [self.detailItem removeEditorsObject:[self sortedPersonFromSet:self.detailItem.editors atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
+                break;
+            case BookIllustratorSection:
+                [self.detailItem removeIllustratorsObject:[self sortedPersonFromSet:self.detailItem.illustrators atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
+                break;
+            case BookContributorSection:
+                [self.detailItem removeContributorsObject:[self sortedPersonFromSet:self.detailItem.contributors atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
+                break;
+            case BookAwardSection:
+                break;
+            case BookPointSection:
+                break;
+            case BookPublisherSection:
+                self.detailItem.publisher = nil;
+                [self deleteRowAtIndexPath:indexPath];
+                break;
+            case BookBoughtFromSection:
+                break;
+            case BookCollectionSection:
+                break;
+            default:
+                break;
+        }
+        
+        // Save the context.
+        NSError *error = nil;
+        if (![self.managedObjectContext save:&error])
+        {
+            /*
+             Replace this implementation with code to handle the error appropriately.
+             
+             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+             */
+            DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+    }   
+}
+
+// Section headers.
+-(NSString*) tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
+{
+    NSString* header = nil;
+    
+    switch (section)
+    {
+        case BookDataSection:
+            break;
+        case BookAuthorSection:
+            if (self.detailItem.authors.count > 0 || self.editing)
+            {
+                header = NSLocalizedString(@"Authors", @"BookDetailViewController Authors section header.");
+            }
+            break;
+        case BookEditorSection:
+            if (self.detailItem.editors.count > 0 || self.editing)
+            {
+                header = NSLocalizedString(@"Editors", @"BookDetailViewController Editors section header.");
+            }
+            break;
+        case BookIllustratorSection:
+            if (self.detailItem.illustrators.count > 0 || self.editing)
+            {
+                header = NSLocalizedString(@"Illustrators", @"BookDetailViewController Illustrators section header.");
+            }
+            break;
+        case BookContributorSection:
+            if (self.detailItem.contributors.count > 0 || self.editing)
+            {
+                header = NSLocalizedString(@"Contributors", @"BookDetailViewController Contributors section header.");
+            }
+            break;
+        case BookAwardSection:
+            if (self.detailItem.awards.count > 0 || self.editing)
+            {
+                header = NSLocalizedString(@"Awards", @"BookDetailViewController Awards section header.");
+            }
+            break;
+        case BookPointSection:
+            if (self.detailItem.points.count > 0 || self.editing)
+            {
+                header = NSLocalizedString(@"Points", @"BookDetailViewController Points section header.");
+            }
+            break;
+        case BookPublisherSection:
+            if (self.detailItem.publisher || self.editing)
+            {
+                header = NSLocalizedString(@"Publisher", @"BookDetailViewController Publisher section header.");
+            }
+            break;
+            break;
+        case BookBoughtFromSection:
+            if (self.detailItem.boughtFrom || self.editing)
+            {
+                header = NSLocalizedString(@"Bought From", @"BookDetailViewController Bought From section header.");
+            }
+            break;
+            break;
+        case BookCollectionSection:
+            if (self.detailItem.collections.count > 0 || self.editing)
+            {
+                header = NSLocalizedString(@"Collections", @"BookDetailViewController Collections section header.");
+            }
+            break;
+        default:
+            DLog(@"Invalid BookDetailViewController section found: %i.", section);
+            break;
+    }
+    
+    return header;
+}
+
+-(NSIndexPath*) tableView:(UITableView*)tableView willSelectRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    if (!self.editing)
+    {
+        switch (indexPath.section)
+        {
+            case BookDataSection:
+                return nil;
+            case BookAuthorSection:
+            case BookEditorSection:
+            case BookIllustratorSection:
+            case BookContributorSection:
+            case BookAwardSection:
+            case BookPointSection:
+            case BookPublisherSection:
+            case BookBoughtFromSection:
+            case BookCollectionSection:
+                return indexPath;
+            default:
+                DLog(@"Invalid BookDetailViewController section found: %i.", indexPath.section);
+                return nil;
+        }
+    }
+    else
+    {
+        return indexPath;
+    }
+}
+
+-(UITableViewCell*) configureDataCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
+    
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.textField.inputView = nil;
+    cell.textField.keyboardType = UIKeyboardTypeDefault;
+    cell.textField.text = @"";
+    
+    // Create the date picker to use for the date fields.
+    UIDatePicker* datePicker = [[UIDatePicker alloc] init];
+    datePicker.datePickerMode = UIDatePickerModeDate;
+    [datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+
+    // Create the date formatter to display the date data.
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setTimeStyle:NSDateFormatterNoStyle];
+    [formatter setDateStyle:NSDateFormatterLongStyle];
+    
+    // Create a localized currency symbol to use in the price fields.
+    NSString* currencySymbol = [[NSLocale currentLocale] objectForKey:NSLocaleCurrencySymbol];
+    
+    if(cell == nil)
+    {
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
+        cell.textField.enabled = NO;
+    }
+    
+    switch (indexPath.row)
+    {
+        case BookTitleRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Title", @"BookDetailViewController title data field label.");
+            cell.textField.text = self.detailItem.title;
+            cell.textField.tag = BookTitleRow;
+            break;
+        case BookFormatRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Format", @"BookDetailViewController format data field label.");
+            cell.textField.text = self.detailItem.format;
+            cell.textField.tag = BookFormatRow;
+            break;
+        case BookEditionRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Edition", @"BookDetailViewController edition data field label.");
+            cell.textField.text = self.detailItem.edition;
+            cell.textField.tag = BookEditionRow;
+            break;
+        case BookPrintingRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Printing", @"BookDetailViewController printing data field label.");
+            cell.textField.text = (self.detailItem.printing == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printing intValue]];
+            cell.textField.tag = BookPrintingRow;
+            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            break;
+        case BookIsbnRow:
+            cell.fieldLabel.text = NSLocalizedString(@"ISBN", @"BookDetailViewController isbn data field label.");
+            cell.textField.text = self.detailItem.isbn;
+            cell.textField.tag = BookIsbnRow;
+            cell.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+            break;
+        case BookPagesRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Pages", @"BookDetailViewController pages data field label.");
+            cell.textField.text = (self.detailItem.pages == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.pages intValue]];
+            cell.textField.tag = BookPagesRow;
+            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            break;
+        case BookReleaseDateRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Released", @"BookDetailViewController releaseDate data field label.");
+            releaseDateTextField = cell.textField;
+            cell.textField.tag = BookReleaseDateRow;
+            datePicker.tag = BookReleaseDateRow;
+            cell.textField.inputView = datePicker;
+            cell.textField.text = [formatter stringFromDate:self.detailItem.releaseDate];
+            break;
+        case BookPurchaseDateRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Puchased", @"BookDetailViewController purchaseDate data field label.");
+            purchaseDateTextField = cell.textField;
+            cell.textField.tag = BookPurchaseDateRow;
+            datePicker.tag = BookPurchaseDateRow;
+            cell.textField.inputView = datePicker;
+            cell.textField.text = [formatter stringFromDate:self.detailItem.releaseDate];
+            break;
+        case BookOriginalPriceRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Original Price", @"BookDetailViewController originalPrice data field label.");
+            cell.textField.text = (self.detailItem.originalPrice == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.originalPrice floatValue]];
+            cell.textField.tag = BookOriginalPriceRow;
+            cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
+            break;
+        case BookPricePaidRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Price Paid", @"BookDetailViewController pricePaid data field label.");
+            cell.textField.text = (self.detailItem.pricePaid == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.pricePaid floatValue]];
+            cell.textField.tag = BookPricePaidRow;
+            cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
+            break;
+        case BookCurrentValueRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Current Value", @"BookDetailViewController currentValue data field label.");
+            cell.textField.text = (self.detailItem.currentValue == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.currentValue floatValue]];
+            cell.textField.tag = BookCurrentValueRow;
+            cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
+            break;
+        case BookBookConditionRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Book Condition", @"BookDetailViewController bookCondition data field label.");
+            cell.textField.text = self.detailItem.bookCondition;
+            cell.textField.tag = BookBookConditionRow;
+            break;
+        case BookJacketConditionRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Jacket Condition", @"BookDetailViewController jacketCondition data field label.");
+            cell.textField.text = self.detailItem.jacketCondition;
+            cell.textField.tag = BookJacketConditionRow;
+            break;
+        case BookNumberRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Number", @"BookDetailViewController number data field label.");
+            cell.textField.text = (self.detailItem.number == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.number intValue]];
+            cell.textField.tag = BookNumberRow;
+            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            break;
+        case BookPrintRunRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Print Run", @"BookDetailViewController printRun data field label.");
+            cell.textField.text = (self.detailItem.printRun == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printRun intValue]];
+            cell.textField.tag = BookPrintRunRow;
+            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            break;
+        case BookCommentsRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Comments", @"BookDetailViewController comments data field label.");
+            cell.textField.text = self.detailItem.comments;
+            cell.textField.tag = BookCommentsRow;
+            break;
+        default:
+            DLog(@"Invalid BookDetailViewController Data section row found: %i.", indexPath.row);
+            break;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCell*) configureAuthorCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString* CellIdentifier = @"AuthorCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    if(self.editing && indexPath.row == self.detailItem.authors.count)
+    {
+        cell.textLabel.text = NSLocalizedString(@"Add Author...", @"TitleDetailViewController add Author insertion row text.");
+    }
+    else
+    {
+        Person* person = [self sortedPersonFromSet:self.detailItem.authors atIndexPath:indexPath];
+        cell.textLabel.text = person.fullName;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCell*) configureEditorCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString* CellIdentifier = @"EditorCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    if(self.editing && indexPath.row == self.detailItem.editors.count)
+    {
+        cell.textLabel.text = NSLocalizedString(@"Add Editor...", @"TitleDetailViewController add Editor insertion row text.");
+    }
+    else
+    {
+        Person* person = [self sortedPersonFromSet:self.detailItem.editors atIndexPath:indexPath];
+        cell.textLabel.text = person.fullName;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCell*) configureIllustratorCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString* CellIdentifier = @"IllustratorCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    if(self.editing && indexPath.row == self.detailItem.illustrators.count)
+    {
+        cell.textLabel.text = NSLocalizedString(@"Add Illustrator...", @"TitleDetailViewController add Illustrator insertion row text.");
+    }
+    else
+    {
+        Person* person = [self sortedPersonFromSet:self.detailItem.illustrators atIndexPath:indexPath];
+        cell.textLabel.text = person.fullName;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCell*) configureContributorCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString* CellIdentifier = @"ContributorCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    if(self.editing && indexPath.row == self.detailItem.contributors.count)
+    {
+        cell.textLabel.text = NSLocalizedString(@"Add Contributor...", @"TitleDetailViewController add Contributor insertion row text.");
+    }
+    else
+    {
+        Person* person = [self sortedPersonFromSet:self.detailItem.contributors atIndexPath:indexPath];
+        cell.textLabel.text = person.fullName;
+    }
+    return cell;
+}
+
+-(UITableViewCell*) configureAwardCellAtIndexPath:(NSIndexPath*)indexPath
+{
+    static NSString* CellIdentifier = @"AwardCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    if(self.editing && indexPath.row == self.detailItem.awards.count)
+    {
+        cell.textLabel.text = NSLocalizedString(@"Add Award...", @"BookDetailViewController add Award insertion row text.");
+    }
+    else
+    {
+        //        Award* award = [self sortedEditionFromSet:self.detailItem.awards atIndexPath:indexPath];
+        //        cell.textLabel.text = award.name;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCell*) configurePointCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString* CellIdentifier = @"PointCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    if(self.editing && indexPath.row == self.detailItem.points.count)
+    {
+        cell.textLabel.text = NSLocalizedString(@"Add Point...", @"BookDetailViewController add Point insertion row text.");
+    }
+    else
+    {
+        //        Award* award = [self sortedEditionFromSet:self.detailItem.awards atIndexPath:indexPath];
+        //        cell.textLabel.text = award.name;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCell*) configurePublisherCellAtIndexPath:(NSIndexPath*)indexPath
+{
+    static NSString* CellIdentifier = @"PublisherCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    NSInteger insertionRow = (self.detailItem.publisher != nil) ? 1 : 0;
+    
+    if (self.editing && indexPath.row == insertionRow)
+    {
+        if (indexPath.row == 0)
+        {
+            cell.textLabel.text = NSLocalizedString(@"Add Publisher...", @"BookDetailViewController add Publisher insertion row text.");
+        }
+        else
+        {
+            cell.textLabel.text = NSLocalizedString(@"Replace Publisher...", @"BookDetailViewController replace Publisher insertion row text.");
+        }
+    }
+    else
+    {
+        cell.textLabel.text = self.detailItem.publisher.name;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCell*) configureBoughtFromCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString* CellIdentifier = @"BoughtFromCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    NSInteger insertionRow = (self.detailItem.boughtFrom != nil) ? 1 : 0;
+    
+    if (self.editing && indexPath.row == insertionRow)
+    {
+        if (indexPath.row == 0)
+        {
+            cell.textLabel.text = NSLocalizedString(@"Add Seller...", @"BookDetailViewController add Seller insertion row text.");
+        }
+        else
+        {
+            cell.textLabel.text = NSLocalizedString(@"Replace Seller...", @"BookDetailViewController replace Seller insertion row text.");
+        }
+    }
+    else
+    {
+//        cell.textLabel.text = self.detailItem.boughtFrom.name;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCell*) configureCollectionCell
+{
+    static NSString* CellIdentifier = @"Cell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    if(self.editing)
+        cell.textLabel.text = NSLocalizedString(@"Add Collection...", @"TitleDetailViewController add Collection insertion row text.");
+    
+    return cell;
+}
+
+#pragma mark - Person Selection Delegate Method
+
+-(void) personViewController:(PersonViewController *)controller didSelectPerson:(Person *)person withPersonType:(PersonType)type
+{
+    switch (type)
+    {
+        case Author:
+            [self.detailItem addAuthorsObject:person];
+            break;
+        case Editor:
+            [self.detailItem addEditorsObject:person];
+            break;
+        case Illustrator:
+            [self.detailItem addIllustratorsObject:person];
+            break;
+        case Contributor:
+            [self.detailItem addContributorsObject:person];
+            break;
+        default:
+            DLog(@"Invalid PersonType found in TitleDetailViewController: %i.", type);
+            break;
+    }
+    
+    NSError* error;
+    if (![self.detailItem.managedObjectContext save:&error])
+    {
+        // Update to handle the error appropriately.
+        DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        exit(-1);  // Fail
+    }
+
+    [self.tableView reloadData];
+}
+
+#pragma mark - Publisher Selection Delegate Method
+
+-(void) publisherViewController:(PublisherViewController *)controller didSelectPublisher:(Publisher *)publisher
+{
+    self.detailItem.publisher = publisher;
+    
+    NSError* error;
+    if (![self.detailItem.managedObjectContext save:&error])
+    {
+        // Update to handle the error appropriately.
+        DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        exit(-1);  // Fail
+    }
+    
+    [self.tableView reloadData];
+}
+
+#pragma mark - Local Helper Methods
+
+-(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedPeople = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedPeople objectAtIndex:indexPath.row];
+}
+
+-(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    NSIndexPath* path = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section];
+    NSArray* paths = [NSArray arrayWithObjects:path, nil];
+    
+    [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
+}
+
+-(void) loadPersonViewControllerForPersonType:(PersonType)type
+{
+    PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
+    personViewController.delegate = self;
+    personViewController.managedObjectContext = self.managedObjectContext;
+    personViewController.selectionMode = TRUE;
+    personViewController.personSelectionType = type;
+    
+    [self.navigationController pushViewController:personViewController animated:YES];
+}
+
+-(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath
+{
+    PersonDetailViewController* personDetailViewController = [[PersonDetailViewController alloc] initWithNibName:@"PersonDetailViewController" bundle:nil];
+    Person* selectedPerson = nil;
+    
+    switch (type)
+    {
+        case Author:
+            selectedPerson = [self sortedPersonFromSet:self.detailItem.authors atIndexPath:indexPath];
+            break;
+        case Editor:
+            selectedPerson = [self sortedPersonFromSet:self.detailItem.editors atIndexPath:indexPath];
+            break;
+        case Illustrator:
+            selectedPerson = [self sortedPersonFromSet:self.detailItem.illustrators atIndexPath:indexPath];
+            break;
+        case Contributor:
+            selectedPerson = [self sortedPersonFromSet:self.detailItem.contributors atIndexPath:indexPath];
+            break;
+        default:
+            break;
+    }
+    
+    if (selectedPerson)
+    {
+        personDetailViewController.detailItem = selectedPerson;
+        [self.navigationController pushViewController:personDetailViewController animated:YES];
+    }
+}
+
+-(void) loadPublisherView
+{
+    PublisherViewController* publisherViewController = [[PublisherViewController alloc] initWithNibName:@"PublisherViewController" bundle:nil];
+    publisherViewController.delegate = self;
+    publisherViewController.managedObjectContext = self.detailItem.managedObjectContext;
+    publisherViewController.selectionMode = TRUE;
+    
+    [self.navigationController pushViewController:publisherViewController animated:YES];
+}
+
+-(void) loadPublisherDetailViewForPublisher:(Publisher*)publisher
+{
+    if (publisher)
+    {
+        PublisherDetailViewController* publisherDetailViewController = [[PublisherDetailViewController alloc] initWithNibName:@"PublisherDetailViewController" bundle:nil];
+        publisherDetailViewController.detailItem = publisher;
+        [self.navigationController pushViewController:publisherDetailViewController animated:YES];
+    }
+}
+
+@end

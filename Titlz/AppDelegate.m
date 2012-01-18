@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 
-#import "TitleViewController.h"
+#import "BookViewController.h"
 
 void uncaughtExceptionHandler(NSException* exception);
 
@@ -34,9 +34,9 @@ void uncaughtExceptionHandler(NSException* exception)
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-    TitleViewController* titleViewController = [[TitleViewController alloc] initWithNibName:@"TitleViewController" bundle:nil];
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:titleViewController];
-    titleViewController.managedObjectContext = self.managedObjectContext;
+    BookViewController* bookViewController = [[BookViewController alloc] initWithNibName:@"BookViewController" bundle:nil];
+    self.navigationController = [[UINavigationController alloc] initWithRootViewController:bookViewController];
+    bookViewController.managedObjectContext = self.managedObjectContext;
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
     return YES;

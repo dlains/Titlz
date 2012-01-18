@@ -7,11 +7,11 @@
 //
 
 #import "PersonDetailViewController.h"
-#import "TitleViewController.h"
-#import "TitleDetailViewController.h"
+#import "BookViewController.h"
+#import "BookDetailViewController.h"
 #import "EditableTextCell.h"
 #import "Person.h"
-#import "Title.h"
+#import "Book.h"
 
 @interface PersonDetailViewController ()
 -(UITableViewCell*) configureDataCellForRow:(NSInteger)row;
@@ -22,11 +22,11 @@
 -(UITableViewCell*) configureIllustratedCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureContributedCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection;
--(Title*) sortedTitleFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(Book*) sortedBookFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
--(void) loadTitleViewForPersonType:(PersonType)type;
--(void) loadTitleDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
+-(void) loadBookViewForPersonType:(PersonType)type;
+-(void) loadBookDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
 -(void) loadPersonViewForPersonType:(PersonType)type;
 -(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
 -(void) loadPersonDetailViewForPerson:(Person*)person;
@@ -373,27 +373,27 @@
             break;
         case PersonAuthoredSection:
             if (indexPath.row == self.detailItem.authored.count)
-                [self loadTitleViewForPersonType:Author];
+                [self loadBookViewForPersonType:Author];
             else
-                [self loadTitleDetailViewForPersonType:Author atIndexPath:indexPath];
+                [self loadBookDetailViewForPersonType:Author atIndexPath:indexPath];
             break;
         case PersonEditedSection:
             if (indexPath.row == self.detailItem.edited.count)
-                [self loadTitleViewForPersonType:Editor];
+                [self loadBookViewForPersonType:Editor];
             else
-                [self loadTitleDetailViewForPersonType:Editor atIndexPath:indexPath];
+                [self loadBookDetailViewForPersonType:Editor atIndexPath:indexPath];
             break;
         case PersonIllustratedSection:
             if (indexPath.row == self.detailItem.illustrated.count)
-                [self loadTitleViewForPersonType:Illustrator];
+                [self loadBookViewForPersonType:Illustrator];
             else
-                [self loadTitleDetailViewForPersonType:Illustrator atIndexPath:indexPath];
+                [self loadBookDetailViewForPersonType:Illustrator atIndexPath:indexPath];
             break;
         case PersonContributedSection:
             if (indexPath.row == self.detailItem.contributed.count)
-                [self loadTitleViewForPersonType:Contributor];
+                [self loadBookViewForPersonType:Contributor];
             else
-                [self loadTitleDetailViewForPersonType:Contributor atIndexPath:indexPath];
+                [self loadBookDetailViewForPersonType:Contributor atIndexPath:indexPath];
             break;
         default:
             DLog(@"Invalid TitleDetailViewController section found: %i.", indexPath.section);
@@ -417,19 +417,19 @@
             case PersonAliasOfSection:
                 break;
             case PersonAuthoredSection:
-                [self.detailItem removeAuthoredObject:[self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath]];
+                [self.detailItem removeAuthoredObject:[self sortedBookFromSet:self.detailItem.authored atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             case PersonEditedSection:
-                [self.detailItem removeEditedObject:[self sortedTitleFromSet:self.detailItem.edited atIndexPath:indexPath]];
+                [self.detailItem removeEditedObject:[self sortedBookFromSet:self.detailItem.edited atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             case PersonIllustratedSection:
-                [self.detailItem removeIllustratedObject:[self sortedTitleFromSet:self.detailItem.illustrated atIndexPath:indexPath]];
+                [self.detailItem removeIllustratedObject:[self sortedBookFromSet:self.detailItem.illustrated atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             case PersonContributedSection:
-                [self.detailItem removeContributedObject:[self sortedTitleFromSet:self.detailItem.contributed atIndexPath:indexPath]];
+                [self.detailItem removeContributedObject:[self sortedBookFromSet:self.detailItem.contributed atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             default:
@@ -621,8 +621,8 @@
     }
     else
     {
-        Title* title = [self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath];
-        cell.textLabel.text = title.name;
+        Book* book = [self sortedBookFromSet:self.detailItem.authored atIndexPath:indexPath];
+        cell.textLabel.text = book.title;
     }
     
     return cell;
@@ -645,8 +645,8 @@
     }
     else
     {
-        Title* title = [self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath];
-        cell.textLabel.text = title.name;
+        Book* book = [self sortedBookFromSet:self.detailItem.edited atIndexPath:indexPath];
+        cell.textLabel.text = book.title;
     }
     
     return cell;
@@ -669,8 +669,8 @@
     }
     else
     {
-        Title* title = [self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath];
-        cell.textLabel.text = title.name;
+        Book* book = [self sortedBookFromSet:self.detailItem.illustrated atIndexPath:indexPath];
+        cell.textLabel.text = book.title;
     }
     
     return cell;
@@ -693,8 +693,8 @@
     }
     else
     {
-        Title* title = [self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath];
-        cell.textLabel.text = title.name;
+        Book* book = [self sortedBookFromSet:self.detailItem.contributed atIndexPath:indexPath];
+        cell.textLabel.text = book.title;
     }
     
     return cell;
@@ -702,21 +702,21 @@
 
 #pragma mark - Title Selection Delegate Method
 
--(void) titleViewController:(TitleViewController *)controller didSelectTitle:(Title *)title forPersonType:(PersonType)type
+-(void) bookViewController:(BookViewController *)controller didSelectBook:(Book*)book forPersonType:(PersonType)type
 {
     switch (type)
     {
         case Author:
-            [self.detailItem addAuthoredObject:title];
+            [self.detailItem addAuthoredObject:book];
             break;
         case Editor:
-            [self.detailItem addEditedObject:title];
+            [self.detailItem addEditedObject:book];
             break;
         case Illustrator:
-            [self.detailItem addIllustratedObject:title];
+            [self.detailItem addIllustratedObject:book];
             break;
         case Contributor:
-            [self.detailItem addContributedObject:title];
+            [self.detailItem addContributedObject:book];
             break;
         default:
             DLog(@"Invalid PersonType found in PersonDetailViewController: %i.", type);
@@ -754,12 +754,12 @@
 
 #pragma mark - Local Helper Methods
 
--(Title*) sortedTitleFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+-(Book*) sortedBookFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
 {
-    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
-    NSArray* sortedTitles = [set sortedArrayUsingDescriptors:sortDescriptors];
-    return [sortedTitles objectAtIndex:indexPath.row];
+    NSArray* sortedBooks = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedBooks objectAtIndex:indexPath.row];
 }
 
 -(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
@@ -778,44 +778,44 @@
     [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
 }
 
--(void) loadTitleViewForPersonType:(PersonType)type
+-(void) loadBookViewForPersonType:(PersonType)type
 {
-    TitleViewController* titleViewController = [[TitleViewController alloc] initWithNibName:@"TitleViewController" bundle:nil];
-    titleViewController.managedObjectContext = self.detailItem.managedObjectContext;
-    titleViewController.delegate = self;
-    titleViewController.selectionMode = TRUE;
-    titleViewController.personSelectionType = type;
+    BookViewController* bookViewController = [[BookViewController alloc] initWithNibName:@"BookViewController" bundle:nil];
+    bookViewController.managedObjectContext = self.detailItem.managedObjectContext;
+    bookViewController.delegate = self;
+    bookViewController.selectionMode = TRUE;
+    bookViewController.personSelectionType = type;
     
-    [self.navigationController pushViewController:titleViewController animated:YES];
+    [self.navigationController pushViewController:bookViewController animated:YES];
 }
 
--(void) loadTitleDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath
+-(void) loadBookDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath
 {
-    TitleDetailViewController* titleDetailViewController = [[TitleDetailViewController alloc] initWithNibName:@"TitleDetailViewController" bundle:nil];
-    Title* selectedTitle = nil;
+    BookDetailViewController* bookDetailViewController = [[BookDetailViewController alloc] initWithNibName:@"BookDetailViewController" bundle:nil];
+    Book* selectedBook = nil;
     
     switch (type)
     {
         case Author:
-            selectedTitle = [self sortedTitleFromSet:self.detailItem.authored atIndexPath:indexPath];
+            selectedBook = [self sortedBookFromSet:self.detailItem.authored atIndexPath:indexPath];
             break;
         case Editor:
-            selectedTitle = [self sortedTitleFromSet:self.detailItem.edited atIndexPath:indexPath];
+            selectedBook = [self sortedBookFromSet:self.detailItem.edited atIndexPath:indexPath];
             break;
         case Illustrator:
-            selectedTitle = [self sortedTitleFromSet:self.detailItem.illustrated atIndexPath:indexPath];
+            selectedBook = [self sortedBookFromSet:self.detailItem.illustrated atIndexPath:indexPath];
             break;
         case Contributor:
-            selectedTitle = [self sortedTitleFromSet:self.detailItem.contributed atIndexPath:indexPath];
+            selectedBook = [self sortedBookFromSet:self.detailItem.contributed atIndexPath:indexPath];
             break;
         default:
             break;
     }
     
-    if (selectedTitle)
+    if (selectedBook)
     {
-        titleDetailViewController.detailItem = selectedTitle;
-        [self.navigationController pushViewController:titleDetailViewController animated:YES];
+        bookDetailViewController.detailItem = selectedBook;
+        [self.navigationController pushViewController:bookDetailViewController animated:YES];
     }
 }
 

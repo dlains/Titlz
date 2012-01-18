@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Person, Title;
+@class Person, Book;
 
 @interface Person : NSManagedObject
 
@@ -40,24 +40,24 @@
 - (void)addAliases:(NSSet *)values;
 - (void)removeAliases:(NSSet *)values;
 
-- (void)addAuthoredObject:(Title *)value;
-- (void)removeAuthoredObject:(Title *)value;
-- (void)addAuthored:(NSSet *)values;
-- (void)removeAuthored:(NSSet *)values;
+- (void)addAuthoredObject:(Book*)value;
+- (void)removeAuthoredObject:(Book*)value;
+- (void)addAuthored:(NSSet*)values;
+- (void)removeAuthored:(NSSet*)values;
 
-- (void)addContributedObject:(Title *)value;
-- (void)removeContributedObject:(Title *)value;
-- (void)addContributed:(NSSet *)values;
-- (void)removeContributed:(NSSet *)values;
+- (void)addContributedObject:(Book*)value;
+- (void)removeContributedObject:(Book*)value;
+- (void)addContributed:(NSSet*)values;
+- (void)removeContributed:(NSSet*)values;
 
-- (void)addEditedObject:(Title *)value;
-- (void)removeEditedObject:(Title *)value;
-- (void)addEdited:(NSSet *)values;
-- (void)removeEdited:(NSSet *)values;
+- (void)addEditedObject:(Book*)value;
+- (void)removeEditedObject:(Book*)value;
+- (void)addEdited:(NSSet*)values;
+- (void)removeEdited:(NSSet*)values;
 
-- (void)addIllustratedObject:(Title *)value;
-- (void)removeIllustratedObject:(Title *)value;
-- (void)addIllustrated:(NSSet *)values;
-- (void)removeIllustrated:(NSSet *)values;
+- (void)addIllustratedObject:(Book*)value;
+- (void)removeIllustratedObject:(Book*)value;
+- (void)addIllustrated:(NSSet*)values;
+- (void)removeIllustrated:(NSSet*)values;
 
 @end

@@ -18,18 +18,41 @@ typedef enum PersonTypeEnum
     Alias,
 } PersonType;
 
-typedef enum TitleDetailSectionsEnum
+typedef enum BookDetailSectionsEnum
 {
-    TitleNameSection = 0,
-    TitleEditionSection,
-    TitleAuthorSection,
-    TitleEditorSection,
-    TitleIllustratorSection,
-    TitleContributorSection,
-    TitleBookSection,
-    TitleCollectionSection,
-    TitleDetailSectionCount
-} TitleDetailSections;
+    BookDataSection = 0,
+    BookAuthorSection,
+    BookEditorSection,
+    BookIllustratorSection,
+    BookContributorSection,
+    BookAwardSection,
+    BookPointSection,
+    BookPublisherSection,
+    BookBoughtFromSection,
+    BookCollectionSection,
+    BookDetailSectionCount
+} BookDetailSections;
+
+typedef enum BookDataSectionRowsEnum
+{
+    BookTitleRow = 0,
+    BookFormatRow,
+    BookEditionRow,
+    BookPrintingRow,
+    BookIsbnRow,
+    BookPagesRow,
+    BookReleaseDateRow,
+    BookPurchaseDateRow,
+    BookOriginalPriceRow,
+    BookPricePaidRow,
+    BookCurrentValueRow,
+    BookBookConditionRow,
+    BookJacketConditionRow,
+    BookNumberRow,
+    BookPrintRunRow,
+    BookCommentsRow,
+    BookDataSectionRowCount
+} BookDataSectionRows;
 
 typedef enum PersonDetailSectionsEnum
 {
@@ -53,30 +76,10 @@ typedef enum PersonDataSectionRowsEnum
     PersonDataSectionRowCount
 } PersonDataSectionRows;
 
-typedef enum EditionDetailSectionsEnum
-{
-    EditionDataSection = 0,
-    EditionPublisherSection,
-    EditionPointsSection,
-    EditionBooksSection,
-    EditionDetailSectionCount
-} EditionDetailSections;
-
-typedef enum EditionDataSectionRowsEnum
-{
-    EditionNameRow = 0,
-    EditionFormatRow,
-    EditionIsbnRow,
-    EditionPagesRow,
-    EditionPrintRunRow,
-    EditionReleaseDateRow,
-    EditionDataSectionRowCount
-} EditionDataSectionRows;
-
 typedef enum PublisherDetailSectionsEnum
 {
     PublisherDataSection = 0,
-    PublisherEditionsSection,
+    PublisherBooksSection,
     PublisherDetailSectionCount
 } PublisherDetailSections;
 

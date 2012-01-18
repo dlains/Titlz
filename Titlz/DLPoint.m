@@ -7,14 +7,14 @@
 //
 
 #import "DLPoint.h"
-#import "Edition.h"
+#import "Book.h"
 
 
 @implementation DLPoint
 
 @dynamic issue;
 @dynamic location;
-@dynamic edition;
+@dynamic book;
 
 +(id) pointInManagedObjectContext:(NSManagedObjectContext*)context
 {

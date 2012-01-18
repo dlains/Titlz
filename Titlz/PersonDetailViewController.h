@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TitleViewController.h"
+#import "BookViewController.h"
 
 @class Person;
 
-@interface PersonDetailViewController : UITableViewController <TitleSelectedDelegate, PersonSelectedDelegate>
+@interface PersonDetailViewController : UITableViewController <BookSelectedDelegate, PersonSelectedDelegate>
 {
     UITextField* bornTextField;
     UITextField* diedTextField;

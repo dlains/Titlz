@@ -9,13 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Edition;
+@class Book;
 
 @interface DLPoint : NSManagedObject
 
 @property (nonatomic, retain) NSString* issue;
 @property (nonatomic, retain) NSString* location;
-@property (nonatomic, retain) Edition* edition;
+@property (nonatomic, retain) Book* book;
 
 +(id) pointInManagedObjectContext:(NSManagedObjectContext*)context;
 

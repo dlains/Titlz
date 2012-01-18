@@ -1,5 +1,5 @@
 //
-//  TitleDetailViewController.h
+//  BookDetailViewController.h
 //  Titlz
 //
 //  Created by David Lains on 12/26/11.
@@ -8,13 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "PersonViewController.h"
-#import "NewEditionViewController.h"
+#import "PublisherViewController.h"
 
-@class Title;
+@class Book;
 
-@interface TitleDetailViewController : UITableViewController <PersonSelectedDelegate, NewEditionDelegate>
+@interface BookDetailViewController : UITableViewController <PersonSelectedDelegate, PublisherSelectedDelegate>
+{
+    UITextField* releaseDateTextField;
+    UITextField* purchaseDateTextField;
+}
 
-@property(nonatomic, strong) Title* detailItem;
+@property(nonatomic, strong) Book* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;
 @property(nonatomic, strong) NSManagedObjectContext* managedObjectContext;
 

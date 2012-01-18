@@ -2,30 +2,25 @@
 //  Publisher.m
 //  Titlz
 //
-//  Created by David Lains on 1/12/12.
+//  Created by David Lains on 1/16/12.
 //  Copyright (c) 2012 Dagger Lake Software. All rights reserved.
 //
 
 #import "Publisher.h"
-#import "Edition.h"
+#import "Book.h"
 
 
 @implementation Publisher
 
-@dynamic name;
-@dynamic parent;
-@dynamic street;
-@dynamic street1;
 @dynamic city;
 @dynamic country;
-@dynamic state;
+@dynamic name;
+@dynamic parent;
 @dynamic postalCode;
-@dynamic editions;
-
-+(id) publisherInManagedObjectContext:(NSManagedObjectContext*)context
-{
-    return [NSEntityDescription insertNewObjectForEntityForName:@"Publisher" inManagedObjectContext:context];
-}
+@dynamic state;
+@dynamic street;
+@dynamic street1;
+@dynamic books;
 
 -(NSString*) firstLetterOfName
 {
@@ -37,6 +32,11 @@
     
     [self didAccessValueForKey:@"firstLetterOfName"];
     return result;
+}
+
++(id) publisherInManagedObjectContext:(NSManagedObjectContext*)context
+{
+    return [NSEntityDescription insertNewObjectForEntityForName:@"Publisher" inManagedObjectContext:context];
 }
 
 @end

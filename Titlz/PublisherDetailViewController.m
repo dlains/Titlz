@@ -7,17 +7,16 @@
 //
 
 #import "PublisherDetailViewController.h"
-#import "EditionDetailViewController.h"
+#import "BookDetailViewController.h"
 #import "EditableTextCell.h"
 #import "Publisher.h"
-#import "Edition.h"
-#import "Title.h"
+#import "Book.h"
 
 @interface PublisherDetailViewController ()
 -(UITableViewCell*) configureDataCellForRow:(NSInteger)row;
 -(UITableViewCell*) configureEditionsCellAtIndexPath:(NSIndexPath*)indexPath;
--(void) loadEditionDetailViewForEditionAtIndexPath:(NSIndexPath*)indexPath;
--(Edition*) sortedEditionFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(void) loadBookDetailViewForBookAtIndexPath:(NSIndexPath*)indexPath;
+-(Book*) sortedBookFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 @end
 
 @implementation PublisherDetailViewController
@@ -49,12 +48,6 @@
 -(void) viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 -(void) viewDidUnload
@@ -237,8 +230,8 @@
     {
         case PublisherDataSection:
             return PublisherDataSectionRowCount;
-        case PublisherEditionsSection:
-            return self.detailItem.editions.count;
+        case PublisherBooksSection:
+            return self.detailItem.books.count;
         default:
             return 0;
     }
@@ -253,7 +246,7 @@
         case PublisherDataSection:
             cell = [self configureDataCellForRow:indexPath.row];
             break;
-        case PublisherEditionsSection:
+        case PublisherBooksSection:
             cell = [self configureEditionsCellAtIndexPath:indexPath];
             break;
         default:
@@ -271,7 +264,7 @@
     {
         case PublisherDataSection:
             return UITableViewCellEditingStyleNone;
-        case PublisherEditionsSection:
+        case PublisherBooksSection:
             return UITableViewCellEditingStyleNone;
         default:
             DLog(@"Invalid PersonDetailViewController section found: %i.", indexPath.section);
@@ -317,11 +310,11 @@
     {
         case PublisherDataSection:
             break;
-        case PublisherEditionsSection:
-            [self loadEditionDetailViewForEditionAtIndexPath:indexPath];
+        case PublisherBooksSection:
+            [self loadBookDetailViewForBookAtIndexPath:indexPath];
             break;
         default:
-            DLog(@"Invalid TitleDetailViewController section found: %i.", indexPath.section);
+            DLog(@"Invalid PublisherDetailViewController section found: %i.", indexPath.section);
             break;
     }
 }
@@ -335,10 +328,10 @@
     {
         case PublisherDataSection:
             break;
-        case PublisherEditionsSection:
-            if (self.detailItem.editions.count > 0)
+        case PublisherBooksSection:
+            if (self.detailItem.books.count > 0)
             {
-                header = NSLocalizedString(@"Published Titles", @"PublisherDetailViewController Editions section header.");
+                header = NSLocalizedString(@"Published Books", @"PublisherDetailViewController Books section header.");
             }
             break;
         default:
@@ -421,31 +414,31 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    Edition* edition = [self sortedEditionFromSet:self.detailItem.editions atIndexPath:indexPath];
-    cell.textLabel.text = edition.title.name;
+    Book* book = [self sortedBookFromSet:self.detailItem.books atIndexPath:indexPath];
+    cell.textLabel.text = book.title;
     
     return cell;
 }
 
 #pragma mark - Local Helper Methods
 
--(Edition*) sortedEditionFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+-(Book*) sortedBookFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
 {
-    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
-    NSArray* sortedEditions = [set sortedArrayUsingDescriptors:sortDescriptors];
-    return [sortedEditions objectAtIndex:indexPath.row];
+    NSArray* sortedBooks = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedBooks objectAtIndex:indexPath.row];
 }
 
--(void) loadEditionDetailViewForEditionAtIndexPath:(NSIndexPath*)indexPath
+-(void) loadBookDetailViewForBookAtIndexPath:(NSIndexPath*)indexPath
 {
-    Edition* selectedEdition = [self sortedEditionFromSet:self.detailItem.editions atIndexPath:indexPath];
+    Book* selectedBook = [self sortedBookFromSet:self.detailItem.books atIndexPath:indexPath];
     
-    if (selectedEdition)
+    if (selectedBook)
     {
-        EditionDetailViewController* editionDetailViewController = [[EditionDetailViewController alloc] initWithNibName:@"EditionDetailViewController" bundle:nil];
-        editionDetailViewController.detailItem = selectedEdition;
-        [self.navigationController pushViewController:editionDetailViewController animated:YES];
+        BookDetailViewController* bookDetailViewController = [[BookDetailViewController alloc] initWithNibName:@"BookDetailViewController" bundle:nil];
+        bookDetailViewController.detailItem = selectedBook;
+        [self.navigationController pushViewController:bookDetailViewController animated:YES];
     }
 }
 

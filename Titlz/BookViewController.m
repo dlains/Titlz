@@ -1,23 +1,23 @@
 //
-//  TitleViewController.m
+//  BookViewController.m
 //  Titlz
 //
 //  Created by David Lains on 12/26/11.
 //  Copyright (c) 2011 Dagger Lake Software. All rights reserved.
 //
 
-#import "TitleViewController.h"
-#import "TitleDetailViewController.h"
-#import "Title.h"
+#import "BookViewController.h"
+#import "BookDetailViewController.h"
+#import "Book.h"
 
-@interface TitleViewController ()
+@interface BookViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
 -(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate;
 @end
 
-@implementation TitleViewController
+@implementation BookViewController
 
-@synthesize titleDetailViewController = _titleDetailViewController;
+@synthesize bookDetailViewController = _bookDetailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize addingManagedObjectContext = __addingManagedObjectContext;
@@ -30,7 +30,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        self.title = NSLocalizedString(@"Titles", @"TitleViewController header bar title.");
+        self.title = NSLocalizedString(@"Books", @"BookViewController header bar title.");
     }
     return self;
 }
@@ -112,7 +112,7 @@
 // Customize the appearance of table view cells.
 -(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"TitlesCell";
+    static NSString* CellIdentifier = @"BooksCell";
     
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -170,20 +170,20 @@
     if (self.selectionMode)
     {
         // Get the selected person and update the correct delegate.
-        Title* selectedTitle = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        [self.delegate titleViewController:self didSelectTitle:selectedTitle forPersonType:self.personSelectionType];
+        Book* selectedBook = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+        [self.delegate bookViewController:self didSelectBook:selectedBook forPersonType:self.personSelectionType];
         [self.navigationController popViewControllerAnimated:YES];
     }
     else
     {
-        if (!self.titleDetailViewController)
+        if (!self.bookDetailViewController)
         {
-            self.titleDetailViewController = [[TitleDetailViewController alloc] initWithNibName:@"TitleDetailViewController" bundle:nil];
+            self.bookDetailViewController = [[BookDetailViewController alloc] initWithNibName:@"BookDetailViewController" bundle:nil];
         }
-        Title* selectedTitle = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        self.titleDetailViewController.detailItem = selectedTitle;
-        self.titleDetailViewController.managedObjectContext = self.managedObjectContext;
-        [self.navigationController pushViewController:self.titleDetailViewController animated:YES];
+        Book* selectedBook = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+        self.bookDetailViewController.detailItem = selectedBook;
+        self.bookDetailViewController.managedObjectContext = self.managedObjectContext;
+        [self.navigationController pushViewController:self.bookDetailViewController animated:YES];
     }
 }
 
@@ -210,7 +210,7 @@
 -(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate
 {
     NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription* entity = [NSEntityDescription entityForName:@"Title" inManagedObjectContext:self.managedObjectContext];
+    NSEntityDescription* entity = [NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number.
@@ -219,18 +219,18 @@
     [fetchRequest setPredicate:predicate];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
 
-    NSString* cacheName = @"Title";
+    NSString* cacheName = @"Book";
     if (predicate)
         cacheName = nil;
 
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfName" cacheName:cacheName];
+    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfTitle" cacheName:cacheName];
     controller.delegate = self;
     self.fetchedResultsController = controller;
     
@@ -310,15 +310,15 @@
 
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
 {
-    Title* title = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = title.name;
+    Book* book = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = book.title;
 }
 
 #pragma mark - Search delegate
 
 -(BOOL) searchDisplayController:(UISearchDisplayController*)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
-    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@", searchString];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"title CONTAINS[cd] %@", searchString];
     self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:predicate];
     return YES;
 }
@@ -332,23 +332,23 @@
 
 -(void) insertNewObject
 {
-    NewTitleViewController* newTitleViewController = [[NewTitleViewController alloc] initWithStyle:UITableViewStyleGrouped];
-	newTitleViewController.delegate = self;
+    NewBookViewController* newBookViewController = [[NewBookViewController alloc] initWithStyle:UITableViewStyleGrouped];
+	newBookViewController.delegate = self;
 	
 	// Create a new managed object context for the new title -- set its persistent store coordinator to the same as that from the fetched results controller's context.
 	self.addingManagedObjectContext = [[NSManagedObjectContext alloc] init];
 	
 	[self.addingManagedObjectContext setPersistentStoreCoordinator:[[self.fetchedResultsController managedObjectContext] persistentStoreCoordinator]];
     
-	newTitleViewController.detailItem = [Title titleInManagedObjectContext:self.addingManagedObjectContext];
+	newBookViewController.detailItem = [Book bookInManagedObjectContext:self.addingManagedObjectContext];
 	
-	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newTitleViewController];
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newBookViewController];
 	
     [self.navigationController presentModalViewController:navController animated:YES];
     
 }
 
--(void) newTitleViewController:(NewTitleViewController *)controller didFinishWithSave:(BOOL)save
+-(void) newBookViewController:(NewBookViewController*)controller didFinishWithSave:(BOOL)save
 {
     if (save)
     {
