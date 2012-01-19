@@ -12,11 +12,13 @@
 #import "PublisherViewController.h"
 #import "PublisherDetailViewController.h"
 #import "SellerDetailViewController.h"
+#import "AwardDetailViewController.h"
 #import "EditableTextCell.h"
 #import "Book.h"
 #import "Person.h"
 #import "Publisher.h"
 #import "Seller.h"
+#import "Award.h"
 
 @interface BookDetailViewController ()
 -(UITableViewCell*) configureDataCellAtIndexPath:(NSIndexPath*)indexPath;
@@ -31,6 +33,7 @@
 -(UITableViewCell*) configureCollectionCell;
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection;
 -(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(Award*) sortedAwardFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
 -(void) loadPersonViewControllerForPersonType:(PersonType)type;
 -(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
@@ -39,6 +42,8 @@
 -(void) loadSellerView;
 -(void) loadSellerDetailViewForSeller:(Seller*)seller;
 -(void) showLookupViewControllerForLookupType:(LookupType)type;
+-(void) loadNewAwardView;
+-(void) loadAwardDetailViewForAwardAtIndexPath:(NSIndexPath*)indexPath;
 @end
 
 @implementation BookDetailViewController
@@ -529,10 +534,10 @@
                 [self loadPersonDetailViewForPersonType:Contributor atIndexPath:indexPath];
             break;
         case BookAwardSection:
-//            if (indexPath.row == self.detailItem.awards.count)
-//                [self loadNewAwardView];
-//            else
-//                [self loadAwardDetailViewForAwardAtIndexPath:indexPath];
+            if (indexPath.row == self.detailItem.awards.count)
+                [self loadNewAwardView];
+            else
+                [self loadAwardDetailViewForAwardAtIndexPath:indexPath];
             break;
         case BookPointSection:
             break;
@@ -582,6 +587,8 @@
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             case BookAwardSection:
+                [self.detailItem removeAwardsObject:[self sortedAwardFromSet:self.detailItem.awards atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
                 break;
             case BookPointSection:
                 break;
@@ -590,6 +597,8 @@
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             case BookBoughtFromSection:
+                self.detailItem.boughtFrom = nil;
+                [self deleteRowAtIndexPath:indexPath];
                 break;
             case BookCollectionSection:
                 break;
@@ -960,8 +969,8 @@
     }
     else
     {
-        //        Award* award = [self sortedEditionFromSet:self.detailItem.awards atIndexPath:indexPath];
-        //        cell.textLabel.text = award.name;
+        Award* award = [self sortedAwardFromSet:self.detailItem.awards atIndexPath:indexPath];
+        cell.textLabel.text = award.name;
     }
     
     return cell;
@@ -1140,6 +1149,27 @@
     [self.tableView reloadData];
 }
 
+#pragma mark - New Award Handling
+
+-(void) newAwardViewController:(NewAwardViewController*)controller didFinishWithSave:(BOOL)save
+{
+    if (save)
+    {
+        [self.detailItem addAwardsObject:controller.detailItem];
+        
+		NSError *error;
+		if (![self.managedObjectContext save:&error])
+        {
+			// Update to handle the error appropriately.
+			DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+			exit(-1);  // Fail
+		}
+    }
+
+    [self.tableView reloadData];
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 #pragma mark - Local Helper Methods
 
 -(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
@@ -1148,6 +1178,14 @@
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     NSArray* sortedPeople = [set sortedArrayUsingDescriptors:sortDescriptors];
     return [sortedPeople objectAtIndex:indexPath.row];
+}
+
+-(Award*) sortedAwardFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedAwards = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedAwards objectAtIndex:indexPath.row];
 }
 
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath
@@ -1247,6 +1285,29 @@
     
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:controller];
     [self.navigationController presentModalViewController:navController animated:YES];
+}
+
+-(void) loadNewAwardView
+{
+    NewAwardViewController* newAwardViewController = [[NewAwardViewController alloc] initWithStyle:UITableViewStyleGrouped];
+	newAwardViewController.delegate = self;
+	newAwardViewController.detailItem = [Award awardInManagedObjectContext:self.managedObjectContext];
+	
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newAwardViewController];
+	
+    [self.navigationController presentModalViewController:navController animated:YES];
+}
+
+-(void) loadAwardDetailViewForAwardAtIndexPath:(NSIndexPath*)indexPath
+{
+    AwardDetailViewController* awardDetailViewController = [[AwardDetailViewController alloc] initWithNibName:@"AwardDetailViewController" bundle:nil];
+    Award* selectedAward = [self sortedAwardFromSet:self.detailItem.awards atIndexPath:indexPath];
+    
+    if (selectedAward)
+    {
+        awardDetailViewController.detailItem = selectedAward;
+        [self.navigationController pushViewController:awardDetailViewController animated:YES];
+    }
 }
 
 @end

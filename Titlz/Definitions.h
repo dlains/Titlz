@@ -9,6 +9,20 @@
 #ifndef Titlz_Definitions_h
 #define Titlz_Definitions_h
 
+typedef enum AwardDetailSectionsEnum
+{
+    AwardDataSection = 0,
+    AwardDetailSectionCount,
+} AwardDetailSections;
+
+typedef enum AwardDataSectionRowsEnum
+{
+    AwardNameRow = 0,
+    AwardCategoryRow,
+    AwardYearRow,
+    AwardDataSectionRowCount,
+} AwardDataSectionRows;
+
 typedef enum PersonTypeEnum
 {
     Author = 0,
