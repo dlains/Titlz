@@ -74,7 +74,7 @@
         <attribute name="street1" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="publisher" inverseEntity="Book" syncable="YES"/>
     </entity>
-    <entity name="Seller" syncable="YES">
+    <entity name="Seller" representedClassName="Seller" syncable="YES">
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
@@ -84,6 +84,7 @@
         <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="street" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="street1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="website" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="books" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="boughtFrom" inverseEntity="Book" syncable="YES"/>
     </entity>
     <elements>
@@ -94,6 +95,6 @@
         <element name="Person" positionX="-8244" positionY="-7524" width="128" height="225"/>
         <element name="Point" positionX="-8417" positionY="-7047" width="128" height="90"/>
         <element name="Publisher" positionX="-8417" positionY="-7263" width="128" height="195"/>
-        <element name="Seller" positionX="-9171" positionY="-7488" width="128" height="195"/>
+        <element name="Seller" positionX="-9171" positionY="-7488" width="128" height="210"/>
     </elements>
 </model>

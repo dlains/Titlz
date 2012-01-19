@@ -1,26 +1,24 @@
 //
-//  PublisherViewController.m
+//  SellerViewController.m
 //  Titlz
 //
-//  Created by David Lains on 1/13/12.
+//  Created by David Lains on 1/18/12.
 //  Copyright (c) 2012 Dagger Lake Software. All rights reserved.
 //
 
-#import "PublisherViewController.h"
-#import "PublisherDetailViewController.h"
-#import "Publisher.h"
+#import "SellerViewController.h"
+#import "SellerDetailViewController.h"
+#import "Seller.h"
 
-@interface PublisherViewController ()
+@interface SellerViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
 -(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate;
 @end
 
-@implementation PublisherViewController
+@implementation SellerViewController
 
-@synthesize publisherDetailViewController = _publisherDetailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
-@synthesize addingManagedObjectContext = __addingManagedObjectContext;
 @synthesize delegate = _delegate;
 @synthesize selectionMode = _selectionMode;
 
@@ -29,12 +27,12 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        self.title = NSLocalizedString(@"Publishers", @"PublisherViewController header bar title.");
+        self.title = NSLocalizedString(@"Sellers", @"SellerViewController header bar title.");
     }
     return self;
 }
 
--(void) didReceiveMemoryWarning
+- (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -44,7 +42,7 @@
 
 #pragma mark - View lifecycle
 
--(void) viewDidLoad
+- (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
@@ -55,34 +53,34 @@
     self.navigationItem.rightBarButtonItem = addButton;
 }
 
--(void) viewDidUnload
+- (void)viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
--(void) viewWillAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 }
 
--(void) viewDidAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
 }
 
--(void) viewWillDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
 }
 
--(void) viewDidDisappear:(BOOL)animated
+- (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
 }
 
--(BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -90,30 +88,20 @@
 
 #pragma mark - Table view data source
 
--(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return [[self.fetchedResultsController sections] count];
 }
 
--(NSArray*) sectionIndexTitlesForTableView:(UITableView*)tableView
-{
-    return [self.fetchedResultsController sectionIndexTitles];
-}
-
--(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     return [sectionInfo numberOfObjects];
 }
 
--(NSInteger) tableView:(UITableView*)tableView sectionForSectionIndexTitle:(NSString*)title atIndex:(NSInteger)index
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [self.fetchedResultsController sectionForSectionIndexTitle:title atIndex:index];
-}
-
--(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
-{
-    static NSString* CellIdentifier = @"PublisherCell";
+    static NSString* CellIdentifier = @"SellerCell";
     
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -164,27 +152,17 @@
     if (self.selectionMode)
     {
         // Get the selected person and update the correct delegate.
-        Publisher* selectedPublisher = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        [self.delegate publisherViewController:self didSelectPublisher:selectedPublisher];
+        Seller* selectedSeller = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+        [self.delegate sellerViewController:self didSelectSeller:selectedSeller];
         [self.navigationController popViewControllerAnimated:YES];
     }
     else
     {
-        // Selecting a row to get detail info.
-        if (!self.publisherDetailViewController)
-        {
-            self.publisherDetailViewController = [[PublisherDetailViewController alloc] initWithNibName:@"PublisherDetailViewController" bundle:nil];
-        }
-        Publisher* selectedPublisher = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        self.publisherDetailViewController.detailItem = selectedPublisher;
-        [self.navigationController pushViewController:self.publisherDetailViewController animated:YES];
+         SellerDetailViewController* sellerDetailViewController = [[SellerDetailViewController alloc] initWithNibName:@"SellerDetailViewController" bundle:nil];
+         Seller* selectedSeller = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+         sellerDetailViewController.detailItem = selectedSeller;
+         [self.navigationController pushViewController:sellerDetailViewController animated:YES];
     }
-}
-
--(NSString*) tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
-{
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
-    return [sectionInfo name];
 }
 
 #pragma mark - Fetched results controller
@@ -204,7 +182,7 @@
 -(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate
 {
     NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription* entity = [NSEntityDescription entityForName:@"Publisher" inManagedObjectContext:self.managedObjectContext];
+    NSEntityDescription* entity = [NSEntityDescription entityForName:@"Seller" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number.
@@ -218,13 +196,13 @@
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
-    NSString* cacheName = @"Publisher";
+    NSString* cacheName = @"Seller";
     if (predicate)
         cacheName = nil;
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfName" cacheName:cacheName];
+    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:cacheName];
     controller.delegate = self;
     self.fetchedResultsController = controller;
     
@@ -304,8 +282,8 @@
 
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
 {
-    Publisher* publisher = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = publisher.name;
+    Seller* seller = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = seller.name;
 }
 
 #pragma mark - Search delegate
@@ -322,52 +300,34 @@
     self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:nil];
 }
 
-#pragma mark - New Publisher Handling
+#pragma mark - New Seller Handling
 
 -(void) insertNewObject
 {
-    NewPublisherViewController* newPublisherViewController = [[NewPublisherViewController alloc] initWithStyle:UITableViewStyleGrouped];
-	newPublisherViewController.delegate = self;
+    NewSellerViewController* newSellerViewController = [[NewSellerViewController alloc] initWithStyle:UITableViewStyleGrouped];
+	newSellerViewController.delegate = self;
+	newSellerViewController.detailItem = [Seller sellerInManagedObjectContext:self.managedObjectContext];
 	
-	// Create a new managed object context for the new title -- set its persistent store coordinator to the same as that from the fetched results controller's context.
-	self.addingManagedObjectContext = [[NSManagedObjectContext alloc] init];
-	
-	[self.addingManagedObjectContext setPersistentStoreCoordinator:[[self.fetchedResultsController managedObjectContext] persistentStoreCoordinator]];
-    
-	newPublisherViewController.detailItem = [Publisher publisherInManagedObjectContext:self.addingManagedObjectContext];
-	
-	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newPublisherViewController];
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newSellerViewController];
 	
     [self.navigationController presentModalViewController:navController animated:YES];
 }
 
--(void) newPublisherViewController:(NewPublisherViewController *)controller didFinishWithSave:(BOOL)save
+-(void) newSellerViewController:(NewSellerViewController*)controller didFinishWithSave:(BOOL)save
 {
     if (save)
     {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addControllerContextDidSave:) name:NSManagedObjectContextDidSaveNotification object:self.addingManagedObjectContext];
-		
 		NSError *error;
-		if (![self.addingManagedObjectContext save:&error])
+		if (![self.managedObjectContext save:&error])
         {
 			// Update to handle the error appropriately.
 			DLog(@"Unresolved error %@, %@", error, [error userInfo]);
 			exit(-1);  // Fail
 		}
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextDidSaveNotification object:self.addingManagedObjectContext];
     }
     
+    [self.tableView reloadData];
     [self dismissModalViewControllerAnimated:YES];
-}
-
-/**
- Notification from the add controller's context's save operation. This is used to update the fetched results controller's managed object context with the new book instead of performing a fetch (which would be a much more computationally expensive operation).
- */
--(void) addControllerContextDidSave:(NSNotification*)saveNotification
-{
-	NSManagedObjectContext* context = [self.fetchedResultsController managedObjectContext];
-	// Merging changes causes the fetched results controller to update its results
-	[context mergeChangesFromContextDidSaveNotification:saveNotification];	
 }
 
 @end

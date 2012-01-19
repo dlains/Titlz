@@ -10,7 +10,7 @@
 #import "DLPoint.h"
 #import "Person.h"
 #import "Publisher.h"
-
+#import "Seller.h"
 
 @implementation Book
 

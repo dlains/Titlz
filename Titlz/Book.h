@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class DLPoint, Person, Publisher;
+@class DLPoint, Person, Publisher, Seller;
 
 @interface Book : NSManagedObject
 
@@ -39,7 +39,7 @@
 @property (nonatomic, retain) NSSet* contributors;
 @property (nonatomic, retain) NSSet* editors;
 @property (nonatomic, retain) NSSet* illustrators;
-@property (nonatomic, retain) NSManagedObject* boughtFrom;
+@property (nonatomic, retain) Seller* boughtFrom;
 @property (nonatomic, retain) Publisher* publisher;
 @property (nonatomic, retain) NSSet* points;
 

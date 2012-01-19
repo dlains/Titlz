@@ -1,37 +1,35 @@
 //
-//  PublisherDetailViewController.m
+//  SellerDetailViewController.m
 //  Titlz
 //
-//  Created by David Lains on 1/13/12.
+//  Created by David Lains on 1/18/12.
 //  Copyright (c) 2012 Dagger Lake Software. All rights reserved.
 //
 
-#import "PublisherDetailViewController.h"
+#import "SellerDetailViewController.h"
 #import "BookDetailViewController.h"
 #import "EditableTextCell.h"
-#import "Publisher.h"
+#import "Seller.h"
 #import "Book.h"
 
-@interface PublisherDetailViewController ()
+@interface SellerDetailViewController ()
 -(UITableViewCell*) configureDataCellForRow:(NSInteger)row;
 -(UITableViewCell*) configureBooksCellAtIndexPath:(NSIndexPath*)indexPath;
 -(void) loadBookDetailViewForBookAtIndexPath:(NSIndexPath*)indexPath;
 -(Book*) sortedBookFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 @end
 
-@implementation PublisherDetailViewController
+@implementation SellerDetailViewController
 
 @synthesize detailItem = _detailItem;
 @synthesize undoManager = _undoManager;
-
-#pragma mark - Initialization
 
 -(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        self.title = NSLocalizedString(@"Publisher", @"PublisherDetailViewController header bar title.");
+        self.title = NSLocalizedString(@"Seller", @"SellerDetailViewController header bar title.");
     }
     return self;
 }
@@ -53,7 +51,7 @@
 -(void) viewDidUnload
 {
     [super viewDidUnload];
-
+    
     self.detailItem = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -121,10 +119,10 @@
 	}
 	
 	// Register as an observer of the title's context's undo manager.
-	NSUndoManager* titleUndoManager = self.detailItem.managedObjectContext.undoManager;
+	NSUndoManager* undoManager = self.detailItem.managedObjectContext.undoManager;
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidUndo:) name:NSUndoManagerDidUndoChangeNotification object:titleUndoManager];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidRedo:) name:NSUndoManagerDidRedoChangeNotification object:titleUndoManager];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidUndo:) name:NSUndoManagerDidUndoChangeNotification object:undoManager];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidRedo:) name:NSUndoManagerDidRedoChangeNotification object:undoManager];
 }
 
 -(void) cleanUpUndoManager
@@ -160,29 +158,35 @@
 {
     switch (textField.tag)
     {
-        case PublisherNameRow:
+        case SellerNameRow:
             self.detailItem.name = textField.text;
             break;
-        case PublisherParentRow:
-            self.detailItem.parent = textField.text;
-            break;
-        case PublisherStreetRow:
+        case SellerStreetRow:
             self.detailItem.street = textField.text;
             break;
-        case PublisherStreet1Row:
+        case SellerStreet1Row:
             self.detailItem.street1 = textField.text;
             break;
-        case PublisherCityRow:
+        case SellerCityRow:
             self.detailItem.city = textField.text;
             break;
-        case PublisherStateRow:
+        case SellerStateRow:
             self.detailItem.state = textField.text;
             break;
-        case PublisherPostalCodeRow:
+        case SellerPostalCodeRow:
             self.detailItem.postalCode = textField.text;
             break;
-        case PublisherCountryRow:
+        case SellerCountryRow:
             self.detailItem.country = textField.text;
+            break;
+        case SellerEmailRow:
+            self.detailItem.email = textField.text;
+            break;
+        case SellerPhoneRow:
+            self.detailItem.phone = textField.text;
+            break;
+        case SellerWebsiteRow:
+            self.detailItem.phone = textField.text;
             break;
         default:
             break;
@@ -221,16 +225,16 @@
 
 -(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
 {
-    return PublisherDetailSectionCount;
+    return SellerDetailSectionCount;
 }
 
--(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     switch (section)
     {
-        case PublisherDataSection:
-            return PublisherDataSectionRowCount;
-        case PublisherBooksSection:
+        case SellerDataSection:
+            return SellerDataSectionRowCount;
+        case SellerBooksSection:
             return self.detailItem.books.count;
         default:
             return 0;
@@ -250,7 +254,7 @@
             cell = [self configureBooksCellAtIndexPath:indexPath];
             break;
         default:
-            DLog(@"Invalid PublisherDetailViewController section found: %i.", indexPath.section);
+            DLog(@"Invalid SellerDetailViewController section found: %i.", indexPath.section);
             break;
     }
     
@@ -262,12 +266,12 @@
 {
     switch (indexPath.section)
     {
-        case PublisherDataSection:
+        case SellerDataSection:
             return UITableViewCellEditingStyleNone;
-        case PublisherBooksSection:
+        case SellerBooksSection:
             return UITableViewCellEditingStyleNone;
         default:
-            DLog(@"Invalid PublisherDetailViewController section found: %i.", indexPath.section);
+            DLog(@"Invalid SellerDetailViewController section found: %i.", indexPath.section);
             return UITableViewCellEditingStyleNone;
     }
 }
@@ -308,13 +312,13 @@
 {
     switch (indexPath.section)
     {
-        case PublisherDataSection:
+        case SellerDataSection:
             break;
-        case PublisherBooksSection:
+        case SellerBooksSection:
             [self loadBookDetailViewForBookAtIndexPath:indexPath];
             break;
         default:
-            DLog(@"Invalid PublisherDetailViewController section found: %i.", indexPath.section);
+            DLog(@"Invalid SellerDetailViewController section found: %i.", indexPath.section);
             break;
     }
 }
@@ -326,12 +330,12 @@
     
     switch (section)
     {
-        case PublisherDataSection:
+        case SellerDataSection:
             break;
-        case PublisherBooksSection:
+        case SellerBooksSection:
             if (self.detailItem.books.count > 0)
             {
-                header = NSLocalizedString(@"Published Books", @"PublisherDetailViewController Books section header.");
+                header = NSLocalizedString(@"Books Bought", @"SellerDetailViewController Books section header.");
             }
             break;
         default:
@@ -356,45 +360,58 @@
     
     switch (row)
     {
-        case PublisherNameRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Name", @"PublisherDetailViewController name data field label.");
+        case SellerNameRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Name", @"SellerDetailViewController name data field label.");
             cell.textField.text = self.detailItem.name;
-            cell.textField.tag = PublisherNameRow;
+            cell.textField.tag = SellerNameRow;
             break;
-        case PublisherParentRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Parent", @"PublisherDetailViewController parent data field label.");
-            cell.textField.text = self.detailItem.parent;
-            cell.textField.tag = PublisherParentRow;
-            break;
-        case PublisherStreetRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Street", @"PublisherDetailViewController street data field label.");
+        case SellerStreetRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Street", @"SellerDetailViewController street data field label.");
             cell.textField.text = self.detailItem.street;
-            cell.textField.tag = PublisherStreetRow;
+            cell.textField.tag = SellerStreetRow;
             break;
-        case PublisherStreet1Row:
-            cell.fieldLabel.text = NSLocalizedString(@"Street", @"PublisherDetailViewController street data field label.");
+        case SellerStreet1Row:
+            cell.fieldLabel.text = NSLocalizedString(@"Street", @"SellerDetailViewController street data field label.");
             cell.textField.text = self.detailItem.street1;
-            cell.textField.tag = PublisherStreet1Row;
+            cell.textField.tag = SellerStreet1Row;
             break;
-        case PublisherCityRow:
-            cell.fieldLabel.text = NSLocalizedString(@"City", @"PublisherDetailViewController city data field label.");
+        case SellerCityRow:
+            cell.fieldLabel.text = NSLocalizedString(@"City", @"SellerDetailViewController city data field label.");
             cell.textField.text = self.detailItem.city;
-            cell.textField.tag = PublisherCityRow;
+            cell.textField.tag = SellerCityRow;
             break;
-        case PublisherStateRow:
-            cell.fieldLabel.text = NSLocalizedString(@"State", @"PublisherDetailViewController state data field label.");
+        case SellerStateRow:
+            cell.fieldLabel.text = NSLocalizedString(@"State", @"SellerDetailViewController state data field label.");
             cell.textField.text = self.detailItem.state;
-            cell.textField.tag = PublisherStateRow;
+            cell.textField.tag = SellerStateRow;
             break;
-        case PublisherPostalCodeRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Postal Code", @"PublisherDetailViewController postalCode data field label.");
+        case SellerPostalCodeRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Postal Code", @"SellerDetailViewController postalCode data field label.");
             cell.textField.text = self.detailItem.postalCode;
-            cell.textField.tag = PublisherPostalCodeRow;
+            cell.textField.tag = SellerPostalCodeRow;
             break;
-        case PublisherCountryRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Country", @"PublisherDetailViewController country data field label.");
+        case SellerCountryRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Country", @"SellerDetailViewController country data field label.");
             cell.textField.text = self.detailItem.country;
-            cell.textField.tag = PublisherCountryRow;
+            cell.textField.tag = SellerCountryRow;
+            break;
+        case SellerEmailRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Email", @"SellerDetailViewController email data field label.");
+            cell.textField.text = self.detailItem.email;
+            cell.textField.tag = SellerEmailRow;
+            cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
+            break;
+        case SellerPhoneRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Phone", @"SellerDetailViewController phone data field label.");
+            cell.textField.text = self.detailItem.email;
+            cell.textField.tag = SellerPhoneRow;
+            cell.textField.keyboardType = UIKeyboardTypePhonePad;
+            break;
+        case SellerWebsiteRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Website", @"SellerDetailViewController website data field label.");
+            cell.textField.text = self.detailItem.email;
+            cell.textField.tag = SellerWebsiteRow;
+            cell.textField.keyboardType = UIKeyboardTypeURL;
             break;
         default:
             break;

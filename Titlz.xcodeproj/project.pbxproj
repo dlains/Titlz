@@ -22,6 +22,12 @@
 		55B5C4C714C73F8B0022B33D /* LookupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55B5C4C514C73F8B0022B33D /* LookupViewController.xib */; };
 		55B5C4CA14C745740022B33D /* Lookup.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B5C4C914C745740022B33D /* Lookup.m */; };
 		55B5C4CD14C749890022B33D /* NewLookupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B5C4CC14C749890022B33D /* NewLookupViewController.m */; };
+		55B5C4D214C797DE0022B33D /* SellerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B5C4D014C797DE0022B33D /* SellerViewController.m */; };
+		55B5C4D314C797DE0022B33D /* SellerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55B5C4D114C797DE0022B33D /* SellerViewController.xib */; };
+		55B5C4D714C798960022B33D /* SellerDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B5C4D514C798960022B33D /* SellerDetailViewController.m */; };
+		55B5C4D814C798960022B33D /* SellerDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55B5C4D614C798960022B33D /* SellerDetailViewController.xib */; };
+		55B5C4DB14C798B70022B33D /* NewSellerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B5C4DA14C798B70022B33D /* NewSellerViewController.m */; };
+		55B5C4DE14C799BF0022B33D /* Seller.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B5C4DD14C799BF0022B33D /* Seller.m */; };
 		55C123E514C0AB1700827F61 /* PublisherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C123E314C0AB1700827F61 /* PublisherViewController.m */; };
 		55C123E614C0AB1700827F61 /* PublisherViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55C123E414C0AB1700827F61 /* PublisherViewController.xib */; };
 		55C123EA14C0B29D00827F61 /* PublisherDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C123E814C0B29D00827F61 /* PublisherDetailViewController.m */; };
@@ -69,6 +75,16 @@
 		55B5C4C914C745740022B33D /* Lookup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Lookup.m; sourceTree = "<group>"; };
 		55B5C4CB14C749890022B33D /* NewLookupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewLookupViewController.h; sourceTree = "<group>"; };
 		55B5C4CC14C749890022B33D /* NewLookupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewLookupViewController.m; sourceTree = "<group>"; };
+		55B5C4CF14C797DE0022B33D /* SellerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SellerViewController.h; sourceTree = "<group>"; };
+		55B5C4D014C797DE0022B33D /* SellerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SellerViewController.m; sourceTree = "<group>"; };
+		55B5C4D114C797DE0022B33D /* SellerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SellerViewController.xib; sourceTree = "<group>"; };
+		55B5C4D414C798960022B33D /* SellerDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SellerDetailViewController.h; sourceTree = "<group>"; };
+		55B5C4D514C798960022B33D /* SellerDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SellerDetailViewController.m; sourceTree = "<group>"; };
+		55B5C4D614C798960022B33D /* SellerDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SellerDetailViewController.xib; sourceTree = "<group>"; };
+		55B5C4D914C798B70022B33D /* NewSellerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewSellerViewController.h; sourceTree = "<group>"; };
+		55B5C4DA14C798B70022B33D /* NewSellerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewSellerViewController.m; sourceTree = "<group>"; };
+		55B5C4DC14C799BF0022B33D /* Seller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Seller.h; sourceTree = "<group>"; };
+		55B5C4DD14C799BF0022B33D /* Seller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Seller.m; sourceTree = "<group>"; };
 		55C123E214C0AB1700827F61 /* PublisherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublisherViewController.h; sourceTree = "<group>"; };
 		55C123E314C0AB1700827F61 /* PublisherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublisherViewController.m; sourceTree = "<group>"; };
 		55C123E414C0AB1700827F61 /* PublisherViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PublisherViewController.xib; sourceTree = "<group>"; };
@@ -131,6 +147,8 @@
 				55EB3C4514B13E5600721D42 /* Person.m */,
 				55EDF6FB14C4B1F100C4BCE5 /* Publisher.h */,
 				55EDF6FC14C4B1F100C4BCE5 /* Publisher.m */,
+				55B5C4DC14C799BF0022B33D /* Seller.h */,
+				55B5C4DD14C799BF0022B33D /* Seller.m */,
 			);
 			name = Entities;
 			sourceTree = "<group>";
@@ -192,6 +210,7 @@
 				55C6968F14B2D25F00DA4172 /* Book */,
 				55D4A74814B51C2700BAA15E /* Person */,
 				55C123E014C0AAD300827F61 /* Publisher */,
+				55B5C4CE14C797A50022B33D /* Seller */,
 				55B5C4C114C73DC30022B33D /* Lookup */,
 				55EB3C3B14B0CC1300721D42 /* DLog.h */,
 				55EB3C3C14B0CC1300721D42 /* DLog.m */,
@@ -214,6 +233,8 @@
 				55EB3C4114B13D1D00721D42 /* PersonDetailViewController.xib */,
 				55C123E414C0AB1700827F61 /* PublisherViewController.xib */,
 				55C123E914C0B29D00827F61 /* PublisherDetailViewController.xib */,
+				55B5C4D114C797DE0022B33D /* SellerViewController.xib */,
+				55B5C4D614C798960022B33D /* SellerDetailViewController.xib */,
 				552C741714AE8EBB00595DE9 /* EditableTextCell.xib */,
 			);
 			name = Views;
@@ -238,6 +259,19 @@
 			name = Lookup;
 			sourceTree = "<group>";
 		};
+		55B5C4CE14C797A50022B33D /* Seller */ = {
+			isa = PBXGroup;
+			children = (
+				55B5C4CF14C797DE0022B33D /* SellerViewController.h */,
+				55B5C4D014C797DE0022B33D /* SellerViewController.m */,
+				55B5C4D414C798960022B33D /* SellerDetailViewController.h */,
+				55B5C4D514C798960022B33D /* SellerDetailViewController.m */,
+				55B5C4D914C798B70022B33D /* NewSellerViewController.h */,
+				55B5C4DA14C798B70022B33D /* NewSellerViewController.m */,
+			);
+			name = Seller;
+			sourceTree = "<group>";
+		};
 		55C123E014C0AAD300827F61 /* Publisher */ = {
 			isa = PBXGroup;
 			children = (
@@ -247,6 +281,7 @@
 				55C123E814C0B29D00827F61 /* PublisherDetailViewController.m */,
 				55C123EC14C0B2DD00827F61 /* NewPublisherViewController.h */,
 				55C123ED14C0B2DD00827F61 /* NewPublisherViewController.m */,
+				55EB3C4014B13D1D00721D42 /* PersonDetailViewController.m */,
 			);
 			name = Publisher;
 			sourceTree = "<group>";
@@ -270,7 +305,6 @@
 				55D4A74914B55BED00BAA15E /* PersonViewController.h */,
 				55D4A74A14B55BED00BAA15E /* PersonViewController.m */,
 				55EB3C3F14B13D1D00721D42 /* PersonDetailViewController.h */,
-				55EB3C4014B13D1D00721D42 /* PersonDetailViewController.m */,
 				55D4A74E14B55CE700BAA15E /* NewPersonViewController.h */,
 				55D4A74F14B55CE700BAA15E /* NewPersonViewController.m */,
 			);
@@ -337,6 +371,8 @@
 				55EDF6E714C4ABF600C4BCE5 /* BookDetailViewController.xib in Resources */,
 				55EDF6E814C4ABF600C4BCE5 /* BookViewController.xib in Resources */,
 				55B5C4C714C73F8B0022B33D /* LookupViewController.xib in Resources */,
+				55B5C4D314C797DE0022B33D /* SellerViewController.xib in Resources */,
+				55B5C4D814C798960022B33D /* SellerDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,6 +404,10 @@
 				55B5C4C614C73F8B0022B33D /* LookupViewController.m in Sources */,
 				55B5C4CA14C745740022B33D /* Lookup.m in Sources */,
 				55B5C4CD14C749890022B33D /* NewLookupViewController.m in Sources */,
+				55B5C4D214C797DE0022B33D /* SellerViewController.m in Sources */,
+				55B5C4D714C798960022B33D /* SellerDetailViewController.m in Sources */,
+				55B5C4DB14C798B70022B33D /* NewSellerViewController.m in Sources */,
+				55B5C4DE14C799BF0022B33D /* Seller.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -106,4 +106,26 @@ typedef enum PublisherDataSectionRowsEnum
     PublisherDataSectionRowCount
 } PublisherDataSectionRows;
 
+typedef enum SellerDetailSectionsEnum
+{
+    SellerDataSection = 0,
+    SellerBooksSection,
+    SellerDetailSectionCount
+} SellerDetailSections;
+
+typedef enum SellerDataSectionRowsEnum
+{
+    SellerNameRow = 0,
+    SellerStreetRow,
+    SellerStreet1Row,
+    SellerCityRow,
+    SellerStateRow,
+    SellerPostalCodeRow,
+    SellerCountryRow,
+    SellerEmailRow,
+    SellerPhoneRow,
+    SellerWebsiteRow,
+    SellerDataSectionRowCount
+} SellerDataSectionRows;
+
 #endif

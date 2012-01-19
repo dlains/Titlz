@@ -11,10 +11,12 @@
 #import "PersonDetailViewController.h"
 #import "PublisherViewController.h"
 #import "PublisherDetailViewController.h"
+#import "SellerDetailViewController.h"
 #import "EditableTextCell.h"
 #import "Book.h"
 #import "Person.h"
 #import "Publisher.h"
+#import "Seller.h"
 
 @interface BookDetailViewController ()
 -(UITableViewCell*) configureDataCellAtIndexPath:(NSIndexPath*)indexPath;
@@ -34,6 +36,8 @@
 -(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
 -(void) loadPublisherView;
 -(void) loadPublisherDetailViewForPublisher:(Publisher*)publisher;
+-(void) loadSellerView;
+-(void) loadSellerDetailViewForSeller:(Seller*)seller;
 -(void) showLookupViewControllerForLookupType:(LookupType)type;
 @end
 
@@ -494,6 +498,7 @@
 -(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
     NSInteger publisherInsertionRow = (self.detailItem.publisher != nil) ? 1 : 0;
+    NSInteger boughtFromInsertionRow = (self.detailItem.boughtFrom != nil) ? 1 : 0;
 
     switch (indexPath.section)
     {
@@ -538,6 +543,10 @@
                 [self loadPublisherDetailViewForPublisher:self.detailItem.publisher];
             break;
         case BookBoughtFromSection:
+            if (indexPath.row == boughtFromInsertionRow)
+                [self loadSellerView];
+            else
+                [self loadSellerDetailViewForSeller:self.detailItem.boughtFrom];
             break;
         case BookCollectionSection:
             break;
@@ -1040,7 +1049,7 @@
     }
     else
     {
-//        cell.textLabel.text = self.detailItem.boughtFrom.name;
+        cell.textLabel.text = self.detailItem.boughtFrom.name;
     }
     
     return cell;
@@ -1102,6 +1111,23 @@
 -(void) publisherViewController:(PublisherViewController *)controller didSelectPublisher:(Publisher *)publisher
 {
     self.detailItem.publisher = publisher;
+    
+    NSError* error;
+    if (![self.detailItem.managedObjectContext save:&error])
+    {
+        // Update to handle the error appropriately.
+        DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        exit(-1);  // Fail
+    }
+    
+    [self.tableView reloadData];
+}
+
+#pragma mark - Seller Selection Delegate Method
+
+-(void) sellerViewController:(SellerViewController *)controller didSelectSeller:(Seller*)seller
+{
+    self.detailItem.boughtFrom = seller;
     
     NSError* error;
     if (![self.detailItem.managedObjectContext save:&error])
@@ -1190,6 +1216,26 @@
         PublisherDetailViewController* publisherDetailViewController = [[PublisherDetailViewController alloc] initWithNibName:@"PublisherDetailViewController" bundle:nil];
         publisherDetailViewController.detailItem = publisher;
         [self.navigationController pushViewController:publisherDetailViewController animated:YES];
+    }
+}
+
+-(void) loadSellerView
+{
+    SellerViewController* sellerViewController = [[SellerViewController alloc] initWithNibName:@"SellerViewController" bundle:nil];
+    sellerViewController.delegate = self;
+    sellerViewController.managedObjectContext = self.detailItem.managedObjectContext;
+    sellerViewController.selectionMode = TRUE;
+    
+    [self.navigationController pushViewController:sellerViewController animated:YES];
+}
+
+-(void) loadSellerDetailViewForSeller:(Seller*)seller
+{
+    if (seller)
+    {
+        SellerDetailViewController* sellerDetailViewController = [[SellerDetailViewController alloc] initWithNibName:@"SellerDetailViewController" bundle:nil];
+        sellerDetailViewController.detailItem = seller;
+        [self.navigationController pushViewController:sellerDetailViewController animated:YES];
     }
 }
 
