@@ -31,7 +31,7 @@
         <relationship name="contributors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="contributed" inverseEntity="Person" syncable="YES"/>
         <relationship name="editors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="edited" inverseEntity="Person" syncable="YES"/>
         <relationship name="illustrators" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="illustrated" inverseEntity="Person" syncable="YES"/>
-        <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Point" inverseName="book" inverseEntity="Point" syncable="YES"/>
+        <relationship name="points" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Point" inverseName="book" inverseEntity="Point" syncable="YES"/>
         <relationship name="publisher" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Publisher" inverseName="books" inverseEntity="Publisher" syncable="YES"/>
     </entity>
     <entity name="Collection" syncable="YES">

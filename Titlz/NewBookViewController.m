@@ -123,39 +123,37 @@
             self.detailItem.title = textField.text;
             break;
         case BookFormatRow:
-            break;
         case BookEditionRow:
             break;
         case BookPrintingRow:
-            self.detailItem.printing = [NSNumber numberWithInt:[textField.text intValue]];
+            self.detailItem.printing = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
         case BookIsbnRow:
             self.detailItem.isbn = textField.text;
             break;
         case BookPagesRow:
-            self.detailItem.pages = [NSNumber numberWithInt:[textField.text intValue]];
+            self.detailItem.pages = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
         case BookReleaseDateRow:
         case BookPurchaseDateRow:
             break;
         case BookOriginalPriceRow:
-            self.detailItem.originalPrice = [NSDecimalNumber decimalNumberWithString:textField.text];
+            self.detailItem.originalPrice = ([textField.text length] > 0) ? [NSDecimalNumber decimalNumberWithString:textField.text] : nil;
             break;
         case BookPricePaidRow:
-            self.detailItem.pricePaid = [NSDecimalNumber decimalNumberWithString:textField.text];
+            self.detailItem.pricePaid = ([textField.text length] > 0) ? [NSDecimalNumber decimalNumberWithString:textField.text] : nil;
             break;
         case BookCurrentValueRow:
-            self.detailItem.currentValue = [NSDecimalNumber decimalNumberWithString:textField.text];
+            self.detailItem.currentValue = ([textField.text length] > 0) ? [NSDecimalNumber decimalNumberWithString:textField.text] : nil;
             break;
         case BookBookConditionRow:
-            break;
         case BookJacketConditionRow:
             break;
         case BookNumberRow:
-            self.detailItem.number = [NSNumber numberWithInt:[textField.text intValue]];
+            self.detailItem.number = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
         case BookPrintRunRow:
-            self.detailItem.printRun = [NSNumber numberWithInt:[textField.text intValue]];
+            self.detailItem.printRun = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
         case BookCommentsRow:
             self.detailItem.comments = textField.text;

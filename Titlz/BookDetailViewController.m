@@ -13,12 +13,14 @@
 #import "PublisherDetailViewController.h"
 #import "SellerDetailViewController.h"
 #import "AwardDetailViewController.h"
+#import "PointDetailViewController.h"
 #import "EditableTextCell.h"
 #import "Book.h"
 #import "Person.h"
 #import "Publisher.h"
 #import "Seller.h"
 #import "Award.h"
+#import "DLPoint.h"
 
 @interface BookDetailViewController ()
 -(UITableViewCell*) configureDataCellAtIndexPath:(NSIndexPath*)indexPath;
@@ -34,6 +36,7 @@
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection;
 -(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(Award*) sortedAwardFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(DLPoint*) sortedPointFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
 -(void) loadPersonViewControllerForPersonType:(PersonType)type;
 -(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
@@ -44,6 +47,8 @@
 -(void) showLookupViewControllerForLookupType:(LookupType)type;
 -(void) loadNewAwardView;
 -(void) loadAwardDetailViewForAwardAtIndexPath:(NSIndexPath*)indexPath;
+-(void) loadNewPointView;
+-(void) loadPointDetailViewForPointAtIndexPath:(NSIndexPath*)indexPath;
 @end
 
 @implementation BookDetailViewController
@@ -241,34 +246,34 @@
         case BookEditionRow:
             break;
         case BookPrintingRow:
-            self.detailItem.printing = [NSNumber numberWithInt:[textField.text intValue]];
+            self.detailItem.printing = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
         case BookIsbnRow:
             self.detailItem.isbn = textField.text;
             break;
         case BookPagesRow:
-            self.detailItem.pages = [NSNumber numberWithInt:[textField.text intValue]];
+            self.detailItem.pages = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
         case BookReleaseDateRow:
         case BookPurchaseDateRow:
             break;
         case BookOriginalPriceRow:
-            self.detailItem.originalPrice = [NSDecimalNumber decimalNumberWithString:textField.text];
+            self.detailItem.originalPrice = ([textField.text length] > 0) ? [NSDecimalNumber decimalNumberWithString:textField.text] : nil;
             break;
         case BookPricePaidRow:
-            self.detailItem.pricePaid = [NSDecimalNumber decimalNumberWithString:textField.text];
+            self.detailItem.pricePaid = ([textField.text length] > 0) ? [NSDecimalNumber decimalNumberWithString:textField.text] : nil;
             break;
         case BookCurrentValueRow:
-            self.detailItem.currentValue = [NSDecimalNumber decimalNumberWithString:textField.text];
+            self.detailItem.currentValue = ([textField.text length] > 0) ? [NSDecimalNumber decimalNumberWithString:textField.text] : nil;
             break;
         case BookBookConditionRow:
         case BookJacketConditionRow:
             break;
         case BookNumberRow:
-            self.detailItem.number = [NSNumber numberWithInt:[textField.text intValue]];
+            self.detailItem.number = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
         case BookPrintRunRow:
-            self.detailItem.printRun = [NSNumber numberWithInt:[textField.text intValue]];
+            self.detailItem.printRun = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
         case BookCommentsRow:
             self.detailItem.comments = textField.text;
@@ -540,6 +545,10 @@
                 [self loadAwardDetailViewForAwardAtIndexPath:indexPath];
             break;
         case BookPointSection:
+            if (indexPath.row == self.detailItem.points.count)
+                [self loadNewPointView];
+            else
+                [self loadPointDetailViewForPointAtIndexPath:indexPath];
             break;
         case BookPublisherSection:
             if (indexPath.row == publisherInsertionRow)
@@ -591,6 +600,8 @@
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             case BookPointSection:
+                [self.detailItem removePointsObject:[self sortedPointFromSet:self.detailItem.points atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
                 break;
             case BookPublisherSection:
                 self.detailItem.publisher = nil;
@@ -672,13 +683,11 @@
                 header = NSLocalizedString(@"Publisher", @"BookDetailViewController Publisher section header.");
             }
             break;
-            break;
         case BookBoughtFromSection:
             if (self.detailItem.boughtFrom || self.editing)
             {
                 header = NSLocalizedString(@"Bought From", @"BookDetailViewController Bought From section header.");
             }
-            break;
             break;
         case BookCollectionSection:
             if (self.detailItem.collections.count > 0 || self.editing)
@@ -993,8 +1002,8 @@
     }
     else
     {
-        //        Award* award = [self sortedEditionFromSet:self.detailItem.awards atIndexPath:indexPath];
-        //        cell.textLabel.text = award.name;
+        DLPoint* point = [self sortedPointFromSet:self.detailItem.points atIndexPath:indexPath];
+        cell.textLabel.text = point.issue;
     }
     
     return cell;
@@ -1170,6 +1179,27 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
+#pragma mark - New Point Handling
+
+-(void) newPointViewController:(NewPointViewController*)controller didFinishWithSave:(BOOL)save
+{
+    if (save)
+    {
+        [self.detailItem addPointsObject:controller.detailItem];
+        
+		NSError *error;
+		if (![self.managedObjectContext save:&error])
+        {
+			// Update to handle the error appropriately.
+			DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+			exit(-1);  // Fail
+		}
+    }
+    
+    [self.tableView reloadData];
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 #pragma mark - Local Helper Methods
 
 -(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
@@ -1186,6 +1216,14 @@
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     NSArray* sortedAwards = [set sortedArrayUsingDescriptors:sortDescriptors];
     return [sortedAwards objectAtIndex:indexPath.row];
+}
+
+-(DLPoint*) sortedPointFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"issue" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedPoints = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedPoints objectAtIndex:indexPath.row];
 }
 
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath
@@ -1307,6 +1345,29 @@
     {
         awardDetailViewController.detailItem = selectedAward;
         [self.navigationController pushViewController:awardDetailViewController animated:YES];
+    }
+}
+
+-(void) loadNewPointView
+{
+    NewPointViewController* newPointViewController = [[NewPointViewController alloc] initWithStyle:UITableViewStyleGrouped];
+	newPointViewController.delegate = self;
+	newPointViewController.detailItem = [DLPoint pointInManagedObjectContext:self.managedObjectContext];
+	
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newPointViewController];
+	
+    [self.navigationController presentModalViewController:navController animated:YES];
+}
+
+-(void) loadPointDetailViewForPointAtIndexPath:(NSIndexPath*)indexPath
+{
+    PointDetailViewController* pointDetailViewController = [[PointDetailViewController alloc] initWithNibName:@"PointDetailViewController" bundle:nil];
+    DLPoint* selectedPoint = [self sortedPointFromSet:self.detailItem.points atIndexPath:indexPath];
+    
+    if (selectedPoint)
+    {
+        pointDetailViewController.detailItem = selectedPoint;
+        [self.navigationController pushViewController:pointDetailViewController animated:YES];
     }
 }
 

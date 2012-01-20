@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5508606014C91CF40051DEA2 /* PointDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5508605E14C91CF40051DEA2 /* PointDetailViewController.m */; };
+		5508606114C91CF40051DEA2 /* PointDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5508605F14C91CF40051DEA2 /* PointDetailViewController.xib */; };
+		5508606414C91D4B0051DEA2 /* NewPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5508606314C91D4B0051DEA2 /* NewPointViewController.m */; };
 		552C741814AE8EBB00595DE9 /* EditableTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552C741714AE8EBB00595DE9 /* EditableTextCell.xib */; };
 		552C741C14AE926600595DE9 /* EditableTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C741B14AE926600595DE9 /* EditableTextCell.m */; };
 		556E593914C8A898000C4CBC /* Award.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E593814C8A898000C4CBC /* Award.m */; };
@@ -54,6 +57,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5508605D14C91CF40051DEA2 /* PointDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointDetailViewController.h; sourceTree = "<group>"; };
+		5508605E14C91CF40051DEA2 /* PointDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointDetailViewController.m; sourceTree = "<group>"; };
+		5508605F14C91CF40051DEA2 /* PointDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointDetailViewController.xib; sourceTree = "<group>"; };
+		5508606214C91D4B0051DEA2 /* NewPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPointViewController.h; sourceTree = "<group>"; };
+		5508606314C91D4B0051DEA2 /* NewPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewPointViewController.m; sourceTree = "<group>"; };
 		552C741714AE8EBB00595DE9 /* EditableTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditableTextCell.xib; sourceTree = "<group>"; };
 		552C741A14AE926600595DE9 /* EditableTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableTextCell.h; sourceTree = "<group>"; };
 		552C741B14AE926600595DE9 /* EditableTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditableTextCell.m; sourceTree = "<group>"; };
@@ -145,6 +153,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5508605C14C91CBA0051DEA2 /* Point */ = {
+			isa = PBXGroup;
+			children = (
+				5508605D14C91CF40051DEA2 /* PointDetailViewController.h */,
+				5508605E14C91CF40051DEA2 /* PointDetailViewController.m */,
+				5508606214C91D4B0051DEA2 /* NewPointViewController.h */,
+				5508606314C91D4B0051DEA2 /* NewPointViewController.m */,
+			);
+			name = Point;
+			sourceTree = "<group>";
+		};
 		5562329C14AAF1FA0099765E /* Entities */ = {
 			isa = PBXGroup;
 			children = (
@@ -234,6 +253,7 @@
 				556E593A14C8A8F5000C4CBC /* Award */,
 				55C6968F14B2D25F00DA4172 /* Book */,
 				55D4A74814B51C2700BAA15E /* Person */,
+				5508605C14C91CBA0051DEA2 /* Point */,
 				55C123E014C0AAD300827F61 /* Publisher */,
 				55B5C4CE14C797A50022B33D /* Seller */,
 				55B5C4C114C73DC30022B33D /* Lookup */,
@@ -257,6 +277,7 @@
 				55B5C4C514C73F8B0022B33D /* LookupViewController.xib */,
 				55D4A74B14B55BED00BAA15E /* PersonViewController.xib */,
 				55EB3C4114B13D1D00721D42 /* PersonDetailViewController.xib */,
+				5508605F14C91CF40051DEA2 /* PointDetailViewController.xib */,
 				55C123E414C0AB1700827F61 /* PublisherViewController.xib */,
 				55C123E914C0B29D00827F61 /* PublisherDetailViewController.xib */,
 				55B5C4D114C797DE0022B33D /* SellerViewController.xib */,
@@ -400,6 +421,7 @@
 				55B5C4D314C797DE0022B33D /* SellerViewController.xib in Resources */,
 				55B5C4D814C798960022B33D /* SellerDetailViewController.xib in Resources */,
 				556E594414C8A953000C4CBC /* AwardDetailViewController.xib in Resources */,
+				5508606114C91CF40051DEA2 /* PointDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +460,8 @@
 				556E593914C8A898000C4CBC /* Award.m in Sources */,
 				556E594314C8A953000C4CBC /* AwardDetailViewController.m in Sources */,
 				556E594714C8A974000C4CBC /* NewAwardViewController.m in Sources */,
+				5508606014C91CF40051DEA2 /* PointDetailViewController.m in Sources */,
+				5508606414C91D4B0051DEA2 /* NewPointViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

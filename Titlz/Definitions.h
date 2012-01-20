@@ -100,6 +100,19 @@ typedef enum PersonDataSectionRowsEnum
     PersonDataSectionRowCount
 } PersonDataSectionRows;
 
+typedef enum PointDetailSectionsEnum
+{
+    PointDataSection = 0,
+    PointDetailSectionCount,
+} PointDetailSections;
+
+typedef enum PointDataSectionRowsEnum
+{
+    PointIssueRow = 0,
+    PointLocationRow,
+    PointDataSectionRowCount,
+} PointDataSectionRows;
+
 typedef enum PublisherDetailSectionsEnum
 {
     PublisherDataSection = 0,
