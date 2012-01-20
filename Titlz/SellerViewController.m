@@ -125,17 +125,7 @@
         [context deleteObject:[self.fetchedResultsController objectAtIndexPath:indexPath]];
         
         // Save the context.
-        NSError *error = nil;
-        if (![context save:&error])
-        {
-            /*
-             Replace this implementation with code to handle the error appropriately.
-             
-             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-             */
-            DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
+        [ContextSaver saveContext:context];
     }   
 }
 
@@ -317,13 +307,7 @@
 {
     if (save)
     {
-		NSError *error;
-		if (![self.managedObjectContext save:&error])
-        {
-			// Update to handle the error appropriately.
-			DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-			exit(-1);  // Fail
-		}
+        [ContextSaver saveContext:self.managedObjectContext];
     }
     
     [self.tableView reloadData];

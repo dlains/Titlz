@@ -208,13 +208,7 @@
     {
 		[self cleanUpUndoManager];
 		// Save the changes.
-		NSError* error;
-		if (![self.detailItem.managedObjectContext save:&error])
-        {
-			// Update to handle the error appropriately.
-			DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-			exit(-1);  // Fail
-		}
+        [ContextSaver saveContext:self.detailItem.managedObjectContext];
         [self.tableView reloadData];
     }
 }

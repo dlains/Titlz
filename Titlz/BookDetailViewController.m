@@ -55,7 +55,6 @@
 
 @synthesize detailItem = _detailItem;
 @synthesize undoManager = _undoManager;
-@synthesize managedObjectContext = _managedObjectContext;
 
 #pragma mark - Initialization
 
@@ -192,12 +191,7 @@
 -(void) doneButtonPressed
 {
     // Save the changes.
-    NSError* error = nil;
-    BOOL success = [[self.detailItem managedObjectContext] save:&error];
-    if(!success)
-    {
-        DLog(@"Error saving: %@.", error);
-    }
+    [ContextSaver saveContext:self.detailItem.managedObjectContext];
     
     [self.navigationController dismissModalViewControllerAnimated:YES];
 }
@@ -367,13 +361,8 @@
     {
 		[self cleanUpUndoManager];
 		// Save the changes.
-		NSError* error;
-		if (![self.detailItem.managedObjectContext save:&error])
-        {
-			// Update to handle the error appropriately.
-			DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-			exit(-1);  // Fail
-		}
+        [ContextSaver saveContext:self.detailItem.managedObjectContext];
+
         [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView reloadData];
     }
@@ -618,17 +607,7 @@
         }
         
         // Save the context.
-        NSError *error = nil;
-        if (![self.managedObjectContext save:&error])
-        {
-            /*
-             Replace this implementation with code to handle the error appropriately.
-             
-             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-             */
-            DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
+        [ContextSaver saveContext:self.detailItem.managedObjectContext];
     }   
 }
 
@@ -1113,13 +1092,7 @@
             break;
     }
     
-    NSError* error;
-    if (![self.detailItem.managedObjectContext save:&error])
-    {
-        // Update to handle the error appropriately.
-        DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        exit(-1);  // Fail
-    }
+    [ContextSaver saveContext:self.detailItem.managedObjectContext];
 
     [self.tableView reloadData];
 }
@@ -1129,14 +1102,7 @@
 -(void) publisherViewController:(PublisherViewController *)controller didSelectPublisher:(Publisher *)publisher
 {
     self.detailItem.publisher = publisher;
-    
-    NSError* error;
-    if (![self.detailItem.managedObjectContext save:&error])
-    {
-        // Update to handle the error appropriately.
-        DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        exit(-1);  // Fail
-    }
+    [ContextSaver saveContext:self.detailItem.managedObjectContext];
     
     [self.tableView reloadData];
 }
@@ -1146,14 +1112,7 @@
 -(void) sellerViewController:(SellerViewController *)controller didSelectSeller:(Seller*)seller
 {
     self.detailItem.boughtFrom = seller;
-    
-    NSError* error;
-    if (![self.detailItem.managedObjectContext save:&error])
-    {
-        // Update to handle the error appropriately.
-        DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        exit(-1);  // Fail
-    }
+    [ContextSaver saveContext:self.detailItem.managedObjectContext];
     
     [self.tableView reloadData];
 }
@@ -1166,13 +1125,7 @@
     {
         [self.detailItem addAwardsObject:controller.detailItem];
         
-		NSError *error;
-		if (![self.managedObjectContext save:&error])
-        {
-			// Update to handle the error appropriately.
-			DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-			exit(-1);  // Fail
-		}
+        [ContextSaver saveContext:self.detailItem.managedObjectContext];
     }
 
     [self.tableView reloadData];
@@ -1187,13 +1140,7 @@
     {
         [self.detailItem addPointsObject:controller.detailItem];
         
-		NSError *error;
-		if (![self.managedObjectContext save:&error])
-        {
-			// Update to handle the error appropriately.
-			DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-			exit(-1);  // Fail
-		}
+        [ContextSaver saveContext:self.detailItem.managedObjectContext];
     }
     
     [self.tableView reloadData];
@@ -1238,7 +1185,7 @@
 {
     PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
     personViewController.delegate = self;
-    personViewController.managedObjectContext = self.managedObjectContext;
+    personViewController.managedObjectContext = self.detailItem.managedObjectContext;
     personViewController.selectionMode = TRUE;
     personViewController.personSelectionType = type;
     
@@ -1329,7 +1276,7 @@
 {
     NewAwardViewController* newAwardViewController = [[NewAwardViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	newAwardViewController.delegate = self;
-	newAwardViewController.detailItem = [Award awardInManagedObjectContext:self.managedObjectContext];
+	newAwardViewController.detailItem = [Award awardInManagedObjectContext:self.detailItem.managedObjectContext];
 	
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newAwardViewController];
 	
@@ -1352,7 +1299,7 @@
 {
     NewPointViewController* newPointViewController = [[NewPointViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	newPointViewController.delegate = self;
-	newPointViewController.detailItem = [DLPoint pointInManagedObjectContext:self.managedObjectContext];
+	newPointViewController.detailItem = [DLPoint pointInManagedObjectContext:self.detailItem.managedObjectContext];
 	
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newPointViewController];
 	

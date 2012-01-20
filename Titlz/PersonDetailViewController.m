@@ -238,14 +238,10 @@
     else
     {
 		[self cleanUpUndoManager];
-		// Save the changes.
-		NSError* error;
-		if (![self.detailItem.managedObjectContext save:&error])
-        {
-			// Update to handle the error appropriately.
-			DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-			exit(-1);  // Fail
-		}
+		
+        // Save the changes.
+        [ContextSaver saveContext:self.detailItem.managedObjectContext];
+
         [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView reloadData];
     }
@@ -437,17 +433,7 @@
         }
         
         // Save the context.
-        NSError *error = nil;
-        if (![self.detailItem.managedObjectContext save:&error])
-        {
-            /*
-             Replace this implementation with code to handle the error appropriately.
-             
-             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-             */
-            DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
+        [ContextSaver saveContext:self.detailItem.managedObjectContext];
     }   
 }
 
@@ -723,13 +709,7 @@
             break;
     }
     
-    NSError* error;
-    if (![self.detailItem.managedObjectContext save:&error])
-    {
-        // Update to handle the error appropriately.
-        DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        exit(-1);  // Fail
-    }
+    [ContextSaver saveContext:self.detailItem.managedObjectContext];
     
     [self.tableView reloadData];
 }
@@ -740,13 +720,7 @@
     {
         [self.detailItem addAliasesObject:person];
 
-        NSError* error;
-        if (![self.detailItem.managedObjectContext save:&error])
-        {
-            // Update to handle the error appropriately.
-            DLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            exit(-1);  // Fail
-        }
+        [ContextSaver saveContext:self.detailItem.managedObjectContext];
         
         [self.tableView reloadData];
     }

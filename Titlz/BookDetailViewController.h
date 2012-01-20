@@ -25,7 +25,6 @@
 
 @property(nonatomic, strong) Book* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;
-@property(nonatomic, strong) NSManagedObjectContext* managedObjectContext;
 
 -(void) setUpUndoManager;
 -(void) cleanUpUndoManager;

@@ -12,6 +12,7 @@
 		5508606414C91D4B0051DEA2 /* NewPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5508606314C91D4B0051DEA2 /* NewPointViewController.m */; };
 		552C741814AE8EBB00595DE9 /* EditableTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552C741714AE8EBB00595DE9 /* EditableTextCell.xib */; };
 		552C741C14AE926600595DE9 /* EditableTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C741B14AE926600595DE9 /* EditableTextCell.m */; };
+		5548F42A14C9F800004C8BA8 /* ContextSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 5548F42914C9F800004C8BA8 /* ContextSaver.m */; };
 		556E593914C8A898000C4CBC /* Award.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E593814C8A898000C4CBC /* Award.m */; };
 		556E594314C8A953000C4CBC /* AwardDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E594114C8A953000C4CBC /* AwardDetailViewController.m */; };
 		556E594414C8A953000C4CBC /* AwardDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556E594214C8A953000C4CBC /* AwardDetailViewController.xib */; };
@@ -65,6 +66,8 @@
 		552C741714AE8EBB00595DE9 /* EditableTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditableTextCell.xib; sourceTree = "<group>"; };
 		552C741A14AE926600595DE9 /* EditableTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableTextCell.h; sourceTree = "<group>"; };
 		552C741B14AE926600595DE9 /* EditableTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditableTextCell.m; sourceTree = "<group>"; };
+		5548F42814C9F800004C8BA8 /* ContextSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextSaver.h; sourceTree = "<group>"; };
+		5548F42914C9F800004C8BA8 /* ContextSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextSaver.m; sourceTree = "<group>"; };
 		556E593714C8A898000C4CBC /* Award.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Award.h; sourceTree = "<group>"; };
 		556E593814C8A898000C4CBC /* Award.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Award.m; sourceTree = "<group>"; };
 		556E594014C8A953000C4CBC /* AwardDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AwardDetailViewController.h; sourceTree = "<group>"; };
@@ -164,6 +167,17 @@
 			name = Point;
 			sourceTree = "<group>";
 		};
+		5548F42614C9F704004C8BA8 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				5548F42814C9F800004C8BA8 /* ContextSaver.h */,
+				5548F42914C9F800004C8BA8 /* ContextSaver.m */,
+				55EB3C3B14B0CC1300721D42 /* DLog.h */,
+				55EB3C3C14B0CC1300721D42 /* DLog.m */,
+			);
+			name = Utility;
+			sourceTree = "<group>";
+		};
 		5562329C14AAF1FA0099765E /* Entities */ = {
 			isa = PBXGroup;
 			children = (
@@ -257,8 +271,7 @@
 				55C123E014C0AAD300827F61 /* Publisher */,
 				55B5C4CE14C797A50022B33D /* Seller */,
 				55B5C4C114C73DC30022B33D /* Lookup */,
-				55EB3C3B14B0CC1300721D42 /* DLog.h */,
-				55EB3C3C14B0CC1300721D42 /* DLog.m */,
+				5548F42614C9F704004C8BA8 /* Utility */,
 				5591513A14BF9F6F00F1C01E /* Definitions.h */,
 				55A99EA714A949FA00836F4E /* AppDelegate.h */,
 				55A99EA814A949FA00836F4E /* AppDelegate.m */,
@@ -462,6 +475,7 @@
 				556E594714C8A974000C4CBC /* NewAwardViewController.m in Sources */,
 				5508606014C91CF40051DEA2 /* PointDetailViewController.m in Sources */,
 				5508606414C91D4B0051DEA2 /* NewPointViewController.m in Sources */,
+				5548F42A14C9F800004C8BA8 /* ContextSaver.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
