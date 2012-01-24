@@ -20,7 +20,6 @@
 @synthesize bookDetailViewController = _bookDetailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
-@synthesize addingManagedObjectContext = __addingManagedObjectContext;
 @synthesize delegate = _delegate;
 @synthesize selectionMode = _selectionMode;
 @synthesize personSelectionType = _personSelectionType;
@@ -145,7 +144,7 @@
         [context deleteObject:[self.fetchedResultsController objectAtIndexPath:indexPath]];
         
         // Save the context.
-        [ContextSaver saveContext:context];
+        [ContextUtil saveContext:context];
     }   
 }
 
@@ -334,7 +333,16 @@
 {
     if (save)
     {
-        [ContextSaver saveContext:self.managedObjectContext];
+        if (![ContextUtil saveContext:self.managedObjectContext])
+        {
+            // Didn't save, so don't dismiss the modal view.
+            return;
+        }
+    }
+    else
+    {
+        // Canceled the insert, remove the managed object.
+        [self.managedObjectContext deleteObject:controller.detailItem];
     }
     
     [self dismissModalViewControllerAnimated:YES];

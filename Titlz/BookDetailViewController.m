@@ -191,7 +191,7 @@
 -(void) doneButtonPressed
 {
     // Save the changes.
-    [ContextSaver saveContext:self.detailItem.managedObjectContext];
+    [ContextUtil saveContext:self.detailItem.managedObjectContext];
     
     [self.navigationController dismissModalViewControllerAnimated:YES];
 }
@@ -229,6 +229,30 @@
             break;
     }
 }
+
+-(BOOL) textFieldShouldEndEditing:(UITextField*)textField
+{
+    BOOL valid = YES;
+    NSError* error;
+    NSString* value = textField.text;
+    
+    switch (textField.tag)
+    {
+        case BookTitleRow:
+            valid = [self.detailItem validateValue:&value forKey:@"title" error:&error];
+            break;
+        default:
+            break;
+    }
+        
+    if (valid)
+        [textField resignFirstResponder];
+    else
+        [ContextUtil displayValidationError:error];
+    
+    return valid;
+}
+
 -(void) textFieldDidEndEditing:(UITextField*)textField
 {
     switch (textField.tag)
@@ -361,7 +385,7 @@
     {
 		[self cleanUpUndoManager];
 		// Save the changes.
-        [ContextSaver saveContext:self.detailItem.managedObjectContext];
+        [ContextUtil saveContext:self.detailItem.managedObjectContext];
 
         [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView reloadData];
@@ -607,7 +631,7 @@
         }
         
         // Save the context.
-        [ContextSaver saveContext:self.detailItem.managedObjectContext];
+        [ContextUtil saveContext:self.detailItem.managedObjectContext];
     }   
 }
 
@@ -1092,7 +1116,7 @@
             break;
     }
     
-    [ContextSaver saveContext:self.detailItem.managedObjectContext];
+    [ContextUtil saveContext:self.detailItem.managedObjectContext];
 
     [self.tableView reloadData];
 }
@@ -1102,7 +1126,7 @@
 -(void) publisherViewController:(PublisherViewController *)controller didSelectPublisher:(Publisher *)publisher
 {
     self.detailItem.publisher = publisher;
-    [ContextSaver saveContext:self.detailItem.managedObjectContext];
+    [ContextUtil saveContext:self.detailItem.managedObjectContext];
     
     [self.tableView reloadData];
 }
@@ -1112,7 +1136,7 @@
 -(void) sellerViewController:(SellerViewController *)controller didSelectSeller:(Seller*)seller
 {
     self.detailItem.boughtFrom = seller;
-    [ContextSaver saveContext:self.detailItem.managedObjectContext];
+    [ContextUtil saveContext:self.detailItem.managedObjectContext];
     
     [self.tableView reloadData];
 }
@@ -1125,7 +1149,17 @@
     {
         [self.detailItem addAwardsObject:controller.detailItem];
         
-        [ContextSaver saveContext:self.detailItem.managedObjectContext];
+        if (![ContextUtil saveContext:self.detailItem.managedObjectContext])
+        {
+            // Didn't save, so don't dismiss the modal view.
+            return;
+        }
+    }
+    else
+    {
+        // Canceled the insert, remove the managed object.
+        [self.detailItem removeAwardsObject:controller.detailItem];
+        [self.detailItem.managedObjectContext deleteObject:controller.detailItem];
     }
 
     [self.tableView reloadData];
@@ -1140,7 +1174,17 @@
     {
         [self.detailItem addPointsObject:controller.detailItem];
         
-        [ContextSaver saveContext:self.detailItem.managedObjectContext];
+        if (![ContextUtil saveContext:self.detailItem.managedObjectContext])
+        {
+            // Didn't save, so don't dismiss the modal view.
+            return;
+        }
+    }
+    else
+    {
+        // Canceled the insert, remove the managed object.
+        [self.detailItem removePointsObject:controller.detailItem];
+        [self.detailItem.managedObjectContext deleteObject:controller.detailItem];
     }
     
     [self.tableView reloadData];

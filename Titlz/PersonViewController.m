@@ -22,7 +22,6 @@
 @synthesize personDetailViewController = _personDetailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
-@synthesize addingManagedObjectContext = __addingManagedObjectContext;
 @synthesize delegate = _delegate;
 @synthesize selectionMode = _selectionMode;
 @synthesize personSelectionType = _personSelectionType;
@@ -149,7 +148,7 @@
         [context deleteObject:[self.fetchedResultsController objectAtIndexPath:indexPath]];
         
         // Save the context.
-        [ContextSaver saveContext:context];
+        [ContextUtil saveContext:context];
     }   
 }
 
@@ -359,54 +358,32 @@
 
 -(void) insertNewObject
 {
-    // Use a local TitleDetailViewController here to avoid problems with reusing it with the main navigation controller.
-    /*
-     TitleDetailViewController* titleDetailViewController = [[TitleDetailViewController alloc] initWithPrimaryManagedObjectContext:self.managedObjectContext];
-     titleDetailViewController.detailItem = nil;
-     titleDetailViewController.newRecord = YES;
-     
-     UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:titleDetailViewController];
-     [self.navigationController presentModalViewController:navigationController animated:YES];
-     */
-    
     NewPersonViewController* newPersonViewController = [[NewPersonViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	newPersonViewController.delegate = self;
-	
-	// Create a new managed object context for the new title -- set its persistent store coordinator to the same as that from the fetched results controller's context.
-	self.addingManagedObjectContext = [[NSManagedObjectContext alloc] init];
-	
-	[self.addingManagedObjectContext setPersistentStoreCoordinator:[[self.fetchedResultsController managedObjectContext] persistentStoreCoordinator]];
-    
-	newPersonViewController.detailItem = [Person personInManagedObjectContext:self.addingManagedObjectContext];
+	newPersonViewController.detailItem = [Person personInManagedObjectContext:self.managedObjectContext];
 	
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newPersonViewController];
 	
     [self.navigationController presentModalViewController:navController animated:YES];
-    
 }
 
 -(void) newPersonViewController:(NewPersonViewController *)controller didFinishWithSave:(BOOL)save
 {
     if (save)
     {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addControllerContextDidSave:) name:NSManagedObjectContextDidSaveNotification object:self.addingManagedObjectContext];
-		
-        [ContextSaver saveContext:self.addingManagedObjectContext];
-
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextDidSaveNotification object:self.addingManagedObjectContext];
+        if (![ContextUtil saveContext:self.managedObjectContext])
+        {
+            // Didn't save, so don't dismiss the modal view.
+            return;
+        }
+    }
+    else
+    {
+        // Canceled the insert, remove the managed object.
+        [self.managedObjectContext deleteObject:controller.detailItem];
     }
     
     [self dismissModalViewControllerAnimated:YES];
-}
-
-/**
- Notification from the add controller's context's save operation. This is used to update the fetched results controller's managed object context with the new book instead of performing a fetch (which would be a much more computationally expensive operation).
- */
--(void) addControllerContextDidSave:(NSNotification*)saveNotification
-{
-	NSManagedObjectContext* context = [self.fetchedResultsController managedObjectContext];
-	// Merging changes causes the fetched results controller to update its results
-	[context mergeChangesFromContextDidSaveNotification:saveNotification];	
 }
 
 @end

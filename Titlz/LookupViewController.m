@@ -145,7 +145,7 @@
         [context deleteObject:[self.fetchedResultsController objectAtIndexPath:indexPath]];
         
         // Save the context.
-        [ContextSaver saveContext:context];
+        [ContextUtil saveContext:context];
     }   
 }
 
@@ -294,7 +294,7 @@
 {
     if (save)
     {
-        [ContextSaver saveContext:self.managedObjectContext];
+        [ContextUtil saveContext:self.managedObjectContext];
     }
     
     [self dismissModalViewControllerAnimated:YES];

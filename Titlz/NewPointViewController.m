@@ -16,6 +16,7 @@
 @synthesize detailItem = _detailItem;
 @synthesize undoManager = _undoManager;
 @synthesize delegate = _delegate;
+@synthesize shouldValidate = _shouldValidate;
 
 -(void) didReceiveMemoryWarning
 {
@@ -30,6 +31,8 @@
 -(void) viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.shouldValidate = YES;
     
     self.title = NSLocalizedString(@"New Point", @"NewPointViewController header bar title.");
 
@@ -107,6 +110,35 @@
     }
 }
 
+-(BOOL) textFieldShouldEndEditing:(UITextField*)textField
+{
+    BOOL valid = YES;
+    NSError* error;
+    NSString* value = textField.text;
+    
+    if (self.shouldValidate)
+    {
+        switch (textField.tag)
+        {
+            case PointIssueRow:
+                valid = [self.detailItem validateValue:&value forKey:@"issue" error:&error];
+                break;
+            case PointLocationRow:
+                valid = [self.detailItem validateValue:&value forKey:@"location" error:&error];
+                break;
+            default:
+                break;
+        }
+        
+        if (valid)
+            [textField resignFirstResponder];
+        else
+            [ContextUtil displayValidationError:error];
+    }
+    
+    return valid;
+}
+
 -(BOOL) textFieldShouldReturn:(UITextField*)textField
 {
     [textField resignFirstResponder];
@@ -132,6 +164,7 @@
 
 -(IBAction) cancel:(id)sender
 {
+    self.shouldValidate = NO;
     [self.delegate newPointViewController:self didFinishWithSave:NO];
 }
 

@@ -81,7 +81,7 @@ void uncaughtExceptionHandler(NSException* exception)
 
 -(void) saveContext
 {
-    [ContextSaver saveContext:self.managedObjectContext];
+    [ContextUtil saveContext:self.managedObjectContext];
 }
 
 #pragma mark - Core Data stack

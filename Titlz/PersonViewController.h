@@ -21,7 +21,6 @@
 
 @property(nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
 @property(nonatomic, strong) NSManagedObjectContext* managedObjectContext;
-@property(nonatomic, retain) NSManagedObjectContext *addingManagedObjectContext;
 @property(nonatomic, assign) id <PersonSelectedDelegate> delegate;
 @property(nonatomic, assign) BOOL selectionMode;
 @property(nonatomic, assign) PersonType personSelectionType;

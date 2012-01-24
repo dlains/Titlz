@@ -15,6 +15,7 @@
 @synthesize detailItem = _detailItem;
 @synthesize undoManager = _undoManager;
 @synthesize delegate = _delegate;
+@synthesize shouldValidate = _shouldValidate;
 
 - (void)didReceiveMemoryWarning
 {
@@ -30,6 +31,8 @@
 {
     [super viewDidLoad];
 
+    self.shouldValidate = YES;
+    
     self.title = NSLocalizedString(@"New Person", @"NewPersonViewController header bar title.");
     
     UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
@@ -111,8 +114,44 @@
 
 -(BOOL) textFieldShouldReturn:(UITextField*)textField
 {
-    [textField resignFirstResponder];
-    return YES;
+    return [textField resignFirstResponder];
+}
+
+-(BOOL) textFieldShouldEndEditing:(UITextField*)textField
+{
+    BOOL valid = YES;
+    NSError* error;
+    NSString* value = textField.text;
+    NSDate* dateValue;
+    
+    if (self.shouldValidate)
+    {
+        switch (textField.tag)
+        {
+            case PersonLastNameRow:
+                valid = [self.detailItem validateValue:&value forKey:@"lastName" error:&error];
+                break;
+            case PersonBornRow:
+                dateValue = self.detailItem.born;
+                if (dateValue)
+                    valid = [self.detailItem validateValue:&dateValue forKey:@"born" error:&error];
+                break;
+            case PersonDiedRow:
+                dateValue = self.detailItem.died;
+                if (dateValue)
+                    valid = [self.detailItem validateValue:&dateValue forKey:@"died" error:&error];
+                break;
+            default:
+                break;
+        }
+        
+        if (valid)
+            [textField resignFirstResponder];
+        else
+            [ContextUtil displayValidationError:error];
+    }
+    
+    return valid;
 }
 
 -(void) textFieldDidEndEditing:(UITextField*)textField
@@ -160,6 +199,7 @@
 
 -(IBAction) cancel:(id)sender
 {
+    self.shouldValidate = NO;
     [self.delegate newPersonViewController:self didFinishWithSave:NO];
 }
 

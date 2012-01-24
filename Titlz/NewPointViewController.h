@@ -17,6 +17,7 @@
 @property(nonatomic, strong) DLPoint* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;
 @property(nonatomic, assign) id <NewPointDelegate> delegate;
+@property(nonatomic, assign) BOOL shouldValidate;
 
 -(void) setUpUndoManager;
 -(void) cleanUpUndoManager;

@@ -1,5 +1,5 @@
 //
-//  ContextSaver.h
+//  ContextUtil.h
 //  Titlz
 //
 //  Created by David Lains on 1/20/12.
@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ContextSaver : NSObject <UIAlertViewDelegate>
+@interface ContextUtil : NSObject
 
-+(void) saveContext:(NSManagedObjectContext*)context;
++(BOOL) saveContext:(NSManagedObjectContext*)context;
++(void) displayValidationError:(NSError*)error;
 
 @end

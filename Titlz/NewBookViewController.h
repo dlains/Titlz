@@ -24,6 +24,7 @@
 @property(nonatomic, strong) Book* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;
 @property(nonatomic, assign) id <NewBookDelegate> delegate;
+@property(nonatomic, assign) BOOL shouldValidate;
 
 -(void) setUpUndoManager;
 -(void) cleanUpUndoManager;

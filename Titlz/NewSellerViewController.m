@@ -15,6 +15,7 @@
 @synthesize detailItem = _detailItem;
 @synthesize undoManager = _undoManager;
 @synthesize delegate = _delegate;
+@synthesize shouldValidate = _shouldValidate;
 
 - (void)didReceiveMemoryWarning
 {
@@ -29,6 +30,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    self.shouldValidate = YES;
     
     self.title = NSLocalizedString(@"New Seller", @"NewSellerViewController header bar title.");
     
@@ -115,6 +118,32 @@
     return YES;
 }
 
+-(BOOL) textFieldShouldEndEditing:(UITextField*)textField
+{
+    BOOL valid = YES;
+    NSError* error;
+    NSString* value = textField.text;
+    
+    if (self.shouldValidate)
+    {
+        switch (textField.tag)
+        {
+            case SellerNameRow:
+                valid = [self.detailItem validateValue:&value forKey:@"name" error:&error];
+                break;
+            default:
+                break;
+        }
+        
+        if (valid)
+            [textField resignFirstResponder];
+        else
+            [ContextUtil displayValidationError:error];
+    }
+    
+    return valid;
+}
+
 -(void) textFieldDidEndEditing:(UITextField*)textField
 {
     switch (textField.tag)
@@ -158,6 +187,7 @@
 
 -(IBAction) cancel:(id)sender
 {
+    self.shouldValidate = NO;
     [self.delegate newSellerViewController:self didFinishWithSave:NO];
 }
 

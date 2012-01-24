@@ -125,7 +125,7 @@
         [context deleteObject:[self.fetchedResultsController objectAtIndexPath:indexPath]];
         
         // Save the context.
-        [ContextSaver saveContext:context];
+        [ContextUtil saveContext:context];
     }   
 }
 
@@ -307,7 +307,16 @@
 {
     if (save)
     {
-        [ContextSaver saveContext:self.managedObjectContext];
+        if (![ContextUtil saveContext:self.managedObjectContext])
+        {
+            // Didn't save, so don't dismiss the modal view.
+            return;
+        }
+    }
+    else
+    {
+        // Canceled the insert, remove the managed object.
+        [self.managedObjectContext deleteObject:controller.detailItem];
     }
     
     [self.tableView reloadData];

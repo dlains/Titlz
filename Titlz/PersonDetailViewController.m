@@ -170,6 +170,40 @@
     return YES;
 }
 
+-(BOOL) textFieldShouldEndEditing:(UITextField*)textField
+{
+    BOOL valid = YES;
+    NSError* error;
+    NSString* value = textField.text;
+    NSDate* dateValue;
+    
+    switch (textField.tag)
+    {
+        case PersonLastNameRow:
+            valid = [self.detailItem validateValue:&value forKey:@"lastName" error:&error];
+            break;
+        case PersonBornRow:
+            dateValue = self.detailItem.born;
+            if (dateValue)
+                valid = [self.detailItem validateValue:&dateValue forKey:@"born" error:&error];
+            break;
+        case PersonDiedRow:
+            dateValue = self.detailItem.died;
+            if (dateValue)
+                valid = [self.detailItem validateValue:&dateValue forKey:@"died" error:&error];
+            break;
+        default:
+            break;
+    }
+        
+    if (valid)
+        [textField resignFirstResponder];
+    else
+        [ContextUtil displayValidationError:error];
+    
+    return valid;
+}
+
 -(void) textFieldDidEndEditing:(UITextField*)textField
 {
     switch (textField.tag)
@@ -240,7 +274,7 @@
 		[self cleanUpUndoManager];
 		
         // Save the changes.
-        [ContextSaver saveContext:self.detailItem.managedObjectContext];
+        [ContextUtil saveContext:self.detailItem.managedObjectContext];
 
         [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView reloadData];
@@ -433,7 +467,7 @@
         }
         
         // Save the context.
-        [ContextSaver saveContext:self.detailItem.managedObjectContext];
+        [ContextUtil saveContext:self.detailItem.managedObjectContext];
     }   
 }
 
@@ -709,7 +743,7 @@
             break;
     }
     
-    [ContextSaver saveContext:self.detailItem.managedObjectContext];
+    [ContextUtil saveContext:self.detailItem.managedObjectContext];
     
     [self.tableView reloadData];
 }
@@ -720,7 +754,7 @@
     {
         [self.detailItem addAliasesObject:person];
 
-        [ContextSaver saveContext:self.detailItem.managedObjectContext];
+        [ContextUtil saveContext:self.detailItem.managedObjectContext];
         
         [self.tableView reloadData];
     }

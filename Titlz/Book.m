@@ -61,4 +61,22 @@
     return [NSEntityDescription insertNewObjectForEntityForName:@"Book" inManagedObjectContext:context];
 }
 
+// Title must not be empty.
+-(BOOL) validateTitle:(id*)value error:(NSError**)error
+{
+    NSString* title = [*value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if ([title length] < 1)
+    {
+        NSString* localizedDesc = NSLocalizedString(@"You must supply an book title.", @"Book:validateTitle error message.");
+        NSDictionary* errorUserInfo = [NSDictionary dictionaryWithObject:localizedDesc forKey:NSLocalizedDescriptionKey];
+        if (error)
+        {
+            *error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSValidationStringTooShortError userInfo:errorUserInfo];
+        }
+        return NO;
+    }
+    
+    return YES;
+}
+
 @end

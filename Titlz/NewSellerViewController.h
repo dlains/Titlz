@@ -17,6 +17,7 @@
 @property(nonatomic, strong) Seller* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;
 @property(nonatomic, assign) id <NewSellerDelegate> delegate;
+@property(nonatomic, assign) BOOL shouldValidate;
 
 -(void) setUpUndoManager;
 -(void) cleanUpUndoManager;

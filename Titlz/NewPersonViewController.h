@@ -21,6 +21,7 @@
 @property(nonatomic, strong) Person* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;
 @property(nonatomic, assign) id <NewPersonDelegate> delegate;
+@property(nonatomic, assign) BOOL shouldValidate;
 
 -(void) setUpUndoManager;
 -(void) cleanUpUndoManager;

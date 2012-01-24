@@ -17,6 +17,7 @@
 @property(nonatomic, strong) Award* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;
 @property(nonatomic, assign) id <NewAwardDelegate> delegate;
+@property(nonatomic, assign) BOOL shouldValidate;
 
 -(void) setUpUndoManager;
 -(void) cleanUpUndoManager;

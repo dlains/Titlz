@@ -46,7 +46,7 @@
         <attribute name="born" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="died" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="firstLetterOfName" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
-        <attribute name="firstName" attributeType="String" syncable="YES"/>
+        <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastName" attributeType="String" syncable="YES"/>
         <attribute name="middleName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="aliases" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="aliasOf" inverseEntity="Person" syncable="YES"/>

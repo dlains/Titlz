@@ -12,11 +12,12 @@
 		5508606414C91D4B0051DEA2 /* NewPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5508606314C91D4B0051DEA2 /* NewPointViewController.m */; };
 		552C741814AE8EBB00595DE9 /* EditableTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552C741714AE8EBB00595DE9 /* EditableTextCell.xib */; };
 		552C741C14AE926600595DE9 /* EditableTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C741B14AE926600595DE9 /* EditableTextCell.m */; };
-		5548F42A14C9F800004C8BA8 /* ContextSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = 5548F42914C9F800004C8BA8 /* ContextSaver.m */; };
+		5548F42A14C9F800004C8BA8 /* ContextUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 5548F42914C9F800004C8BA8 /* ContextUtil.m */; };
 		556E593914C8A898000C4CBC /* Award.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E593814C8A898000C4CBC /* Award.m */; };
 		556E594314C8A953000C4CBC /* AwardDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E594114C8A953000C4CBC /* AwardDetailViewController.m */; };
 		556E594414C8A953000C4CBC /* AwardDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556E594214C8A953000C4CBC /* AwardDetailViewController.xib */; };
 		556E594714C8A974000C4CBC /* NewAwardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E594614C8A974000C4CBC /* NewAwardViewController.m */; };
+		557B7B0114CCE78A0057FE42 /* DAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557B7B0014CCE78A0057FE42 /* DAlertView.m */; };
 		5591513614BF5F2800F1C01E /* DLPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 5591513514BF5F2800F1C01E /* DLPoint.m */; };
 		55A99E9714A949FA00836F4E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A99E9614A949FA00836F4E /* UIKit.framework */; };
 		55A99E9914A949FA00836F4E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A99E9814A949FA00836F4E /* Foundation.framework */; };
@@ -66,8 +67,8 @@
 		552C741714AE8EBB00595DE9 /* EditableTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditableTextCell.xib; sourceTree = "<group>"; };
 		552C741A14AE926600595DE9 /* EditableTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableTextCell.h; sourceTree = "<group>"; };
 		552C741B14AE926600595DE9 /* EditableTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditableTextCell.m; sourceTree = "<group>"; };
-		5548F42814C9F800004C8BA8 /* ContextSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextSaver.h; sourceTree = "<group>"; };
-		5548F42914C9F800004C8BA8 /* ContextSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextSaver.m; sourceTree = "<group>"; };
+		5548F42814C9F800004C8BA8 /* ContextUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; path = ContextUtil.h; sourceTree = "<group>"; };
+		5548F42914C9F800004C8BA8 /* ContextUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextUtil.m; sourceTree = "<group>"; };
 		556E593714C8A898000C4CBC /* Award.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Award.h; sourceTree = "<group>"; };
 		556E593814C8A898000C4CBC /* Award.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Award.m; sourceTree = "<group>"; };
 		556E594014C8A953000C4CBC /* AwardDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AwardDetailViewController.h; sourceTree = "<group>"; };
@@ -75,6 +76,8 @@
 		556E594214C8A953000C4CBC /* AwardDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AwardDetailViewController.xib; sourceTree = "<group>"; };
 		556E594514C8A974000C4CBC /* NewAwardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewAwardViewController.h; sourceTree = "<group>"; };
 		556E594614C8A974000C4CBC /* NewAwardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewAwardViewController.m; sourceTree = "<group>"; };
+		557B7AFF14CCE78A0057FE42 /* DAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAlertView.h; sourceTree = "<group>"; };
+		557B7B0014CCE78A0057FE42 /* DAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAlertView.m; sourceTree = "<group>"; };
 		5591513414BF5F2800F1C01E /* DLPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLPoint.h; sourceTree = "<group>"; };
 		5591513514BF5F2800F1C01E /* DLPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLPoint.m; sourceTree = "<group>"; };
 		5591513A14BF9F6F00F1C01E /* Definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Definitions.h; sourceTree = "<group>"; };
@@ -170,10 +173,12 @@
 		5548F42614C9F704004C8BA8 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				5548F42814C9F800004C8BA8 /* ContextSaver.h */,
-				5548F42914C9F800004C8BA8 /* ContextSaver.m */,
+				5548F42814C9F800004C8BA8 /* ContextUtil.h */,
+				5548F42914C9F800004C8BA8 /* ContextUtil.m */,
 				55EB3C3B14B0CC1300721D42 /* DLog.h */,
 				55EB3C3C14B0CC1300721D42 /* DLog.m */,
+				557B7AFF14CCE78A0057FE42 /* DAlertView.h */,
+				557B7B0014CCE78A0057FE42 /* DAlertView.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -475,7 +480,8 @@
 				556E594714C8A974000C4CBC /* NewAwardViewController.m in Sources */,
 				5508606014C91CF40051DEA2 /* PointDetailViewController.m in Sources */,
 				5508606414C91D4B0051DEA2 /* NewPointViewController.m in Sources */,
-				5548F42A14C9F800004C8BA8 /* ContextSaver.m in Sources */,
+				5548F42A14C9F800004C8BA8 /* ContextUtil.m in Sources */,
+				557B7B0114CCE78A0057FE42 /* DAlertView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

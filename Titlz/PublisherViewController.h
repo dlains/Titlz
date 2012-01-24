@@ -23,7 +23,6 @@
 
 @property(nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
 @property(nonatomic, strong) NSManagedObjectContext* managedObjectContext;
-@property(nonatomic, retain) NSManagedObjectContext *addingManagedObjectContext;
 @property(nonatomic, assign) id <PublisherSelectedDelegate> delegate;
 @property(nonatomic, assign) BOOL selectionMode;
 

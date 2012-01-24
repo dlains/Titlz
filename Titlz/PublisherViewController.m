@@ -20,7 +20,6 @@
 @synthesize publisherDetailViewController = _publisherDetailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
-@synthesize addingManagedObjectContext = __addingManagedObjectContext;
 @synthesize delegate = _delegate;
 @synthesize selectionMode = _selectionMode;
 
@@ -137,7 +136,7 @@
         [context deleteObject:[self.fetchedResultsController objectAtIndexPath:indexPath]];
         
         // Save the context.
-        [ContextSaver saveContext:context];
+        [ContextUtil saveContext:context];
     }   
 }
 
@@ -318,13 +317,7 @@
 {
     NewPublisherViewController* newPublisherViewController = [[NewPublisherViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	newPublisherViewController.delegate = self;
-	
-	// Create a new managed object context for the new title -- set its persistent store coordinator to the same as that from the fetched results controller's context.
-	self.addingManagedObjectContext = [[NSManagedObjectContext alloc] init];
-	
-	[self.addingManagedObjectContext setPersistentStoreCoordinator:[[self.fetchedResultsController managedObjectContext] persistentStoreCoordinator]];
-    
-	newPublisherViewController.detailItem = [Publisher publisherInManagedObjectContext:self.addingManagedObjectContext];
+	newPublisherViewController.detailItem = [Publisher publisherInManagedObjectContext:self.managedObjectContext];
 	
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newPublisherViewController];
 	
@@ -335,23 +328,19 @@
 {
     if (save)
     {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addControllerContextDidSave:) name:NSManagedObjectContextDidSaveNotification object:self.addingManagedObjectContext];
-		
-        [ContextSaver saveContext:self.addingManagedObjectContext];
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextDidSaveNotification object:self.addingManagedObjectContext];
+        if (![ContextUtil saveContext:self.managedObjectContext])
+        {
+            // Didn't save, so don't dismiss the modal view.
+            return;
+        }
+    }
+    else
+    {
+        // Canceled the insert, remove the managed object.
+        [self.managedObjectContext deleteObject:controller.detailItem];
     }
     
     [self dismissModalViewControllerAnimated:YES];
-}
-
-/**
- Notification from the add controller's context's save operation. This is used to update the fetched results controller's managed object context with the new book instead of performing a fetch (which would be a much more computationally expensive operation).
- */
--(void) addControllerContextDidSave:(NSNotification*)saveNotification
-{
-	NSManagedObjectContext* context = [self.fetchedResultsController managedObjectContext];
-	// Merging changes causes the fetched results controller to update its results
-	[context mergeChangesFromContextDidSaveNotification:saveNotification];	
 }
 
 @end

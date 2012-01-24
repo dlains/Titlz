@@ -154,6 +154,29 @@
     return YES;
 }
 
+-(BOOL) textFieldShouldEndEditing:(UITextField*)textField
+{
+    BOOL valid = YES;
+    NSError* error;
+    NSString* value = textField.text;
+    
+    switch (textField.tag)
+    {
+        case AwardNameRow:
+            valid = [self.detailItem validateValue:&value forKey:@"name" error:&error];
+            break;
+        default:
+            break;
+    }
+        
+    if (valid)
+        [textField resignFirstResponder];
+    else
+        [ContextUtil displayValidationError:error];
+    
+    return valid;
+}
+
 -(void) textFieldDidEndEditing:(UITextField*)textField
 {
     switch (textField.tag)
@@ -191,7 +214,7 @@
     {
 		[self cleanUpUndoManager];
 		// Save the changes.
-        [ContextSaver saveContext:self.detailItem.managedObjectContext];
+        [ContextUtil saveContext:self.detailItem.managedObjectContext];
         [self.tableView reloadData];
     }
 }
