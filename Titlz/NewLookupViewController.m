@@ -16,6 +16,7 @@
 @synthesize undoManager = _undoManager;
 @synthesize delegate = _delegate;
 @synthesize selectedLookupType = _selectedLookupType;
+@synthesize shouldValidate = _shouldValidate;
 
 -(void) didReceiveMemoryWarning
 {
@@ -30,6 +31,8 @@
 -(void) viewDidLoad
 {
     [super viewDidLoad];
+
+    self.shouldValidate = YES;
     
     switch (self.selectedLookupType)
     {
@@ -48,7 +51,6 @@
         case LookupTypeState:
             self.title = NSLocalizedString(@"New State", @"NewLookupViewController State header bar title.");
             break;
-        case LookupTypeNone:
         default:
             DLog(@"Invalid LookupType found in LookupViewController init: %i.", self.selectedLookupType);
             break;
@@ -138,16 +140,36 @@
     return YES;
 }
 
+-(BOOL) textFieldShouldEndEditing:(UITextField*)textField
+{
+    BOOL valid = YES;
+    NSError* error;
+    NSString* value = textField.text;
+    
+    if (self.shouldValidate)
+    {
+        valid = [self.detailItem validateValue:&value forKey:@"value" error:&error];
+        
+        if (valid)
+            [textField resignFirstResponder];
+        else
+            [ContextUtil displayValidationError:error];
+    }
+    
+    return valid;
+}
+
 -(void) textFieldDidEndEditing:(UITextField*)textField
 {
     self.detailItem.type = [NSNumber numberWithInt:self.selectedLookupType];
-    self.detailItem.value = textField.text;
+    self.detailItem.name = textField.text;
     
     [self becomeFirstResponder];
 }
 
 -(IBAction) cancel:(id)sender
 {
+    self.shouldValidate = NO;
     [self.delegate newLookupViewController:self didFinishWithSave:NO];
 }
 
@@ -180,8 +202,28 @@
         cell.textField.enabled = NO;
     }
     
-    cell.fieldLabel.text = NSLocalizedString(@"Value", @"NewLookupViewController value data field label.");
-    cell.textField.text = self.detailItem.value;
+    switch (self.selectedLookupType)
+    {
+        case LookupTypeEdition:
+            cell.fieldLabel.text = NSLocalizedString(@"Edition", @"NewLookupViewController value data field label.");
+            break;
+        case LookupTypeFormat:
+            cell.fieldLabel.text = NSLocalizedString(@"Format", @"NewLookupViewController value data field label.");
+            break;
+        case LookupTypeCondition:
+            cell.fieldLabel.text = NSLocalizedString(@"Condition", @"NewLookupViewController value data field label.");
+            break;
+        case LookupTypeCountry:
+            cell.fieldLabel.text = NSLocalizedString(@"Country", @"NewLookupViewController value data field label.");
+            break;
+        case LookupTypeState:
+            cell.fieldLabel.text = NSLocalizedString(@"State", @"NewLookupViewController value data field label.");
+            break;
+        default:
+            DLog(@"Invalid LookupType found in LookupViewController init: %i.", self.selectedLookupType);
+            break;
+    }
+    cell.textField.text = self.detailItem.name;
     
     return cell;
 }

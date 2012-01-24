@@ -13,7 +13,7 @@
 @interface Lookup : NSManagedObject
 
 @property(nonatomic, retain) NSNumber* type;
-@property(nonatomic, retain) NSString* value;
+@property(nonatomic, retain) NSString* name;
 
 +(id) lookupInManagedObjectContext:(NSManagedObjectContext*)context;
 

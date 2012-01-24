@@ -45,7 +45,6 @@
             case LookupTypeState:
                 self.title = NSLocalizedString(@"State", @"LookupViewController State header bar title.");
                 break;
-            case LookupTypeNone:
             default:
                 DLog(@"Invalid LookupType found in LookupViewController init: %i.", self.selectedLookupType);
                 break;
@@ -161,7 +160,7 @@
 {
     // Get the selected person and update the correct delegate.
     Lookup* selectedLookup = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    [self.delegate lookupViewController:self didSelectValue:selectedLookup.value withLookupType:self.selectedLookupType];
+    [self.delegate lookupViewController:self didSelectValue:selectedLookup.name withLookupType:self.selectedLookupType];
     [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
@@ -185,7 +184,7 @@
     [fetchRequest setPredicate:predicate];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"value" ascending:YES];
+    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
@@ -273,7 +272,7 @@
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
 {
     Lookup* lookup = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = lookup.value;
+    cell.textLabel.text = lookup.name;
 }
 
 #pragma mark - New Lookup Handling
@@ -294,7 +293,16 @@
 {
     if (save)
     {
-        [ContextUtil saveContext:self.managedObjectContext];
+        if (![ContextUtil saveContext:self.managedObjectContext])
+        {
+            // Didn't save, so don't dismiss the modal view.
+            return;
+        }
+    }
+    else
+    {
+        // Canceled the insert, remove the managed object.
+        [self.managedObjectContext deleteObject:controller.detailItem];
     }
     
     [self dismissModalViewControllerAnimated:YES];

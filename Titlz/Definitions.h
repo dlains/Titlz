@@ -70,8 +70,7 @@ typedef enum BookDataSectionRowsEnum
 
 typedef enum LookupTypeEnum
 {
-    LookupTypeNone = 0,
-    LookupTypeEdition,
+    LookupTypeEdition = 1,
     LookupTypeFormat,
     LookupTypeCondition,
     LookupTypeCountry,
