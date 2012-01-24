@@ -32,7 +32,6 @@
 @dynamic releaseDate;
 @dynamic purchaseDate;
 @dynamic read;
-@dynamic signiature;
 @dynamic currentValue;
 @dynamic authors;
 @dynamic awards;
@@ -43,6 +42,7 @@
 @dynamic boughtFrom;
 @dynamic publisher;
 @dynamic points;
+@dynamic signatures;
 
 -(NSString*) firstLetterOfTitle
 {

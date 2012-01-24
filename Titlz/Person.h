@@ -25,6 +25,7 @@
 @property(nonatomic, retain) NSSet* contributed;
 @property(nonatomic, retain) NSSet* edited;
 @property(nonatomic, retain) NSSet* illustrated;
+@property(nonatomic, retain) NSSet* booksSigned;
 
 // Transient properties.
 @property (nonatomic, readonly) NSString* fullName;
@@ -59,5 +60,10 @@
 - (void)removeIllustratedObject:(Book*)value;
 - (void)addIllustrated:(NSSet*)values;
 - (void)removeIllustrated:(NSSet*)values;
+
+- (void)addBooksSignedObject:(Book*)value;
+- (void)removeBooksSignedObject:(Book*)value;
+- (void)addBooksSigned:(NSSet*)values;
+- (void)removeBooksSigned:(NSSet*)values;
 
 @end

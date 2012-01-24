@@ -30,6 +30,7 @@ typedef enum PersonTypeEnum
     Illustrator,
     Contributor,
     Alias,
+    Signature,
 } PersonType;
 
 typedef enum BookDetailSectionsEnum
@@ -39,6 +40,7 @@ typedef enum BookDetailSectionsEnum
     BookEditorSection,
     BookIllustratorSection,
     BookContributorSection,
+    BookSignatureSection,
     BookAwardSection,
     BookPointSection,
     BookPublisherSection,
@@ -86,6 +88,7 @@ typedef enum PersonDetailSectionsEnum
     PersonEditedSection,
     PersonIllustratedSection,
     PersonContributedSection,
+    PersonBooksSignedSection,
     PersonDetailSectionCount
 } PersonDetailSections;
 

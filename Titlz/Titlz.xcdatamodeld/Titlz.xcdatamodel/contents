@@ -33,6 +33,7 @@
         <relationship name="illustrators" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="illustrated" inverseEntity="Person" syncable="YES"/>
         <relationship name="points" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Point" inverseName="book" inverseEntity="Point" syncable="YES"/>
         <relationship name="publisher" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Publisher" inverseName="books" inverseEntity="Publisher" syncable="YES"/>
+        <relationship name="signatures" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="booksSigned" inverseEntity="Person" syncable="YES"/>
     </entity>
     <entity name="Collection" syncable="YES">
         <attribute name="name" attributeType="String" syncable="YES"/>
@@ -52,6 +53,7 @@
         <relationship name="aliases" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="aliasOf" inverseEntity="Person" syncable="YES"/>
         <relationship name="aliasOf" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="aliases" inverseEntity="Person" syncable="YES"/>
         <relationship name="authored" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="authors" inverseEntity="Book" syncable="YES"/>
+        <relationship name="booksSigned" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="signatures" inverseEntity="Book" syncable="YES"/>
         <relationship name="contributed" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="contributors" inverseEntity="Book" syncable="YES"/>
         <relationship name="edited" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="editors" inverseEntity="Book" syncable="YES"/>
         <relationship name="illustrated" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Book" inverseName="illustrators" inverseEntity="Book" syncable="YES"/>
@@ -91,7 +93,7 @@
         <element name="Book" positionX="-8973" positionY="-7746" width="137" height="435"/>
         <element name="Collection" positionX="-8964" positionY="-7434" width="128" height="75"/>
         <element name="Lookup" positionX="160" positionY="192" width="128" height="75"/>
-        <element name="Person" positionX="-8244" positionY="-7524" width="128" height="225"/>
+        <element name="Person" positionX="-8244" positionY="-7524" width="128" height="240"/>
         <element name="Point" positionX="-8417" positionY="-7047" width="128" height="90"/>
         <element name="Publisher" positionX="-8417" positionY="-7263" width="128" height="195"/>
         <element name="Seller" positionX="-9171" positionY="-7488" width="128" height="210"/>

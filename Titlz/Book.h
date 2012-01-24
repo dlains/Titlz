@@ -31,7 +31,6 @@
 @property (nonatomic, retain) NSDate* releaseDate;
 @property (nonatomic, retain) NSDate* purchaseDate;
 @property (nonatomic, retain) NSNumber* read;
-@property (nonatomic, retain) NSNumber* signiature;
 @property (nonatomic, retain) NSDecimalNumber* currentValue;
 @property (nonatomic, retain) NSSet* authors;
 @property (nonatomic, retain) NSSet* awards;
@@ -42,6 +41,7 @@
 @property (nonatomic, retain) Seller* boughtFrom;
 @property (nonatomic, retain) Publisher* publisher;
 @property (nonatomic, retain) NSSet* points;
+@property (nonatomic, retain) NSSet* signatures;
 
 +(id) bookInManagedObjectContext:(NSManagedObjectContext*)context;
 
@@ -83,5 +83,10 @@
 - (void)removePointsObject:(DLPoint *)value;
 - (void)addPoints:(NSSet *)values;
 - (void)removePoints:(NSSet *)values;
+
+- (void)addSignaturesObject:(Person *)value;
+- (void)removeSignaturesObject:(Person *)value;
+- (void)addSignatures:(NSSet *)values;
+- (void)removeSignatures:(NSSet *)values;
 
 @end

@@ -21,6 +21,7 @@
 -(UITableViewCell*) configureEditedCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureIllustratedCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureContributedCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configureBooksSignedCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection;
 -(Book*) sortedBookFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
@@ -261,9 +262,10 @@
     NSIndexPath* edited        = [NSIndexPath indexPathForRow:self.detailItem.edited.count inSection:PersonEditedSection];
     NSIndexPath* illustrated   = [NSIndexPath indexPathForRow:self.detailItem.illustrated.count inSection:PersonIllustratedSection];
     NSIndexPath* contributed   = [NSIndexPath indexPathForRow:self.detailItem.contributed.count inSection:PersonContributedSection];
+    NSIndexPath* booksSigned   = [NSIndexPath indexPathForRow:self.detailItem.booksSigned.count inSection:PersonBooksSignedSection];
         
-    NSArray* paths = [NSArray arrayWithObjects:alias, authored, edited, illustrated, contributed, nil];
-        
+    NSArray* paths = [NSArray arrayWithObjects:alias, authored, edited, illustrated, contributed, booksSigned, nil];
+
     if (editing)
     {
         [self setUpUndoManager];
@@ -272,7 +274,7 @@
     else
     {
 		[self cleanUpUndoManager];
-		
+
         // Save the changes.
         [ContextUtil saveContext:self.detailItem.managedObjectContext];
 
@@ -310,6 +312,8 @@
             return self.detailItem.illustrated.count + insertionRow;
         case PersonContributedSection:
             return self.detailItem.contributed.count + insertionRow;
+        case PersonBooksSignedSection:
+            return self.detailItem.booksSigned.count + insertionRow;
         default:
             return 0;
     }
@@ -342,6 +346,9 @@
         case PersonContributedSection:
             cell = [self configureContributedCellAtIndexPath:indexPath];
             break;
+        case PersonBooksSignedSection:
+            cell = [self configureBooksSignedCellAtIndexPath:indexPath];
+            break;
         default:
             DLog(@"Invalid PersonDetailViewController section found: %i.", indexPath.section);
             break;
@@ -369,6 +376,8 @@
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.illustrated];
         case PersonContributedSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.contributed];
+        case PersonBooksSignedSection:
+            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.booksSigned];
         default:
             DLog(@"Invalid PersonDetailViewController section found: %i.", indexPath.section);
             return UITableViewCellEditingStyleNone;
@@ -425,8 +434,14 @@
             else
                 [self loadBookDetailViewForPersonType:Contributor atIndexPath:indexPath];
             break;
+        case PersonBooksSignedSection:
+            if (indexPath.row == self.detailItem.booksSigned.count)
+                [self loadBookViewForPersonType:Signature];
+            else
+                [self loadBookDetailViewForPersonType:Signature atIndexPath:indexPath];
+            break;
         default:
-            DLog(@"Invalid TitleDetailViewController section found: %i.", indexPath.section);
+            DLog(@"Invalid PersonDetailViewController section found: %i.", indexPath.section);
             break;
     }
 }
@@ -460,6 +475,10 @@
                 break;
             case PersonContributedSection:
                 [self.detailItem removeContributedObject:[self sortedBookFromSet:self.detailItem.contributed atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
+                break;
+            case PersonBooksSignedSection:
+                [self.detailItem removeBooksSignedObject:[self sortedBookFromSet:self.detailItem.booksSigned atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             default:
@@ -501,7 +520,7 @@
         case PersonEditedSection:
             if (self.detailItem.edited.count > 0 || self.editing)
             {
-                header = NSLocalizedString(@"Edited", @"PersonDetailViewController Edited Of section header.");
+                header = NSLocalizedString(@"Edited", @"PersonDetailViewController Edited section header.");
             }
             break;
         case PersonIllustratedSection:
@@ -513,7 +532,13 @@
         case PersonContributedSection:
             if (self.detailItem.contributed.count > 0 || self.editing)
             {
-                header = NSLocalizedString(@"Contributed", @"PersonDetailViewController Contributed Of section header.");
+                header = NSLocalizedString(@"Contributed", @"PersonDetailViewController Contributed section header.");
+            }
+            break;
+        case PersonBooksSignedSection:
+            if (self.detailItem.booksSigned.count > 0 || self.editing)
+            {
+                header = NSLocalizedString(@"Signed", @"PersonDetailViewController Signed section header.");
             }
             break;
         default:
@@ -720,6 +745,30 @@
     return cell;
 }
 
+-(UITableViewCell*) configureBooksSignedCellAtIndexPath:(NSIndexPath*)indexPath
+{
+    static NSString* CellIdentifier = @"SignatureCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    if(self.editing && indexPath.row == self.detailItem.booksSigned.count)
+    {
+        cell.textLabel.text = NSLocalizedString(@"Add Signed Title...", @"PersonDetailViewController add Book Signed insertion row text.");
+    }
+    else
+    {
+        Book* book = [self sortedBookFromSet:self.detailItem.booksSigned atIndexPath:indexPath];
+        cell.textLabel.text = book.title;
+    }
+    
+    return cell;
+}
+
 #pragma mark - Title Selection Delegate Method
 
 -(void) bookViewController:(BookViewController *)controller didSelectBook:(Book*)book forPersonType:(PersonType)type
@@ -737,6 +786,9 @@
             break;
         case Contributor:
             [self.detailItem addContributedObject:book];
+            break;
+        case Signature:
+            [self.detailItem addBooksSignedObject:book];
             break;
         default:
             DLog(@"Invalid PersonType found in PersonDetailViewController: %i.", type);
@@ -815,6 +867,9 @@
             break;
         case Contributor:
             selectedBook = [self sortedBookFromSet:self.detailItem.contributed atIndexPath:indexPath];
+            break;
+        case Signature:
+            selectedBook = [self sortedBookFromSet:self.detailItem.booksSigned atIndexPath:indexPath];
             break;
         default:
             break;

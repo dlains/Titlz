@@ -28,6 +28,7 @@
 -(UITableViewCell*) configureEditorCellAtIndexPath:(NSIndexPath *)indexPath;
 -(UITableViewCell*) configureIllustratorCellAtIndexPath:(NSIndexPath *)indexPath;
 -(UITableViewCell*) configureContributorCellAtIndexPath:(NSIndexPath *)indexPath;
+-(UITableViewCell*) configureSignatureCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureAwardCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configurePointCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configurePublisherCellAtIndexPath:(NSIndexPath*)indexPath;
@@ -366,6 +367,7 @@
     NSIndexPath* editor      = [NSIndexPath indexPathForRow:self.detailItem.editors.count inSection:BookEditorSection];
     NSIndexPath* illustrator = [NSIndexPath indexPathForRow:self.detailItem.illustrators.count inSection:BookIllustratorSection];
     NSIndexPath* contributor = [NSIndexPath indexPathForRow:self.detailItem.contributors.count inSection:BookContributorSection];
+    NSIndexPath* signature   = [NSIndexPath indexPathForRow:self.detailItem.signatures.count inSection:BookSignatureSection];
     NSIndexPath* award       = [NSIndexPath indexPathForRow:self.detailItem.awards.count inSection:BookAwardSection];
     NSIndexPath* point       = [NSIndexPath indexPathForRow:self.detailItem.points.count inSection:BookPointSection];
     NSInteger publisherRow   = (self.detailItem.publisher != nil) ? 1 : 0;
@@ -374,7 +376,7 @@
     NSIndexPath* boughtFrom  = [NSIndexPath indexPathForRow:boughtFromRow inSection:BookBoughtFromSection];
     NSIndexPath* collection  = [NSIndexPath indexPathForRow:self.detailItem.collections.count inSection:BookCollectionSection];
 
-    NSArray* paths = [NSArray arrayWithObjects:author, editor, illustrator, contributor, award, point, publisher, boughtFrom, collection, nil];
+    NSArray* paths = [NSArray arrayWithObjects:author, editor, illustrator, contributor, signature, award, point, publisher, boughtFrom, collection, nil];
 
     if (editing)
     {
@@ -417,6 +419,8 @@
             return self.detailItem.illustrators.count + insertionRow;
         case BookContributorSection:
             return self.detailItem.contributors.count + insertionRow;
+        case BookSignatureSection:
+            return self.detailItem.signatures.count + insertionRow;
         case BookAwardSection:
             return self.detailItem.awards.count + insertionRow;
         case BookPointSection:
@@ -454,6 +458,9 @@
             break;
         case BookContributorSection:
             cell = [self configureContributorCellAtIndexPath:indexPath];
+            break;
+        case BookSignatureSection:
+            cell = [self configureSignatureCellAtIndexPath:indexPath];
             break;
         case BookAwardSection:
             cell = [self configureAwardCellAtIndexPath:indexPath];
@@ -493,6 +500,8 @@
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.illustrators];
         case BookContributorSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.contributors];
+        case BookSignatureSection:
+            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.signatures];
         case BookAwardSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.awards];
         case BookPointSection:
@@ -551,6 +560,12 @@
             else
                 [self loadPersonDetailViewForPersonType:Contributor atIndexPath:indexPath];
             break;
+        case BookSignatureSection:
+            if (indexPath.row == self.detailItem.signatures.count)
+                [self loadPersonViewControllerForPersonType:Signature];
+            else
+                [self loadPersonDetailViewForPersonType:Signature atIndexPath:indexPath];
+            break;
         case BookAwardSection:
             if (indexPath.row == self.detailItem.awards.count)
                 [self loadNewAwardView];
@@ -606,6 +621,10 @@
                 break;
             case BookContributorSection:
                 [self.detailItem removeContributorsObject:[self sortedPersonFromSet:self.detailItem.contributors atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
+                break;
+            case BookSignatureSection:
+                [self.detailItem removeSignaturesObject:[self sortedPersonFromSet:self.detailItem.signatures atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             case BookAwardSection:
@@ -668,6 +687,12 @@
                 header = NSLocalizedString(@"Contributors", @"BookDetailViewController Contributors section header.");
             }
             break;
+        case BookSignatureSection:
+            if (self.detailItem.signatures.count > 0 || self.editing)
+            {
+                header = NSLocalizedString(@"Signatures", @"BookDetailViewController Signatures section header.");
+            }
+            break;
         case BookAwardSection:
             if (self.detailItem.awards.count > 0 || self.editing)
             {
@@ -718,6 +743,7 @@
             case BookEditorSection:
             case BookIllustratorSection:
             case BookContributorSection:
+            case BookSignatureSection:
             case BookAwardSection:
             case BookPointSection:
             case BookPublisherSection:
@@ -882,7 +908,7 @@
     
     if(self.editing && indexPath.row == self.detailItem.authors.count)
     {
-        cell.textLabel.text = NSLocalizedString(@"Add Author...", @"TitleDetailViewController add Author insertion row text.");
+        cell.textLabel.text = NSLocalizedString(@"Add Author...", @"BookDetailViewController add Author insertion row text.");
     }
     else
     {
@@ -906,7 +932,7 @@
     
     if(self.editing && indexPath.row == self.detailItem.editors.count)
     {
-        cell.textLabel.text = NSLocalizedString(@"Add Editor...", @"TitleDetailViewController add Editor insertion row text.");
+        cell.textLabel.text = NSLocalizedString(@"Add Editor...", @"BookDetailViewController add Editor insertion row text.");
     }
     else
     {
@@ -930,7 +956,7 @@
     
     if(self.editing && indexPath.row == self.detailItem.illustrators.count)
     {
-        cell.textLabel.text = NSLocalizedString(@"Add Illustrator...", @"TitleDetailViewController add Illustrator insertion row text.");
+        cell.textLabel.text = NSLocalizedString(@"Add Illustrator...", @"BookDetailViewController add Illustrator insertion row text.");
     }
     else
     {
@@ -954,11 +980,34 @@
     
     if(self.editing && indexPath.row == self.detailItem.contributors.count)
     {
-        cell.textLabel.text = NSLocalizedString(@"Add Contributor...", @"TitleDetailViewController add Contributor insertion row text.");
+        cell.textLabel.text = NSLocalizedString(@"Add Contributor...", @"BookDetailViewController add Contributor insertion row text.");
     }
     else
     {
         Person* person = [self sortedPersonFromSet:self.detailItem.contributors atIndexPath:indexPath];
+        cell.textLabel.text = person.fullName;
+    }
+    return cell;
+}
+
+-(UITableViewCell*) configureSignatureCellAtIndexPath:(NSIndexPath*)indexPath
+{
+    static NSString* CellIdentifier = @"SignatureCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    if(self.editing && indexPath.row == self.detailItem.signatures.count)
+    {
+        cell.textLabel.text = NSLocalizedString(@"Add Signature...", @"BookDetailViewController add Signature insertion row text.");
+    }
+    else
+    {
+        Person* person = [self sortedPersonFromSet:self.detailItem.signatures atIndexPath:indexPath];
         cell.textLabel.text = person.fullName;
     }
     return cell;
@@ -1111,6 +1160,9 @@
         case Contributor:
             [self.detailItem addContributorsObject:person];
             break;
+        case Signature:
+            [self.detailItem addSignaturesObject:person];
+            break;
         default:
             DLog(@"Invalid PersonType found in TitleDetailViewController: %i.", type);
             break;
@@ -1254,6 +1306,9 @@
             break;
         case Contributor:
             selectedPerson = [self sortedPersonFromSet:self.detailItem.contributors atIndexPath:indexPath];
+            break;
+        case Signature:
+            selectedPerson = [self sortedPersonFromSet:self.detailItem.signatures atIndexPath:indexPath];
             break;
         default:
             break;

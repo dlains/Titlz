@@ -27,6 +27,7 @@
 @dynamic contributed;
 @dynamic edited;
 @dynamic illustrated;
+@dynamic booksSigned;
 
 -(NSString*) fullName
 {
