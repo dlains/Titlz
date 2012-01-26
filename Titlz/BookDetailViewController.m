@@ -14,6 +14,7 @@
 #import "SellerDetailViewController.h"
 #import "AwardDetailViewController.h"
 #import "PointDetailViewController.h"
+#import "EditableImageAndTextCell.h"
 #import "EditableTextCell.h"
 #import "Book.h"
 #import "Person.h"
@@ -21,6 +22,7 @@
 #import "Seller.h"
 #import "Award.h"
 #import "DLPoint.h"
+#import "Photo.h"
 
 @interface BookDetailViewController ()
 -(UITableViewCell*) configureDataCellAtIndexPath:(NSIndexPath*)indexPath;
@@ -50,6 +52,9 @@
 -(void) loadAwardDetailViewForAwardAtIndexPath:(NSIndexPath*)indexPath;
 -(void) loadNewPointView;
 -(void) loadPointDetailViewForPointAtIndexPath:(NSIndexPath*)indexPath;
+
+-(IBAction) thumbnailButtonPressed:(id)sender;
+
 @end
 
 @implementation BookDetailViewController
@@ -761,14 +766,23 @@
     }
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == BookDataSection && indexPath.row == BookTitleRow)
+    {
+        return 130.0f;
+    }
+    else
+    {
+        return 44.0f;
+    }
+}
+
 -(UITableViewCell*) configureDataCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
-    
-    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
-    cell.textField.inputView = nil;
-    cell.textField.keyboardType = UIKeyboardTypeDefault;
-    cell.textField.text = @"";
+    UITableViewCell* result = nil;
+    EditableTextCell* textCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
+    EditableImageAndTextCell* imageCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableImageAndTextCell"];
     
     // Create the date picker to use for the date fields.
     UIDatePicker* datePicker = [[UIDatePicker alloc] init];
@@ -783,116 +797,151 @@
     // Create a localized currency symbol to use in the price fields.
     NSString* currencySymbol = [[NSLocale currentLocale] objectForKey:NSLocaleCurrencySymbol];
     
-    if(cell == nil)
+    if(textCell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
-        cell = [topLevelObjects objectAtIndex:0];
-        cell.textField.enabled = NO;
+        textCell = [topLevelObjects objectAtIndex:0];
+        textCell.textField.enabled = NO;
     }
     
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    textCell.textField.inputView = nil;
+    textCell.textField.keyboardType = UIKeyboardTypeDefault;
+    textCell.textField.text = @"";
+
+    if(imageCell == nil)
+    {
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableImageAndTextCell" owner:self options:nil];
+        imageCell = [topLevelObjects objectAtIndex:0];
+        imageCell.textField.enabled = NO;
+        imageCell.thumbnailButton.enabled = NO;
+    }
+
     switch (indexPath.row)
     {
         case BookTitleRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Title", @"BookDetailViewController title data field label.");
-            cell.textField.text = self.detailItem.title;
-            cell.textField.tag = BookTitleRow;
+            if (self.detailItem.thumbnail == nil)
+                imageCell.thumbnailView.image = [UIImage imageNamed:@"BookCover-leather-large.jpg"];
+            else
+                imageCell.thumbnailView.image = self.detailItem.thumbnail;
+            [imageCell.thumbnailButton addTarget:self action:@selector(thumbnailButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            //imageCell.fieldLabel.text = NSLocalizedString(@"Title", @"BookDetailViewController title data field label.");
+            imageCell.textField.text = self.detailItem.title;
+            imageCell.textField.tag = BookTitleRow;
+            result = imageCell;
             break;
         case BookFormatRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Format", @"BookDetailViewController format data field label.");
-            cell.textField.text = self.detailItem.format;
-            cell.textField.tag = BookFormatRow;
+            textCell.fieldLabel.text = NSLocalizedString(@"Format", @"BookDetailViewController format data field label.");
+            textCell.textField.text = self.detailItem.format;
+            textCell.textField.tag = BookFormatRow;
+            result = textCell;
             break;
         case BookEditionRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Edition", @"BookDetailViewController edition data field label.");
-            cell.textField.text = self.detailItem.edition;
-            cell.textField.tag = BookEditionRow;
+            textCell.fieldLabel.text = NSLocalizedString(@"Edition", @"BookDetailViewController edition data field label.");
+            textCell.textField.text = self.detailItem.edition;
+            textCell.textField.tag = BookEditionRow;
+            result = textCell;
             break;
         case BookPrintingRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Printing", @"BookDetailViewController printing data field label.");
-            cell.textField.text = (self.detailItem.printing == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printing intValue]];
-            cell.textField.tag = BookPrintingRow;
-            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            textCell.fieldLabel.text = NSLocalizedString(@"Printing", @"BookDetailViewController printing data field label.");
+            textCell.textField.text = (self.detailItem.printing == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printing intValue]];
+            textCell.textField.tag = BookPrintingRow;
+            textCell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            result = textCell;
             break;
         case BookIsbnRow:
-            cell.fieldLabel.text = NSLocalizedString(@"ISBN", @"BookDetailViewController isbn data field label.");
-            cell.textField.text = self.detailItem.isbn;
-            cell.textField.tag = BookIsbnRow;
-            cell.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+            textCell.fieldLabel.text = NSLocalizedString(@"ISBN", @"BookDetailViewController isbn data field label.");
+            textCell.textField.text = self.detailItem.isbn;
+            textCell.textField.tag = BookIsbnRow;
+            textCell.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+            result = textCell;
             break;
         case BookPagesRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Pages", @"BookDetailViewController pages data field label.");
-            cell.textField.text = (self.detailItem.pages == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.pages intValue]];
-            cell.textField.tag = BookPagesRow;
-            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            textCell.fieldLabel.text = NSLocalizedString(@"Pages", @"BookDetailViewController pages data field label.");
+            textCell.textField.text = (self.detailItem.pages == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.pages intValue]];
+            textCell.textField.tag = BookPagesRow;
+            textCell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            result = textCell;
             break;
         case BookReleaseDateRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Released", @"BookDetailViewController releaseDate data field label.");
-            releaseDateTextField = cell.textField;
-            cell.textField.tag = BookReleaseDateRow;
+            textCell.fieldLabel.text = NSLocalizedString(@"Released", @"BookDetailViewController releaseDate data field label.");
+            releaseDateTextField = textCell.textField;
+            textCell.textField.tag = BookReleaseDateRow;
             datePicker.tag = BookReleaseDateRow;
-            cell.textField.inputView = datePicker;
-            cell.textField.text = [formatter stringFromDate:self.detailItem.releaseDate];
+            textCell.textField.inputView = datePicker;
+            textCell.textField.text = [formatter stringFromDate:self.detailItem.releaseDate];
+            result = textCell;
             break;
         case BookPurchaseDateRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Puchased", @"BookDetailViewController purchaseDate data field label.");
-            purchaseDateTextField = cell.textField;
-            cell.textField.tag = BookPurchaseDateRow;
+            textCell.fieldLabel.text = NSLocalizedString(@"Puchased", @"BookDetailViewController purchaseDate data field label.");
+            purchaseDateTextField = textCell.textField;
+            textCell.textField.tag = BookPurchaseDateRow;
             datePicker.tag = BookPurchaseDateRow;
-            cell.textField.inputView = datePicker;
-            cell.textField.text = [formatter stringFromDate:self.detailItem.releaseDate];
+            textCell.textField.inputView = datePicker;
+            textCell.textField.text = [formatter stringFromDate:self.detailItem.releaseDate];
+            result = textCell;
             break;
         case BookOriginalPriceRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Original Price", @"BookDetailViewController originalPrice data field label.");
-            cell.textField.text = (self.detailItem.originalPrice == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.originalPrice floatValue]];
-            cell.textField.tag = BookOriginalPriceRow;
-            cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
+            textCell.fieldLabel.text = NSLocalizedString(@"Original Price", @"BookDetailViewController originalPrice data field label.");
+            textCell.textField.text = (self.detailItem.originalPrice == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.originalPrice floatValue]];
+            textCell.textField.tag = BookOriginalPriceRow;
+            textCell.textField.keyboardType = UIKeyboardTypeDecimalPad;
+            result = textCell;
             break;
         case BookPricePaidRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Price Paid", @"BookDetailViewController pricePaid data field label.");
-            cell.textField.text = (self.detailItem.pricePaid == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.pricePaid floatValue]];
-            cell.textField.tag = BookPricePaidRow;
-            cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
+            textCell.fieldLabel.text = NSLocalizedString(@"Price Paid", @"BookDetailViewController pricePaid data field label.");
+            textCell.textField.text = (self.detailItem.pricePaid == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.pricePaid floatValue]];
+            textCell.textField.tag = BookPricePaidRow;
+            textCell.textField.keyboardType = UIKeyboardTypeDecimalPad;
+            result = textCell;
             break;
         case BookCurrentValueRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Current Value", @"BookDetailViewController currentValue data field label.");
-            cell.textField.text = (self.detailItem.currentValue == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.currentValue floatValue]];
-            cell.textField.tag = BookCurrentValueRow;
-            cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
+            textCell.fieldLabel.text = NSLocalizedString(@"Current Value", @"BookDetailViewController currentValue data field label.");
+            textCell.textField.text = (self.detailItem.currentValue == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.currentValue floatValue]];
+            textCell.textField.tag = BookCurrentValueRow;
+            textCell.textField.keyboardType = UIKeyboardTypeDecimalPad;
+            result = textCell;
             break;
         case BookBookConditionRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Book Condition", @"BookDetailViewController bookCondition data field label.");
-            cell.textField.text = self.detailItem.bookCondition;
-            cell.textField.tag = BookBookConditionRow;
+            textCell.fieldLabel.text = NSLocalizedString(@"Book Condition", @"BookDetailViewController bookCondition data field label.");
+            textCell.textField.text = self.detailItem.bookCondition;
+            textCell.textField.tag = BookBookConditionRow;
+            result = textCell;
             break;
         case BookJacketConditionRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Jacket Condition", @"BookDetailViewController jacketCondition data field label.");
-            cell.textField.text = self.detailItem.jacketCondition;
-            cell.textField.tag = BookJacketConditionRow;
+            textCell.fieldLabel.text = NSLocalizedString(@"Jacket Condition", @"BookDetailViewController jacketCondition data field label.");
+            textCell.textField.text = self.detailItem.jacketCondition;
+            textCell.textField.tag = BookJacketConditionRow;
+            result = textCell;
             break;
         case BookNumberRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Number", @"BookDetailViewController number data field label.");
-            cell.textField.text = (self.detailItem.number == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.number intValue]];
-            cell.textField.tag = BookNumberRow;
-            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            textCell.fieldLabel.text = NSLocalizedString(@"Number", @"BookDetailViewController number data field label.");
+            textCell.textField.text = (self.detailItem.number == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.number intValue]];
+            textCell.textField.tag = BookNumberRow;
+            textCell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            result = textCell;
             break;
         case BookPrintRunRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Print Run", @"BookDetailViewController printRun data field label.");
-            cell.textField.text = (self.detailItem.printRun == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printRun intValue]];
-            cell.textField.tag = BookPrintRunRow;
-            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            textCell.fieldLabel.text = NSLocalizedString(@"Print Run", @"BookDetailViewController printRun data field label.");
+            textCell.textField.text = (self.detailItem.printRun == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printRun intValue]];
+            textCell.textField.tag = BookPrintRunRow;
+            textCell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            result = textCell;
             break;
         case BookCommentsRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Comments", @"BookDetailViewController comments data field label.");
-            cell.textField.text = self.detailItem.comments;
-            cell.textField.tag = BookCommentsRow;
+            textCell.fieldLabel.text = NSLocalizedString(@"Comments", @"BookDetailViewController comments data field label.");
+            textCell.textField.text = self.detailItem.comments;
+            textCell.textField.tag = BookCommentsRow;
+            result = textCell;
             break;
         default:
             DLog(@"Invalid BookDetailViewController Data section row found: %i.", indexPath.row);
             break;
     }
     
-    return cell;
+    return result;
 }
 
 -(UITableViewCell*) configureAuthorCellAtIndexPath:(NSIndexPath *)indexPath
@@ -1415,6 +1464,136 @@
         pointDetailViewController.detailItem = selectedPoint;
         [self.navigationController pushViewController:pointDetailViewController animated:YES];
     }
+}
+#pragma mark - Image handling
+
+-(void) thumbnailButtonPressed:(id)sender
+{
+    UIButton* button = sender;
+    UIActionSheet* actionSheet;
+    
+    NSString* cancel = NSLocalizedString(@"Cancel", @"EditableImageAndTextCell action sheet cancel button title.");
+    NSString* delete = NSLocalizedString(@"Delete Photo", @"EditableImageAndTextCell action sheet delete photo button title.");
+    NSString* take   = NSLocalizedString(@"Take Photo", @"EditableImageAndTextCell action sheet take photo button title.");
+    NSString* choose = NSLocalizedString(@"Choose Photo", @"EditableImageAndTextCell action sheet choose photo button title.");
+//    NSString* edit   = NSLocalizedString(@"Edit Photo", @"EditableImageAndTextCell action sheet edit photo button title.");
+    
+    if (button.enabled)
+    {
+        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+        {
+            // Camera available.
+            if (self.detailItem.thumbnail != nil)
+            {
+                // Image already exists, so add the edit and delete options.
+                actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:cancel destructiveButtonTitle:delete otherButtonTitles:take, choose, nil];
+            }
+            else
+            {
+                // Just the take photo and choose photo options.
+                actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:cancel destructiveButtonTitle:nil otherButtonTitles:take, choose, nil];
+            }
+        }
+        else
+        {
+            // No camera available.
+            if (self.detailItem.thumbnail != nil)
+            {
+                // Image already exists, so add the edit and delete options.
+                actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:cancel destructiveButtonTitle:delete otherButtonTitles:choose, nil];
+            }
+            else
+            {
+                // Just the choose photo option.
+                actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:cancel destructiveButtonTitle:nil otherButtonTitles:choose, nil];
+            }
+        }
+
+        [actionSheet showInView:self.view];
+    }
+}
+
+-(void) actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSString* cancel = NSLocalizedString(@"Cancel", @"EditableImageAndTextCell action sheet cancel button title.");
+    NSString* delete = NSLocalizedString(@"Delete Photo", @"EditableImageAndTextCell action sheet delete photo button title.");
+    NSString* take   = NSLocalizedString(@"Take Photo", @"EditableImageAndTextCell action sheet take photo button title.");
+    NSString* choose = NSLocalizedString(@"Choose Photo", @"EditableImageAndTextCell action sheet choose photo button title.");
+//    NSString* edit   = NSLocalizedString(@"Edit Photo", @"EditableImageAndTextCell action sheet edit photo button title.");
+    
+    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:cancel])
+    {
+        return;
+    }
+    
+    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:delete])
+    {
+        self.detailItem.thumbnail = nil;
+        [self.detailItem.managedObjectContext deleteObject:self.detailItem.photo];
+        [ContextUtil saveContext:self.detailItem.managedObjectContext];
+        [self.tableView reloadData];
+    }
+    
+    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:take])
+    {
+        UIImagePickerController* picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        [self presentModalViewController:picker animated:YES];
+    }
+    
+    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:choose])
+    {
+        UIImagePickerController* picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentModalViewController:picker animated:YES];
+    }
+
+    /*
+    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:edit])
+    {
+        UIImagePickerController* picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        picker.allowsEditing = YES;
+        [self presentModalViewController:picker animated:YES];
+    }
+     */
+}
+
+-(void) imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary*)info
+{
+	// If the Book already has a photo, delete it.
+	if (self.detailItem.photo)
+    {
+		[self.detailItem.managedObjectContext deleteObject:self.detailItem.photo];
+	}
+	
+	// Create a new photo object and set the image.
+	Photo* photo = [Photo photoInManagedObjectContext:self.detailItem.managedObjectContext];
+    UIImage* selectedImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+	photo.image = selectedImage;
+	
+	// Associate the photo object with the book.
+	self.detailItem.photo = photo;	
+	
+	// Create a thumbnail version of the image for the book object.
+    CGRect thumbnailRect = CGRectMake(0, 0, 175, 260);
+    
+	UIGraphicsBeginImageContext(thumbnailRect.size);
+	[selectedImage drawInRect:thumbnailRect];
+	self.detailItem.thumbnail = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+
+	[ContextUtil saveContext:self.detailItem.managedObjectContext];
+	
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+-(void) imagePickerControllerDidCancel:(UIImagePickerController*)picker
+{
+	// The user canceled -- simply dismiss the image picker.
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 @end

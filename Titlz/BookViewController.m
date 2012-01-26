@@ -9,6 +9,7 @@
 #import "BookViewController.h"
 #import "BookDetailViewController.h"
 #import "Book.h"
+#import "Photo.h"
 
 @interface BookViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
@@ -116,7 +117,7 @@
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         
         if (!self.selectionMode)
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -300,6 +301,7 @@
 {
     Book* book = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = book.title;
+    cell.detailTextLabel.text = book.format;
 }
 
 #pragma mark - Search delegate
@@ -345,6 +347,7 @@
         [self.managedObjectContext deleteObject:controller.detailItem];
     }
     
+    [self.tableView reloadData];
     [self dismissModalViewControllerAnimated:YES];
 }
 

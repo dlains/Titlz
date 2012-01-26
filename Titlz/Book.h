@@ -9,39 +9,41 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class DLPoint, Person, Publisher, Seller;
+@class DLPoint, Person, Publisher, Seller, Photo;
 
 @interface Book : NSManagedObject
 
-@property (nonatomic, retain) NSString* firstLetterOfTitle;
-@property (nonatomic, retain) NSString* title;
-@property (nonatomic, retain) NSString* subtitle;
-@property (nonatomic, retain) NSString* bookCondition;
-@property (nonatomic, retain) NSString* jacketCondition;
-@property (nonatomic, retain) NSString* comments;
-@property (nonatomic, retain) NSNumber* printing;
-@property (nonatomic, retain) NSNumber* number;
-@property (nonatomic, retain) NSNumber* printRun;
-@property (nonatomic, retain) NSDecimalNumber* originalPrice;
-@property (nonatomic, retain) NSDecimalNumber* pricePaid;
-@property (nonatomic, retain) NSString* edition;
-@property (nonatomic, retain) NSString* format;
-@property (nonatomic, retain) NSString* isbn;
-@property (nonatomic, retain) NSNumber* pages;
-@property (nonatomic, retain) NSDate* releaseDate;
-@property (nonatomic, retain) NSDate* purchaseDate;
-@property (nonatomic, retain) NSNumber* read;
-@property (nonatomic, retain) NSDecimalNumber* currentValue;
-@property (nonatomic, retain) NSSet* authors;
-@property (nonatomic, retain) NSSet* awards;
-@property (nonatomic, retain) NSSet* collections;
-@property (nonatomic, retain) NSSet* contributors;
-@property (nonatomic, retain) NSSet* editors;
-@property (nonatomic, retain) NSSet* illustrators;
-@property (nonatomic, retain) Seller* boughtFrom;
-@property (nonatomic, retain) Publisher* publisher;
-@property (nonatomic, retain) NSSet* points;
-@property (nonatomic, retain) NSSet* signatures;
+@property(nonatomic, retain) NSString* firstLetterOfTitle;
+@property(nonatomic, retain) NSString* title;
+@property(nonatomic, retain) NSString* subtitle;
+@property(nonatomic, retain) NSString* bookCondition;
+@property(nonatomic, retain) NSString* jacketCondition;
+@property(nonatomic, retain) NSString* comments;
+@property(nonatomic, retain) NSNumber* printing;
+@property(nonatomic, retain) NSNumber* number;
+@property(nonatomic, retain) NSNumber* printRun;
+@property(nonatomic, retain) NSDecimalNumber* originalPrice;
+@property(nonatomic, retain) NSDecimalNumber* pricePaid;
+@property(nonatomic, retain) NSString* edition;
+@property(nonatomic, retain) NSString* format;
+@property(nonatomic, retain) NSString* isbn;
+@property(nonatomic, retain) NSNumber* pages;
+@property(nonatomic, retain) NSDate* releaseDate;
+@property(nonatomic, retain) NSDate* purchaseDate;
+@property(nonatomic, retain) NSNumber* read;
+@property(nonatomic, retain) NSDecimalNumber* currentValue;
+@property(nonatomic, retain) NSSet* authors;
+@property(nonatomic, retain) NSSet* awards;
+@property(nonatomic, retain) NSSet* collections;
+@property(nonatomic, retain) NSSet* contributors;
+@property(nonatomic, retain) NSSet* editors;
+@property(nonatomic, retain) NSSet* illustrators;
+@property(nonatomic, retain) Seller* boughtFrom;
+@property(nonatomic, retain) Publisher* publisher;
+@property(nonatomic, retain) NSSet* points;
+@property(nonatomic, retain) NSSet* signatures;
+@property(nonatomic, retain) Photo* photo;
+@property(nonatomic, retain) UIImage* thumbnail;
 
 +(id) bookInManagedObjectContext:(NSManagedObjectContext*)context;
 

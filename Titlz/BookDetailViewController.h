@@ -16,7 +16,7 @@
 
 @class Book;
 
-@interface BookDetailViewController : UITableViewController <PersonSelectedDelegate, PublisherSelectedDelegate, LookupValueSelectedDelegate, SellerSelectedDelegate, NewAwardDelegate, NewPointDelegate>
+@interface BookDetailViewController : UITableViewController <UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, PersonSelectedDelegate, PublisherSelectedDelegate, LookupValueSelectedDelegate, SellerSelectedDelegate, NewAwardDelegate, NewPointDelegate>
 {
     UITextField* releaseDateTextField;
     UITextField* purchaseDateTextField;

@@ -10,6 +10,7 @@
 		5508606014C91CF40051DEA2 /* PointDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5508605E14C91CF40051DEA2 /* PointDetailViewController.m */; };
 		5508606114C91CF40051DEA2 /* PointDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5508605F14C91CF40051DEA2 /* PointDetailViewController.xib */; };
 		5508606414C91D4B0051DEA2 /* NewPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5508606314C91D4B0051DEA2 /* NewPointViewController.m */; };
+		550B680E14D0D9F90080115C /* BookCover-leather-large.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 550B680D14D0D9F90080115C /* BookCover-leather-large.jpg */; };
 		552C741814AE8EBB00595DE9 /* EditableTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552C741714AE8EBB00595DE9 /* EditableTextCell.xib */; };
 		552C741C14AE926600595DE9 /* EditableTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C741B14AE926600595DE9 /* EditableTextCell.m */; };
 		5548F42A14C9F800004C8BA8 /* ContextUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 5548F42914C9F800004C8BA8 /* ContextUtil.m */; };
@@ -19,6 +20,10 @@
 		556E594714C8A974000C4CBC /* NewAwardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E594614C8A974000C4CBC /* NewAwardViewController.m */; };
 		557B7B0114CCE78A0057FE42 /* DAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557B7B0014CCE78A0057FE42 /* DAlertView.m */; };
 		5591513614BF5F2800F1C01E /* DLPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 5591513514BF5F2800F1C01E /* DLPoint.m */; };
+		559E461814CF584D0055D52C /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = 559E461714CF584D0055D52C /* Photo.m */; };
+		559E461C14CF58D40055D52C /* ImageToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 559E461B14CF58D40055D52C /* ImageToDataTransformer.m */; };
+		559E461F14CF7B8F0055D52C /* EditableImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 559E461E14CF7B8F0055D52C /* EditableImageAndTextCell.m */; };
+		559E462114CF7BB70055D52C /* EditableImageAndTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 559E462014CF7BB70055D52C /* EditableImageAndTextCell.xib */; };
 		55A99E9714A949FA00836F4E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A99E9614A949FA00836F4E /* UIKit.framework */; };
 		55A99E9914A949FA00836F4E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A99E9814A949FA00836F4E /* Foundation.framework */; };
 		55A99E9B14A949FA00836F4E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A99E9A14A949FA00836F4E /* CoreGraphics.framework */; };
@@ -64,10 +69,11 @@
 		5508605F14C91CF40051DEA2 /* PointDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointDetailViewController.xib; sourceTree = "<group>"; };
 		5508606214C91D4B0051DEA2 /* NewPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPointViewController.h; sourceTree = "<group>"; };
 		5508606314C91D4B0051DEA2 /* NewPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewPointViewController.m; sourceTree = "<group>"; };
+		550B680D14D0D9F90080115C /* BookCover-leather-large.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "BookCover-leather-large.jpg"; sourceTree = "<group>"; };
 		552C741714AE8EBB00595DE9 /* EditableTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditableTextCell.xib; sourceTree = "<group>"; };
 		552C741A14AE926600595DE9 /* EditableTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableTextCell.h; sourceTree = "<group>"; };
 		552C741B14AE926600595DE9 /* EditableTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditableTextCell.m; sourceTree = "<group>"; };
-		5548F42814C9F800004C8BA8 /* ContextUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; path = ContextUtil.h; sourceTree = "<group>"; };
+		5548F42814C9F800004C8BA8 /* ContextUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextUtil.h; sourceTree = "<group>"; };
 		5548F42914C9F800004C8BA8 /* ContextUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextUtil.m; sourceTree = "<group>"; };
 		556E593714C8A898000C4CBC /* Award.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Award.h; sourceTree = "<group>"; };
 		556E593814C8A898000C4CBC /* Award.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Award.m; sourceTree = "<group>"; };
@@ -81,6 +87,13 @@
 		5591513414BF5F2800F1C01E /* DLPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLPoint.h; sourceTree = "<group>"; };
 		5591513514BF5F2800F1C01E /* DLPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLPoint.m; sourceTree = "<group>"; };
 		5591513A14BF9F6F00F1C01E /* Definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Definitions.h; sourceTree = "<group>"; };
+		559E461614CF584D0055D52C /* Photo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Photo.h; sourceTree = "<group>"; };
+		559E461714CF584D0055D52C /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
+		559E461A14CF58D40055D52C /* ImageToDataTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageToDataTransformer.h; sourceTree = "<group>"; };
+		559E461B14CF58D40055D52C /* ImageToDataTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageToDataTransformer.m; sourceTree = "<group>"; };
+		559E461D14CF7B8F0055D52C /* EditableImageAndTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableImageAndTextCell.h; sourceTree = "<group>"; };
+		559E461E14CF7B8F0055D52C /* EditableImageAndTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditableImageAndTextCell.m; sourceTree = "<group>"; };
+		559E462014CF7BB70055D52C /* EditableImageAndTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditableImageAndTextCell.xib; sourceTree = "<group>"; };
 		55A99E9214A949FA00836F4E /* Titlz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Titlz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		55A99E9614A949FA00836F4E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		55A99E9814A949FA00836F4E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -170,6 +183,14 @@
 			name = Point;
 			sourceTree = "<group>";
 		};
+		550B680C14D0D9D80080115C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				550B680D14D0D9F90080115C /* BookCover-leather-large.jpg */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		5548F42614C9F704004C8BA8 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
@@ -196,10 +217,14 @@
 				55B5C4C914C745740022B33D /* Lookup.m */,
 				55EB3C4414B13E5600721D42 /* Person.h */,
 				55EB3C4514B13E5600721D42 /* Person.m */,
+				559E461614CF584D0055D52C /* Photo.h */,
+				559E461714CF584D0055D52C /* Photo.m */,
 				55EDF6FB14C4B1F100C4BCE5 /* Publisher.h */,
 				55EDF6FC14C4B1F100C4BCE5 /* Publisher.m */,
 				55B5C4DC14C799BF0022B33D /* Seller.h */,
 				55B5C4DD14C799BF0022B33D /* Seller.m */,
+				559E461A14CF58D40055D52C /* ImageToDataTransformer.h */,
+				559E461B14CF58D40055D52C /* ImageToDataTransformer.m */,
 			);
 			name = Entities;
 			sourceTree = "<group>";
@@ -250,6 +275,7 @@
 				5562329C14AAF1FA0099765E /* Entities */,
 				55A99EBE14A94A3A00836F4E /* Classes */,
 				55A99EBF14A94A4900836F4E /* Views */,
+				550B680C14D0D9D80080115C /* Resources */,
 				55A99E9F14A949FA00836F4E /* Supporting Files */,
 			);
 			path = Titlz;
@@ -282,6 +308,8 @@
 				55A99EA814A949FA00836F4E /* AppDelegate.m */,
 				552C741A14AE926600595DE9 /* EditableTextCell.h */,
 				552C741B14AE926600595DE9 /* EditableTextCell.m */,
+				559E461D14CF7B8F0055D52C /* EditableImageAndTextCell.h */,
+				559E461E14CF7B8F0055D52C /* EditableImageAndTextCell.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -301,6 +329,7 @@
 				55B5C4D114C797DE0022B33D /* SellerViewController.xib */,
 				55B5C4D614C798960022B33D /* SellerDetailViewController.xib */,
 				552C741714AE8EBB00595DE9 /* EditableTextCell.xib */,
+				559E462014CF7BB70055D52C /* EditableImageAndTextCell.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -440,6 +469,8 @@
 				55B5C4D814C798960022B33D /* SellerDetailViewController.xib in Resources */,
 				556E594414C8A953000C4CBC /* AwardDetailViewController.xib in Resources */,
 				5508606114C91CF40051DEA2 /* PointDetailViewController.xib in Resources */,
+				559E462114CF7BB70055D52C /* EditableImageAndTextCell.xib in Resources */,
+				550B680E14D0D9F90080115C /* BookCover-leather-large.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -482,6 +513,9 @@
 				5508606414C91D4B0051DEA2 /* NewPointViewController.m in Sources */,
 				5548F42A14C9F800004C8BA8 /* ContextUtil.m in Sources */,
 				557B7B0114CCE78A0057FE42 /* DAlertView.m in Sources */,
+				559E461814CF584D0055D52C /* Photo.m in Sources */,
+				559E461C14CF58D40055D52C /* ImageToDataTransformer.m in Sources */,
+				559E461F14CF7B8F0055D52C /* EditableImageAndTextCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -11,6 +11,7 @@
 #import "Person.h"
 #import "Publisher.h"
 #import "Seller.h"
+#import "Photo.h"
 
 @implementation Book
 
@@ -43,6 +44,8 @@
 @dynamic publisher;
 @dynamic points;
 @dynamic signatures;
+@dynamic photo;
+@dynamic thumbnail;
 
 -(NSString*) firstLetterOfTitle
 {
