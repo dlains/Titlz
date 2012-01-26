@@ -118,9 +118,6 @@
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-        
-        if (!self.selectionMode)
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 
     [self configureCell:cell atIndexPath:indexPath];
@@ -301,7 +298,8 @@
 {
     Book* book = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = book.title;
-    cell.detailTextLabel.text = book.format;
+    NSString* detail = [NSString stringWithFormat:@"%@ - %@", book.edition, book.format];
+    cell.detailTextLabel.text = detail;
 }
 
 #pragma mark - Search delegate
