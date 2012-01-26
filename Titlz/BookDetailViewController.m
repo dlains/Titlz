@@ -778,6 +778,17 @@
     }
 }
 
+-(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    switch (indexPath.section)
+    {
+        case BookDataSection:
+            return NO;
+        default:
+            return YES;
+    }
+}
+
 -(UITableViewCell*) configureDataCellAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell* result = nil;

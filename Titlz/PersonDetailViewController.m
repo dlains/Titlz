@@ -549,6 +549,17 @@
     return header;
 }
 
+-(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    switch (indexPath.section)
+    {
+        case PersonDataSection:
+            return NO;
+        default:
+            return YES;
+    }
+}
+
 -(UITableViewCell*) configureDataCellForRow:(NSInteger)row
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];

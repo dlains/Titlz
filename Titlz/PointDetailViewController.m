@@ -276,6 +276,17 @@
     }
 }
 
+-(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    switch (indexPath.section)
+    {
+        case PointDataSection:
+            return NO;
+        default:
+            return YES;
+    }
+}
+
 -(UITableViewCell*) configureDataCellForRow:(NSInteger)row
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
