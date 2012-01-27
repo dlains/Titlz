@@ -10,6 +10,7 @@
 #import "BookDetailViewController.h"
 #import "Book.h"
 #import "Photo.h"
+#import "AlphaIndexFetchedResultsController.h"
 
 @interface BookViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
@@ -106,6 +107,13 @@
 
 -(NSInteger) tableView:(UITableView*)tableView sectionForSectionIndexTitle:(NSString*)title atIndex:(NSInteger)index
 {
+    // Check for the magnifying glass first.
+    if ([title isEqualToString:UITableViewIndexSearch])
+    {
+        [self.tableView scrollRectToVisible:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height) animated:YES];
+        return -1;
+    }
+    
     return [self.fetchedResultsController sectionForSectionIndexTitle:title atIndex:index];
 }
 
@@ -216,7 +224,7 @@
 
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfTitle" cacheName:cacheName];
+    AlphaIndexFetchedResultsController* controller = [[AlphaIndexFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfTitle" cacheName:cacheName];
     controller.delegate = self;
     self.fetchedResultsController = controller;
     
@@ -298,7 +306,26 @@
 {
     Book* book = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = book.title;
-    NSString* detail = [NSString stringWithFormat:@"%@ - %@", book.edition, book.format];
+    
+    NSMutableString* detail = [NSMutableString stringWithCapacity:10];
+    if (book.edition.length > 0)
+    {
+        [detail appendString:book.edition];
+    }
+    
+    if (book.format.length > 0)
+    {
+        if (detail.length > 0)
+        {
+            [detail appendString:@" - "];
+            [detail appendString:book.format];
+        }
+        else
+        {
+            [detail appendString:book.format];
+        }
+    }
+
     cell.detailTextLabel.text = detail;
 }
 

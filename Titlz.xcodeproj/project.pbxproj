@@ -61,6 +61,7 @@
 		55EDF6F114C4AC1000C4BCE5 /* NewBookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EDF6EE14C4AC1000C4BCE5 /* NewBookViewController.m */; };
 		55EDF6FA14C4B00B00C4BCE5 /* Book.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EDF6F914C4B00B00C4BCE5 /* Book.m */; };
 		55EDF6FD14C4B1F100C4BCE5 /* Publisher.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EDF6FC14C4B1F100C4BCE5 /* Publisher.m */; };
+		55EED62E14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EED62D14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -155,6 +156,8 @@
 		55EDF6F914C4B00B00C4BCE5 /* Book.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Book.m; sourceTree = "<group>"; };
 		55EDF6FB14C4B1F100C4BCE5 /* Publisher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Publisher.h; sourceTree = "<group>"; };
 		55EDF6FC14C4B1F100C4BCE5 /* Publisher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Publisher.m; sourceTree = "<group>"; };
+		55EED62C14D2174F00AFA726 /* AlphaIndexFetchedResultsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlphaIndexFetchedResultsController.h; sourceTree = "<group>"; };
+		55EED62D14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlphaIndexFetchedResultsController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +203,8 @@
 				55EB3C3C14B0CC1300721D42 /* DLog.m */,
 				557B7AFF14CCE78A0057FE42 /* DAlertView.h */,
 				557B7B0014CCE78A0057FE42 /* DAlertView.m */,
+				55EED62C14D2174F00AFA726 /* AlphaIndexFetchedResultsController.h */,
+				55EED62D14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -516,6 +521,7 @@
 				559E461814CF584D0055D52C /* Photo.m in Sources */,
 				559E461C14CF58D40055D52C /* ImageToDataTransformer.m in Sources */,
 				559E461F14CF7B8F0055D52C /* EditableImageAndTextCell.m in Sources */,
+				55EED62E14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

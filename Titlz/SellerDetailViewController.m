@@ -209,7 +209,7 @@
             self.detailItem.phone = textField.text;
             break;
         case SellerWebsiteRow:
-            self.detailItem.phone = textField.text;
+            self.detailItem.website = textField.text;
             break;
         default:
             break;
@@ -356,6 +356,11 @@
         cell.textField.enabled = NO;
     }
     
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.textField.inputView = nil;
+    cell.textField.keyboardType = UIKeyboardTypeDefault;
+    cell.textField.text = @"";
+    
     switch (row)
     {
         case SellerNameRow:
@@ -401,13 +406,13 @@
             break;
         case SellerPhoneRow:
             cell.fieldLabel.text = NSLocalizedString(@"Phone", @"SellerDetailViewController phone data field label.");
-            cell.textField.text = self.detailItem.email;
+            cell.textField.text = self.detailItem.phone;
             cell.textField.tag = SellerPhoneRow;
             cell.textField.keyboardType = UIKeyboardTypePhonePad;
             break;
         case SellerWebsiteRow:
             cell.fieldLabel.text = NSLocalizedString(@"Website", @"SellerDetailViewController website data field label.");
-            cell.textField.text = self.detailItem.email;
+            cell.textField.text = self.detailItem.website;
             cell.textField.tag = SellerWebsiteRow;
             cell.textField.keyboardType = UIKeyboardTypeURL;
             break;

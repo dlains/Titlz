@@ -15,7 +15,6 @@
 
 @property(nonatomic, retain) NSString* firstLetterOfTitle;
 @property(nonatomic, retain) NSString* title;
-@property(nonatomic, retain) NSString* subtitle;
 @property(nonatomic, retain) NSString* bookCondition;
 @property(nonatomic, retain) NSString* jacketCondition;
 @property(nonatomic, retain) NSString* comments;
@@ -30,7 +29,6 @@
 @property(nonatomic, retain) NSNumber* pages;
 @property(nonatomic, retain) NSDate* releaseDate;
 @property(nonatomic, retain) NSDate* purchaseDate;
-@property(nonatomic, retain) NSNumber* read;
 @property(nonatomic, retain) NSDecimalNumber* currentValue;
 @property(nonatomic, retain) NSSet* authors;
 @property(nonatomic, retain) NSSet* awards;
