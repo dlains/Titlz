@@ -65,8 +65,6 @@
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
 								<int key="IBUILineBreakMode">0</int>
-								<string type="base64-UTF8" key="IBUIDisabledTitle">IA</string>
-								<string key="IBUINormalTitle">Edit Image</string>
 								<object class="NSColor" key="IBUIHighlightedTitleColor" id="814628375">
 									<int key="NSColorSpace">1</int>
 									<bytes key="NSRGB">MCAwIDAAA</bytes>
@@ -77,6 +75,15 @@
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MC41AA</bytes>
 								</object>
+								<object class="NSCustomResource" key="IBUIHighlightedImage" id="400819705">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">edit-image-overlay.png</string>
+								</object>
+								<object class="NSCustomResource" key="IBUIDisabledImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">blank-image-overlay.png</string>
+								</object>
+								<reference key="IBUINormalImage" ref="400819705"/>
 								<object class="IBUIFontDescription" key="IBUIFontDescription">
 									<string key="name">Helvetica-Bold</string>
 									<string key="family">Helvetica</string>
@@ -282,6 +289,10 @@
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
+		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="blank-image-overlay.png">{80, 120}</string>
+			<string key="edit-image-overlay.png">{80, 120}</string>
+		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">933</string>
 	</data>
 </archive>
