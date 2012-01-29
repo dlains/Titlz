@@ -110,7 +110,7 @@
     // Check for the magnifying glass first.
     if ([title isEqualToString:UITableViewIndexSearch])
     {
-        [self.tableView scrollRectToVisible:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height) animated:YES];
+        [self.tableView scrollRectToVisible:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height) animated:NO];
         return -1;
     }
     

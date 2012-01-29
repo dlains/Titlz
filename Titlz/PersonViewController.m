@@ -8,6 +8,7 @@
 
 #import "PersonViewController.h"
 #import "PersonDetailViewController.h"
+#import "AlphaIndexFetchedResultsController.h"
 #import "Person.h"
 
 @interface PersonViewController ()
@@ -110,6 +111,13 @@
 
 -(NSInteger) tableView:(UITableView*)tableView sectionForSectionIndexTitle:(NSString*)title atIndex:(NSInteger)index
 {
+    // Check for the magnifying glass first.
+    if ([title isEqualToString:UITableViewIndexSearch])
+    {
+        [self.tableView scrollRectToVisible:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height) animated:NO];
+        return -1;
+    }
+    
     return [self.fetchedResultsController sectionForSectionIndexTitle:title atIndex:index];
 }
 
@@ -223,7 +231,7 @@
 
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfName" cacheName:cacheName];
+    AlphaIndexFetchedResultsController* controller = [[AlphaIndexFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfName" cacheName:cacheName];
     controller.delegate = self;
     self.fetchedResultsController = controller;
     

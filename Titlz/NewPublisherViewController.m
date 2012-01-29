@@ -10,6 +10,9 @@
 #import "EditableTextCell.h"
 #import "Publisher.h"
 
+@interface NewPublisherViewController ()
+-(void) showLookupViewControllerForLookupType:(LookupType)type;
+@end
 
 @implementation NewPublisherViewController
 
@@ -119,6 +122,24 @@
     return YES;
 }
 
+-(void) textFieldDidBeginEditing:(UITextField*)textField
+{
+    // Save the textField for updating when the selection is made.
+    lookupTextField = textField;
+    
+    switch (textField.tag)
+    {
+        case PublisherStateRow:
+            [self showLookupViewControllerForLookupType:LookupTypeState];
+            break;
+        case PublisherCountryRow:
+            [self showLookupViewControllerForLookupType:LookupTypeCountry];
+            break;
+        default:
+            break;
+    }
+}
+
 -(BOOL) textFieldShouldEndEditing:(UITextField*)textField
 {
     BOOL valid = YES;
@@ -165,19 +186,35 @@
             self.detailItem.city = textField.text;
             break;
         case PublisherStateRow:
-            self.detailItem.state = textField.text;
             break;
         case PublisherPostalCodeRow:
             self.detailItem.postalCode = textField.text;
             break;
         case PublisherCountryRow:
-            self.detailItem.country = textField.text;
             break;
         default:
             break;
     }
     
     [self becomeFirstResponder];
+}
+
+-(void) lookupViewController:(LookupViewController *)controller didSelectValue:(NSString *)value withLookupType:(LookupType)type
+{
+    switch (type)
+    {
+        case LookupTypeState:
+            self.detailItem.state = value;
+            break;
+        case LookupTypeCountry:
+            self.detailItem.country = value;
+            break;
+        default:
+            DLog(@"Invalid LookupType found in NewPublisherViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
+            break;
+    }
+    
+    lookupTextField.text = value;
 }
 
 -(IBAction) cancel:(id)sender
@@ -263,6 +300,16 @@
 -(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 {
 	return NO;
+}
+
+-(void) showLookupViewControllerForLookupType:(LookupType)type
+{
+    LookupViewController* controller = [[LookupViewController alloc] initWithLookupType:type];
+    controller.delegate = self;
+    controller.managedObjectContext = self.detailItem.managedObjectContext;
+    
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [self.navigationController presentModalViewController:navController animated:YES];
 }
 
 @end

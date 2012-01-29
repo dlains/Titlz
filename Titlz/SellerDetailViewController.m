@@ -17,6 +17,7 @@
 -(UITableViewCell*) configureBooksCellAtIndexPath:(NSIndexPath*)indexPath;
 -(void) loadBookDetailViewForBookAtIndexPath:(NSIndexPath*)indexPath;
 -(Book*) sortedBookFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(void) showLookupViewControllerForLookupType:(LookupType)type;
 @end
 
 @implementation SellerDetailViewController
@@ -154,6 +155,24 @@
     return YES;
 }
 
+-(void) textFieldDidBeginEditing:(UITextField*)textField
+{
+    // Save the textField for updating when the selection is made.
+    lookupTextField = textField;
+    
+    switch (textField.tag)
+    {
+        case SellerStateRow:
+            [self showLookupViewControllerForLookupType:LookupTypeState];
+            break;
+        case SellerCountryRow:
+            [self showLookupViewControllerForLookupType:LookupTypeCountry];
+            break;
+        default:
+            break;
+    }
+}
+
 -(BOOL) textFieldShouldEndEditing:(UITextField*)textField
 {
     BOOL valid = YES;
@@ -216,6 +235,24 @@
     }
     
     [self becomeFirstResponder];
+}
+
+-(void) lookupViewController:(LookupViewController *)controller didSelectValue:(NSString *)value withLookupType:(LookupType)type
+{
+    switch (type)
+    {
+        case LookupTypeState:
+            self.detailItem.state = value;
+            break;
+        case LookupTypeCountry:
+            self.detailItem.country = value;
+            break;
+        default:
+            DLog(@"Invalid LookupType found in SellerDetailViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
+            break;
+    }
+    
+    lookupTextField.text = value;
 }
 
 #pragma mark - Table view data source
@@ -460,6 +497,16 @@
         bookDetailViewController.detailItem = selectedBook;
         [self.navigationController pushViewController:bookDetailViewController animated:YES];
     }
+}
+
+-(void) showLookupViewControllerForLookupType:(LookupType)type
+{
+    LookupViewController* controller = [[LookupViewController alloc] initWithLookupType:type];
+    controller.delegate = self;
+    controller.managedObjectContext = self.detailItem.managedObjectContext;
+    
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [self.navigationController presentModalViewController:navController animated:YES];
 }
 
 @end

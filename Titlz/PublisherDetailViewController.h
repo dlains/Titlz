@@ -7,10 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LookupViewController.h"
 
 @class Publisher;
 
-@interface PublisherDetailViewController : UITableViewController
+@interface PublisherDetailViewController : UITableViewController <LookupValueSelectedDelegate>
+{
+    UITextField* lookupTextField;
+}
 
 @property(nonatomic, strong) Publisher* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;

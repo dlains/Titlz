@@ -10,6 +10,10 @@
 #import "EditableTextCell.h"
 #import "Seller.h"
 
+@interface NewSellerViewController()
+-(void) showLookupViewControllerForLookupType:(LookupType)type;
+@end
+
 @implementation NewSellerViewController
 
 @synthesize detailItem = _detailItem;
@@ -118,6 +122,24 @@
     return YES;
 }
 
+-(void) textFieldDidBeginEditing:(UITextField*)textField
+{
+    // Save the textField for updating when the selection is made.
+    lookupTextField = textField;
+    
+    switch (textField.tag)
+    {
+        case SellerStateRow:
+            [self showLookupViewControllerForLookupType:LookupTypeState];
+            break;
+        case SellerCountryRow:
+            [self showLookupViewControllerForLookupType:LookupTypeCountry];
+            break;
+        default:
+            break;
+    }
+}
+
 -(BOOL) textFieldShouldEndEditing:(UITextField*)textField
 {
     BOOL valid = YES;
@@ -183,6 +205,24 @@
     }
     
     [self becomeFirstResponder];
+}
+
+-(void) lookupViewController:(LookupViewController *)controller didSelectValue:(NSString *)value withLookupType:(LookupType)type
+{
+    switch (type)
+    {
+        case LookupTypeState:
+            self.detailItem.state = value;
+            break;
+        case LookupTypeCountry:
+            self.detailItem.country = value;
+            break;
+        default:
+            DLog(@"Invalid LookupType found in NewSellerViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
+            break;
+    }
+    
+    lookupTextField.text = value;
 }
 
 -(IBAction) cancel:(id)sender
@@ -279,6 +319,16 @@
 -(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 {
 	return NO;
+}
+
+-(void) showLookupViewControllerForLookupType:(LookupType)type
+{
+    LookupViewController* controller = [[LookupViewController alloc] initWithLookupType:type];
+    controller.delegate = self;
+    controller.managedObjectContext = self.detailItem.managedObjectContext;
+    
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [self.navigationController presentModalViewController:navController animated:YES];
 }
 
 @end

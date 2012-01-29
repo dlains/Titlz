@@ -7,10 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LookupViewController.h"
 
 @class Seller;
 
-@interface SellerDetailViewController : UITableViewController
+@interface SellerDetailViewController : UITableViewController <LookupValueSelectedDelegate>
+{
+    UITextField* lookupTextField;
+}
 
 @property(nonatomic, strong) Seller* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;

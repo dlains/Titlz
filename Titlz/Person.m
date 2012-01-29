@@ -63,10 +63,15 @@
     if ([value length] > 0)
     {
         result = [value substringWithRange:[value rangeOfComposedCharacterSequenceAtIndex:0]];
-    }
-    else
-    {
-        result = @"";
+
+        // Any non-alpha character should be grouped in the # group.
+        NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"[A-Z]" options:NSRegularExpressionSearch error:nil];
+        NSArray* matches = [regex matchesInString:result options:0 range:NSMakeRange(0, [result length])];
+        
+        if ([matches count] == 0)
+        {
+            result = @"#";
+        }
     }
     
     [self didAccessValueForKey:@"firstLetterOfName"];
