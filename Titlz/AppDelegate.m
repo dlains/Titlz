@@ -15,10 +15,10 @@ void uncaughtExceptionHandler(NSException* exception);
 @implementation AppDelegate
 
 @synthesize window = _window;
+@synthesize tabBarController = _tabBarController;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
-@synthesize navigationController = _navigationController;
 
 void uncaughtExceptionHandler(NSException* exception)
 {
@@ -33,11 +33,24 @@ void uncaughtExceptionHandler(NSException* exception)
     application.applicationSupportsShakeToEdit = YES;
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.tabBarController = [[UITabBarController alloc] init];
 
+    // Add the real Collection view controller here when it is done.
+//    CollectionViewController* collectionViewController = [[CollectionViewController alloc] initWithNibName:@"CollectionViewController" bundle:nil];
+//    UINavigationController* collectionNavigationController = [[UINavigationController alloc] initWithRootViewController:collectionViewController];
+//    collectionViewController.managedObjectContext = self.managedObjectModel;
+    
     BookViewController* bookViewController = [[BookViewController alloc] initWithNibName:@"BookViewController" bundle:nil];
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:bookViewController];
+    UINavigationController* bookNavigationController = [[UINavigationController alloc] initWithRootViewController:bookViewController];
     bookViewController.managedObjectContext = self.managedObjectContext;
-    self.window.rootViewController = self.navigationController;
+    
+    PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
+    UINavigationController* personNavigationController = [[UINavigationController alloc] initWithRootViewController:personViewController];
+    personViewController.managedObjectContext = self.managedObjectContext;
+    
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:bookNavigationController, personNavigationController, nil];
+
+    self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     return YES;
 }

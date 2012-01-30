@@ -33,6 +33,7 @@
     if (self)
     {
         self.title = NSLocalizedString(@"People", @"PersonViewController header bar title.");
+        self.tabBarItem.image = [UIImage imageNamed:@"user"];
     }
     return self;
 }

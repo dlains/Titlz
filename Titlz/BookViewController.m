@@ -32,6 +32,7 @@
     if (self)
     {
         self.title = NSLocalizedString(@"Books", @"BookViewController header bar title.");
+        self.tabBarItem.image = [UIImage imageNamed:@"book"];
     }
     return self;
 }
