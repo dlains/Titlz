@@ -819,7 +819,10 @@
     textCell.textField.inputView = nil;
     textCell.textField.keyboardType = UIKeyboardTypeDefault;
     textCell.textField.text = @"";
-    textCell.textField.enabled = NO;
+    if (self.editing)
+        textCell.textField.enabled = YES;
+    else
+        textCell.textField.enabled = NO;
 
     if(imageCell == nil)
     {

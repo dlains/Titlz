@@ -392,7 +392,10 @@
     cell.textField.inputView = nil;
     cell.textField.keyboardType = UIKeyboardTypeDefault;
     cell.textField.text = @"";
-    cell.textField.enabled = NO;
+    if (self.editing)
+        cell.textField.enabled = YES;
+    else
+        cell.textField.enabled = NO;
 
     switch (row)
     {
