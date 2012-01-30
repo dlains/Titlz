@@ -805,9 +805,6 @@
     [formatter setTimeStyle:NSDateFormatterNoStyle];
     [formatter setDateStyle:NSDateFormatterLongStyle];
     
-    // Create a localized currency symbol to use in the price fields.
-    NSString* currencySymbol = [[NSLocale currentLocale] objectForKey:NSLocaleCurrencySymbol];
-    
     if(textCell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
@@ -899,33 +896,33 @@
             break;
         case BookOriginalPriceRow:
             textCell.fieldLabel.text = NSLocalizedString(@"Original Price", @"BookDetailViewController originalPrice data field label.");
-            textCell.textField.text = (self.detailItem.originalPrice == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.originalPrice floatValue]];
+            textCell.textField.text = (self.detailItem.originalPrice == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.originalPrice floatValue]];
             textCell.textField.tag = BookOriginalPriceRow;
             textCell.textField.keyboardType = UIKeyboardTypeDecimalPad;
             result = textCell;
             break;
         case BookPricePaidRow:
             textCell.fieldLabel.text = NSLocalizedString(@"Price Paid", @"BookDetailViewController pricePaid data field label.");
-            textCell.textField.text = (self.detailItem.pricePaid == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.pricePaid floatValue]];
+            textCell.textField.text = (self.detailItem.pricePaid == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.pricePaid floatValue]];
             textCell.textField.tag = BookPricePaidRow;
             textCell.textField.keyboardType = UIKeyboardTypeDecimalPad;
             result = textCell;
             break;
         case BookCurrentValueRow:
             textCell.fieldLabel.text = NSLocalizedString(@"Current Value", @"BookDetailViewController currentValue data field label.");
-            textCell.textField.text = (self.detailItem.currentValue == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.currentValue floatValue]];
+            textCell.textField.text = (self.detailItem.currentValue == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.currentValue floatValue]];
             textCell.textField.tag = BookCurrentValueRow;
             textCell.textField.keyboardType = UIKeyboardTypeDecimalPad;
             result = textCell;
             break;
         case BookBookConditionRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Book Condition", @"BookDetailViewController bookCondition data field label.");
+            textCell.fieldLabel.text = NSLocalizedString(@"Book Cond.", @"BookDetailViewController bookCondition data field label.");
             textCell.textField.text = self.detailItem.bookCondition;
             textCell.textField.tag = BookBookConditionRow;
             result = textCell;
             break;
         case BookJacketConditionRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Jacket Condition", @"BookDetailViewController jacketCondition data field label.");
+            textCell.fieldLabel.text = NSLocalizedString(@"Jacket Cond.", @"BookDetailViewController jacketCondition data field label.");
             textCell.textField.text = self.detailItem.jacketCondition;
             textCell.textField.tag = BookJacketConditionRow;
             result = textCell;
