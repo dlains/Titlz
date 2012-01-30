@@ -813,13 +813,13 @@
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
         textCell = [topLevelObjects objectAtIndex:0];
-        textCell.textField.enabled = NO;
     }
     
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
     textCell.textField.inputView = nil;
     textCell.textField.keyboardType = UIKeyboardTypeDefault;
     textCell.textField.text = @"";
+    textCell.textField.enabled = NO;
 
     if(imageCell == nil)
     {

@@ -271,11 +271,6 @@
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
-    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
-    cell.textField.inputView = nil;
-    cell.textField.keyboardType = UIKeyboardTypeDefault;
-    cell.textField.text = @"";
-    
     // Create the date picker to use for the releaseDate field.
     UIDatePicker* datePicker = [[UIDatePicker alloc] init];
     datePicker.datePickerMode = UIDatePickerModeDate;
@@ -293,8 +288,13 @@
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
         cell = [topLevelObjects objectAtIndex:0];
-        cell.textField.enabled = NO;
     }
+    
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.textField.inputView = nil;
+    cell.textField.keyboardType = UIKeyboardTypeDefault;
+    cell.textField.text = @"";
+    cell.textField.enabled = NO;
     
     switch (indexPath.row)
     {

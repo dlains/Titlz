@@ -388,6 +388,12 @@
         cell.textField.enabled = NO;
     }
     
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.textField.inputView = nil;
+    cell.textField.keyboardType = UIKeyboardTypeDefault;
+    cell.textField.text = @"";
+    cell.textField.enabled = NO;
+
     switch (row)
     {
         case PublisherNameRow:
