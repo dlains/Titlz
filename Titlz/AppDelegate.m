@@ -35,19 +35,19 @@ void uncaughtExceptionHandler(NSException* exception)
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.tabBarController = [[UITabBarController alloc] init];
 
-    CollectionViewController* collectionViewController = [[CollectionViewController alloc] initWithNibName:@"CollectionViewController" bundle:nil];
-    UINavigationController* collectionNavigationController = [[UINavigationController alloc] initWithRootViewController:collectionViewController];
-    collectionViewController.managedObjectContext = self.managedObjectContext;
-    
     BookViewController* bookViewController = [[BookViewController alloc] initWithNibName:@"BookViewController" bundle:nil];
     UINavigationController* bookNavigationController = [[UINavigationController alloc] initWithRootViewController:bookViewController];
     bookViewController.managedObjectContext = self.managedObjectContext;
+    
+    CollectionViewController* collectionViewController = [[CollectionViewController alloc] initWithNibName:@"CollectionViewController" bundle:nil];
+    UINavigationController* collectionNavigationController = [[UINavigationController alloc] initWithRootViewController:collectionViewController];
+    collectionViewController.managedObjectContext = self.managedObjectContext;
     
     PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
     UINavigationController* personNavigationController = [[UINavigationController alloc] initWithRootViewController:personViewController];
     personViewController.managedObjectContext = self.managedObjectContext;
     
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:collectionNavigationController, bookNavigationController, personNavigationController, nil];
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:bookNavigationController, collectionNavigationController, personNavigationController, nil];
 
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];

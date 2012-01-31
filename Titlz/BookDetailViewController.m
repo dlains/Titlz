@@ -903,7 +903,7 @@
             textCell.textField.tag = BookPurchaseDateRow;
             datePicker.tag = BookPurchaseDateRow;
             textCell.textField.inputView = datePicker;
-            textCell.textField.text = [formatter stringFromDate:self.detailItem.releaseDate];
+            textCell.textField.text = [formatter stringFromDate:self.detailItem.purchaseDate];
             result = textCell;
             break;
         case BookOriginalPriceRow:

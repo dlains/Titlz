@@ -273,44 +273,54 @@
     {
         case SellerNameRow:
             cell.fieldLabel.text = NSLocalizedString(@"Name", @"NewSellerViewController name data field label.");
+            cell.textField.text = self.detailItem.name;
             cell.textField.tag = SellerNameRow;
             break;
         case SellerStreetRow:
             cell.fieldLabel.text = NSLocalizedString(@"Street", @"NewSellerViewController street data field label.");
+            cell.textField.text = self.detailItem.street;
             cell.textField.tag = SellerStreetRow;
             break;
         case SellerStreet1Row:
             cell.fieldLabel.text = NSLocalizedString(@"Street", @"NewSellerViewController street data field label.");
+            cell.textField.text = self.detailItem.street1;
             cell.textField.tag = SellerStreet1Row;
             break;
         case SellerCityRow:
             cell.fieldLabel.text = NSLocalizedString(@"City", @"NewSellerViewController city data field label.");
+            cell.textField.text = self.detailItem.city;
             cell.textField.tag = SellerCityRow;
             break;
         case SellerStateRow:
             cell.fieldLabel.text = NSLocalizedString(@"State", @"NewSellerViewController state data field label.");
+            cell.textField.text = self.detailItem.state;
             cell.textField.tag = SellerStateRow;
             break;
         case SellerPostalCodeRow:
             cell.fieldLabel.text = NSLocalizedString(@"Postal Code", @"NewSellerViewController postalCode data field label.");
+            cell.textField.text = self.detailItem.postalCode;
             cell.textField.tag = SellerPostalCodeRow;
             break;
         case SellerCountryRow:
             cell.fieldLabel.text = NSLocalizedString(@"Country", @"NewSellerViewController country data field label.");
+            cell.textField.text = self.detailItem.country;
             cell.textField.tag = SellerCountryRow;
             break;
         case SellerEmailRow:
             cell.fieldLabel.text = NSLocalizedString(@"Email", @"NewSellerViewController email data field label.");
+            cell.textField.text = self.detailItem.email;
             cell.textField.tag = SellerEmailRow;
             cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
             break;
         case SellerPhoneRow:
             cell.fieldLabel.text = NSLocalizedString(@"Phone", @"NewSellerViewController phone data field label.");
+            cell.textField.text = self.detailItem.phone;
             cell.textField.tag = SellerPhoneRow;
             cell.textField.keyboardType = UIKeyboardTypePhonePad;
             break;
         case SellerWebsiteRow:
             cell.fieldLabel.text = NSLocalizedString(@"Website", @"NewSellerViewController website data field label.");
+            cell.textField.text = self.detailItem.website;
             cell.textField.tag = SellerWebsiteRow;
             cell.textField.keyboardType = UIKeyboardTypeURL;
             break;

@@ -363,7 +363,7 @@
             cell.textField.tag = BookPurchaseDateRow;
             datePicker.tag = BookPurchaseDateRow;
             cell.textField.inputView = datePicker;
-            cell.textField.text = [formatter stringFromDate:self.detailItem.releaseDate];
+            cell.textField.text = [formatter stringFromDate:self.detailItem.purchaseDate];
             break;
         case BookOriginalPriceRow:
             cell.fieldLabel.text = NSLocalizedString(@"Original Price", @"NewBookViewController originalPrice data field label.");

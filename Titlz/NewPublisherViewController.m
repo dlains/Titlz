@@ -265,34 +265,42 @@
     {
         case PublisherNameRow:
             cell.fieldLabel.text = NSLocalizedString(@"Name", @"NewPublisherViewController name data field label.");
+            cell.textField.text = self.detailItem.name;
             cell.textField.tag = PublisherNameRow;
             break;
         case PublisherParentRow:
             cell.fieldLabel.text = NSLocalizedString(@"Parent", @"NewPublisherViewController parent data field label.");
+            cell.textField.text = self.detailItem.parent;
             cell.textField.tag = PublisherParentRow;
             break;
         case PublisherStreetRow:
             cell.fieldLabel.text = NSLocalizedString(@"Street", @"NewPublisherViewController street data field label.");
+            cell.textField.text = self.detailItem.street;
             cell.textField.tag = PublisherStreetRow;
             break;
         case PublisherStreet1Row:
             cell.fieldLabel.text = NSLocalizedString(@"Street", @"NewPublisherViewController street data field label.");
+            cell.textField.text = self.detailItem.street1;
             cell.textField.tag = PublisherStreet1Row;
             break;
         case PublisherCityRow:
             cell.fieldLabel.text = NSLocalizedString(@"City", @"NewPublisherViewController city data field label.");
+            cell.textField.text = self.detailItem.city;
             cell.textField.tag = PublisherCityRow;
             break;
         case PublisherStateRow:
             cell.fieldLabel.text = NSLocalizedString(@"State", @"NewPublisherViewController state data field label.");
+            cell.textField.text = self.detailItem.state;
             cell.textField.tag = PublisherStateRow;
             break;
         case PublisherPostalCodeRow:
             cell.fieldLabel.text = NSLocalizedString(@"Postal Code", @"NewPublisherViewController postalCode data field label.");
+            cell.textField.text = self.detailItem.postalCode;
             cell.textField.tag = PublisherPostalCodeRow;
             break;
         case PublisherCountryRow:
             cell.fieldLabel.text = NSLocalizedString(@"Country", @"NewPublisherViewController country data field label.");
+            cell.textField.text = self.detailItem.country;
             cell.textField.tag = PublisherCountryRow;
             break;
         default:
