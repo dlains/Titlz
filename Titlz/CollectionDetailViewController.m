@@ -432,6 +432,17 @@
     [self.tableView reloadData];
 }
 
+-(void) bookViewController:(BookViewController *)controller didSelectBooks:(NSArray *)books
+{
+    for (Book* book in books)
+    {
+        [self.detailItem addBooksObject:book];
+    }
+    
+    [ContextUtil saveContext:self.detailItem.managedObjectContext];
+    [self.tableView reloadData];
+}
+
 #pragma mark - Local Helper Methods
 
 -(Book*) sortedBookFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
@@ -455,7 +466,7 @@
     BookViewController* bookViewController = [[BookViewController alloc] initWithNibName:@"BookViewController" bundle:nil];
     bookViewController.managedObjectContext = self.detailItem.managedObjectContext;
     bookViewController.delegate = self;
-    bookViewController.selectionMode = TRUE;
+    bookViewController.selectionMode = MultipleSelection;
     
     [self.navigationController pushViewController:bookViewController animated:YES];
 }

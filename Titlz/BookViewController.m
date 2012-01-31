@@ -15,6 +15,7 @@
 @interface BookViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
 -(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate;
+-(void) selectObjects;
 @end
 
 @implementation BookViewController
@@ -48,9 +49,18 @@
 -(void) viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    // Set up the edit and add buttons.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    
+    if (self.selectionMode == MultipleSelection)
+    {
+        self.tableView.allowsMultipleSelection = YES;
+        UIBarButtonItem* selectButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Select (0)", @"BookViewController multiple selection button text") style:UIBarButtonItemStyleBordered target:self action:@selector(selectObjects)];
+        self.navigationItem.leftBarButtonItem = selectButton;
+    }
+    else if (self.selectionMode == DetailSelection)
+    {
+        self.tableView.allowsMultipleSelection = NO;
+        self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    }
 
     UIBarButtonItem* addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
     self.navigationItem.rightBarButtonItem = addButton;
@@ -161,14 +171,28 @@
     return NO;
 }
 
+-(void) tableView:(UITableView*)tableView didDeselectRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    if (self.selectionMode == MultipleSelection)
+    {
+        NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
+        self.navigationItem.leftBarButtonItem.title = [NSString stringWithFormat:NSLocalizedString(@"Select (%d)", @"BookViewController multiple selection button text"), selectedRows.count];
+    }
+}
+
 -(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    if (self.selectionMode)
+    if (self.selectionMode == SingleSelection)
     {
-        // Get the selected person and update the correct delegate.
+        // Get the selected book and update the correct delegate.
         Book* selectedBook = [[self fetchedResultsController] objectAtIndexPath:indexPath];
         [self.delegate bookViewController:self didSelectBook:selectedBook forPersonType:self.personSelectionType];
         [self.navigationController popViewControllerAnimated:YES];
+    }
+    else if (self.selectionMode == MultipleSelection)
+    {
+        NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
+        self.navigationItem.leftBarButtonItem.title = [NSString stringWithFormat:NSLocalizedString(@"Select (%d)", @"BookViewController multiple selection button text"), selectedRows.count];
     }
     else
     {
@@ -375,6 +399,22 @@
     
     [self.tableView reloadData];
     [self dismissModalViewControllerAnimated:YES];
+}
+
+-(void) selectObjects
+{
+    // Get the selected books and update the correct delegate.
+    NSArray* indexPaths = [self.tableView indexPathsForSelectedRows];
+    NSMutableArray* selectedBooks = [NSMutableArray arrayWithCapacity:indexPaths.count];
+    
+    for (NSIndexPath* indexPath in indexPaths)
+    {
+        Book* selectedBook = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+        [selectedBooks addObject:selectedBook];
+    }
+    
+    [self.delegate bookViewController:self didSelectBooks:selectedBooks];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

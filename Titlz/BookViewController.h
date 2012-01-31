@@ -22,7 +22,7 @@
 @property(nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
 @property(nonatomic, strong) NSManagedObjectContext* managedObjectContext;
 @property(nonatomic, assign) id <BookSelectedDelegate> delegate;
-@property(nonatomic, assign) BOOL selectionMode;
+@property(nonatomic, assign) SelectionMode selectionMode;
 @property(nonatomic, assign) PersonType personSelectionType;
 
 @end
@@ -30,5 +30,8 @@
 @protocol BookSelectedDelegate <NSObject>
 
 -(void) bookViewController:(BookViewController*)controller didSelectBook:(Book*)book forPersonType:(PersonType)type;
+
+@optional
+-(void) bookViewController:(BookViewController*)controller didSelectBooks:(NSArray*)books;
 
 @end

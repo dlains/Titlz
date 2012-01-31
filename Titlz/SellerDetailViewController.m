@@ -372,13 +372,7 @@
 
 -(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    switch (indexPath.section)
-    {
-        case SellerDataSection:
-            return NO;
-        default:
-            return YES;
-    }
+    return NO;
 }
 
 -(UITableViewCell*) configureDataCellForRow:(NSInteger)row

@@ -9,6 +9,13 @@
 #ifndef Titlz_Definitions_h
 #define Titlz_Definitions_h
 
+typedef enum SelectionModeEnum
+{
+    DetailSelection = 0,
+    SingleSelection,
+    MultipleSelection
+} SelectionMode;
+
 typedef enum AwardDetailSectionsEnum
 {
     AwardDataSection = 0,
