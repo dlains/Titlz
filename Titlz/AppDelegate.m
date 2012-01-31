@@ -35,10 +35,9 @@ void uncaughtExceptionHandler(NSException* exception)
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.tabBarController = [[UITabBarController alloc] init];
 
-    // Add the real Collection view controller here when it is done.
-//    CollectionViewController* collectionViewController = [[CollectionViewController alloc] initWithNibName:@"CollectionViewController" bundle:nil];
-//    UINavigationController* collectionNavigationController = [[UINavigationController alloc] initWithRootViewController:collectionViewController];
-//    collectionViewController.managedObjectContext = self.managedObjectModel;
+    CollectionViewController* collectionViewController = [[CollectionViewController alloc] initWithNibName:@"CollectionViewController" bundle:nil];
+    UINavigationController* collectionNavigationController = [[UINavigationController alloc] initWithRootViewController:collectionViewController];
+    collectionViewController.managedObjectContext = self.managedObjectContext;
     
     BookViewController* bookViewController = [[BookViewController alloc] initWithNibName:@"BookViewController" bundle:nil];
     UINavigationController* bookNavigationController = [[UINavigationController alloc] initWithRootViewController:bookViewController];
@@ -48,7 +47,7 @@ void uncaughtExceptionHandler(NSException* exception)
     UINavigationController* personNavigationController = [[UINavigationController alloc] initWithRootViewController:personViewController];
     personViewController.managedObjectContext = self.managedObjectContext;
     
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:bookNavigationController, personNavigationController, nil];
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:collectionNavigationController, bookNavigationController, personNavigationController, nil];
 
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];

@@ -90,6 +90,21 @@
     }
 }
 
+-(NSUndoManager*) undoManager
+{
+    return self.detailItem.managedObjectContext.undoManager;
+}
+
+-(void) undoManagerDidUndo:(NSNotification*)notification
+{
+    [self.tableView reloadData];
+}
+
+-(void) undoManagerDidRedo:(NSNotification*)notification
+{
+    [self.tableView reloadData];
+}
+
 -(BOOL) textFieldShouldReturn:(UITextField*)textField
 {
     [textField resignFirstResponder];

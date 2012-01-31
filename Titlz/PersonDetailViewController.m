@@ -780,7 +780,7 @@
     return cell;
 }
 
-#pragma mark - Title Selection Delegate Method
+#pragma mark - Book Selection Delegate Method
 
 -(void) bookViewController:(BookViewController *)controller didSelectBook:(Book*)book forPersonType:(PersonType)type
 {

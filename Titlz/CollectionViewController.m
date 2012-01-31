@@ -1,23 +1,22 @@
 //
-//  PublisherViewController.m
+//  CollectionViewController.m
 //  Titlz
 //
-//  Created by David Lains on 1/13/12.
+//  Created by David Lains on 1/30/12.
 //  Copyright (c) 2012 Dagger Lake Software. All rights reserved.
 //
 
-#import "PublisherViewController.h"
-#import "PublisherDetailViewController.h"
-#import "Publisher.h"
+#import "CollectionViewController.h"
+#import "CollectionDetailViewController.h"
+#import "EditableTextCell.h"
+#import "Collection.h"
 
-@interface PublisherViewController ()
+@interface CollectionViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
--(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate;
 @end
 
-@implementation PublisherViewController
+@implementation CollectionViewController
 
-@synthesize publisherDetailViewController = _publisherDetailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize delegate = _delegate;
@@ -28,7 +27,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        self.title = NSLocalizedString(@"Publishers", @"PublisherViewController header bar title.");
+        self.title = NSLocalizedString(@"Collections", @"CollectionViewController header bar title.");
+        self.tabBarItem.image = [UIImage imageNamed:@"collection"];
     }
     return self;
 }
@@ -81,7 +81,7 @@
     [super viewDidDisappear:animated];
 }
 
--(BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+-(BOOL )shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -94,25 +94,15 @@
     return [[self.fetchedResultsController sections] count];
 }
 
--(NSArray*) sectionIndexTitlesForTableView:(UITableView*)tableView
-{
-    return [self.fetchedResultsController sectionIndexTitles];
-}
-
 -(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     return [sectionInfo numberOfObjects];
 }
 
--(NSInteger) tableView:(UITableView*)tableView sectionForSectionIndexTitle:(NSString*)title atIndex:(NSInteger)index
-{
-    return [self.fetchedResultsController sectionForSectionIndexTitle:title atIndex:index];
-}
-
 -(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"PublisherCell";
+    static NSString* CellIdentifier = @"CollectionCell";
     
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -124,7 +114,7 @@
     return cell;
 }
 
--(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+-(void) tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
@@ -137,9 +127,9 @@
     }   
 }
 
--(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+-(BOOL) tableView:(UITableView*)tableView canMoveRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    // Return NO if you do not want the item to be re-orderable.
+    // The table view should not be re-orderable.
     return NO;
 }
 
@@ -149,21 +139,18 @@
 {
     if (self.selectionMode)
     {
-        // Get the selected person and update the correct delegate.
-        Publisher* selectedPublisher = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        [self.delegate publisherViewController:self didSelectPublisher:selectedPublisher];
+        // Get the selected collection and update the correct delegate.
+        Collection* selectedCollection = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+        [self.delegate collectionViewController:self didSelectCollection:selectedCollection];
         [self.navigationController popViewControllerAnimated:YES];
     }
     else
     {
         // Selecting a row to get detail info.
-        if (!self.publisherDetailViewController)
-        {
-            self.publisherDetailViewController = [[PublisherDetailViewController alloc] initWithNibName:@"PublisherDetailViewController" bundle:nil];
-        }
-        Publisher* selectedPublisher = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        self.publisherDetailViewController.detailItem = selectedPublisher;
-        [self.navigationController pushViewController:self.publisherDetailViewController animated:YES];
+        CollectionDetailViewController* collectionDetailViewController = [[CollectionDetailViewController alloc] initWithNibName:@"CollectionDetailViewController" bundle:nil];
+        Collection* selectedCollection = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+        collectionDetailViewController.detailItem = selectedCollection;
+        [self.navigationController pushViewController:collectionDetailViewController animated:YES];
     }
 }
 
@@ -182,21 +169,12 @@
         return __fetchedResultsController;
     }
     
-    self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:nil];
-    
-    return __fetchedResultsController;
-}    
-
--(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate
-{
     NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription* entity = [NSEntityDescription entityForName:@"Publisher" inManagedObjectContext:self.managedObjectContext];
+    NSEntityDescription* entity = [NSEntityDescription entityForName:@"Collection" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
-    
-    [fetchRequest setPredicate:predicate];
     
     // Edit the sort key as appropriate.
     NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
@@ -204,13 +182,9 @@
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
-    NSString* cacheName = @"Publisher";
-    if (predicate)
-        cacheName = nil;
+    NSString* cacheName = @"Collection";
     
-    // Edit the section name key path and cache name if appropriate.
-    // nil for section name key path means "no sections".
-    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfName" cacheName:cacheName];
+    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:cacheName];
     controller.delegate = self;
     self.fetchedResultsController = controller;
     
@@ -290,38 +264,24 @@
 
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
 {
-    Publisher* publisher = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = publisher.name;
+    Collection* collection = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = collection.name;
 }
 
-#pragma mark - Search delegate
-
--(BOOL) searchDisplayController:(UISearchDisplayController*)controller shouldReloadTableForSearchString:(NSString *)searchString
-{
-    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@", searchString];
-    self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:predicate];
-    return YES;
-}
-
--(void) searchDisplayControllerWillEndSearch:(UISearchDisplayController*)controller
-{
-    self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:nil];
-}
-
-#pragma mark - New Publisher Handling
+#pragma mark - New Lookup Handling
 
 -(void) insertNewObject
 {
-    NewPublisherViewController* newPublisherViewController = [[NewPublisherViewController alloc] initWithStyle:UITableViewStyleGrouped];
-	newPublisherViewController.delegate = self;
-	newPublisherViewController.detailItem = [Publisher publisherInManagedObjectContext:self.managedObjectContext];
+    NewCollectionViewController* newCollectionViewController = [[NewCollectionViewController alloc] initWithStyle:UITableViewStyleGrouped];
+	newCollectionViewController.delegate = self;
+	newCollectionViewController.detailItem = [Collection collectionInManagedObjectContext:self.managedObjectContext];
 	
-	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newPublisherViewController];
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newCollectionViewController];
 	
     [self.navigationController presentModalViewController:navController animated:YES];
 }
 
--(void) newPublisherViewController:(NewPublisherViewController *)controller didFinishWithSave:(BOOL)save
+-(void) newCollectionViewController:(NewCollectionViewController*)controller didFinishWithSave:(BOOL)save
 {
     if (save)
     {

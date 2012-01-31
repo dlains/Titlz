@@ -70,6 +70,19 @@ typedef enum BookDataSectionRowsEnum
     BookDataSectionRowCount
 } BookDataSectionRows;
 
+typedef enum CollectionDetailSectionsEnum
+{
+    CollectionDataSection = 0,
+    CollectionBookSection,
+    CollectionDetailSectionCount
+} CollectionDetailSections;
+
+typedef enum CollectionDataSectionRowsEnum
+{
+    CollectionNameRow = 0,
+    CollectionDataSectionRowCount
+} CollectionDataSectionRows;
+
 typedef enum LookupTypeEnum
 {
     LookupTypeEdition = 1,

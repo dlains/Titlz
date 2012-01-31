@@ -7,6 +7,8 @@
 //
 
 #import "BookDetailViewController.h"
+#import "CollectionViewController.h"
+#import "CollectionDetailViewController.h"
 #import "PersonViewController.h"
 #import "PersonDetailViewController.h"
 #import "PublisherViewController.h"
@@ -23,6 +25,7 @@
 #import "Award.h"
 #import "DLPoint.h"
 #import "Photo.h"
+#import "Collection.h"
 
 @interface BookDetailViewController ()
 -(UITableViewCell*) configureDataCellAtIndexPath:(NSIndexPath*)indexPath;
@@ -35,11 +38,12 @@
 -(UITableViewCell*) configurePointCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configurePublisherCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureBoughtFromCellAtIndexPath:(NSIndexPath*)indexPath;
--(UITableViewCell*) configureCollectionCell;
+-(UITableViewCell*) configureCollectionCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection;
 -(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(Award*) sortedAwardFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(DLPoint*) sortedPointFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(Collection*) sortedCollectionFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
 -(void) loadPersonViewControllerForPersonType:(PersonType)type;
 -(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
@@ -52,6 +56,8 @@
 -(void) loadAwardDetailViewForAwardAtIndexPath:(NSIndexPath*)indexPath;
 -(void) loadNewPointView;
 -(void) loadPointDetailViewForPointAtIndexPath:(NSIndexPath*)indexPath;
+-(void) loadCollectionView;
+-(void) loadCollectionDetailViewForCollectionAtIndexPath:(NSIndexPath*)indexPath;
 
 -(IBAction) thumbnailButtonPressed:(id)sender;
 
@@ -480,7 +486,7 @@
             cell = [self configureBoughtFromCellAtIndexPath:indexPath];
             break;
         case BookCollectionSection:
-            cell = [self configureCollectionCell];
+            cell = [self configureCollectionCellAtIndexPath:indexPath];
             break;
         default:
             DLog(@"Invalid BookDetailViewController section found: %i.", indexPath.section);
@@ -596,6 +602,10 @@
                 [self loadSellerDetailViewForSeller:self.detailItem.boughtFrom];
             break;
         case BookCollectionSection:
+            if (indexPath.row == self.detailItem.collections.count)
+                [self loadCollectionView];
+            else
+                [self loadCollectionDetailViewForCollectionAtIndexPath:indexPath];
             break;
         default:
             DLog(@"Invalid BookDetailViewController section found: %i.", indexPath.section);
@@ -649,6 +659,8 @@
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             case BookCollectionSection:
+                [self.detailItem removeCollectionsObject:[self sortedCollectionFromSet:self.detailItem.collections atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
                 break;
             default:
                 break;
@@ -1185,9 +1197,9 @@
     return cell;
 }
 
--(UITableViewCell*) configureCollectionCell
+-(UITableViewCell*) configureCollectionCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString* CellIdentifier = @"Cell";
+    static NSString* CellIdentifier = @"CollectionCell";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -1196,8 +1208,15 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    if(self.editing)
+    if(self.editing && indexPath.row == self.detailItem.collections.count)
+    {
         cell.textLabel.text = NSLocalizedString(@"Add Collection...", @"TitleDetailViewController add Collection insertion row text.");
+    }
+    else
+    {
+        Collection* collection = [self sortedCollectionFromSet:self.detailItem.collections atIndexPath:indexPath];
+        cell.textLabel.text = collection.name;
+    }
     
     return cell;
 }
@@ -1248,6 +1267,17 @@
 -(void) sellerViewController:(SellerViewController *)controller didSelectSeller:(Seller*)seller
 {
     self.detailItem.boughtFrom = seller;
+    [ContextUtil saveContext:self.detailItem.managedObjectContext];
+    
+    [self.tableView reloadData];
+}
+
+#pragma mark - Collection Selection Delegate Method
+
+-(void) collectionViewController:(CollectionViewController *)controller didSelectCollection:(Collection *)collection
+{
+    [self.detailItem addCollectionsObject:collection];
+
     [ContextUtil saveContext:self.detailItem.managedObjectContext];
     
     [self.tableView reloadData];
@@ -1327,6 +1357,14 @@
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     NSArray* sortedPoints = [set sortedArrayUsingDescriptors:sortDescriptors];
     return [sortedPoints objectAtIndex:indexPath.row];
+}
+
+-(Collection*) sortedCollectionFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedCollections = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedCollections objectAtIndex:indexPath.row];
 }
 
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath
@@ -1476,6 +1514,29 @@
         [self.navigationController pushViewController:pointDetailViewController animated:YES];
     }
 }
+
+-(void) loadCollectionView
+{
+    CollectionViewController* collectionViewController = [[CollectionViewController alloc] initWithNibName:@"CollectionViewController" bundle:nil];
+	collectionViewController.delegate = self;
+    collectionViewController.managedObjectContext = self.detailItem.managedObjectContext;
+    collectionViewController.selectionMode = TRUE;
+	
+    [self.navigationController pushViewController:collectionViewController animated:YES];
+}
+
+-(void) loadCollectionDetailViewForCollectionAtIndexPath:(NSIndexPath*)indexPath
+{
+    CollectionDetailViewController* collectionDetailViewController = [[CollectionDetailViewController alloc] initWithNibName:@"CollectionDetailViewController" bundle:nil];
+    Collection* selectedCollection = [self sortedCollectionFromSet:self.detailItem.collections atIndexPath:indexPath];
+    
+    if (selectedCollection)
+    {
+        collectionDetailViewController.detailItem = selectedCollection;
+        [self.navigationController pushViewController:collectionDetailViewController animated:YES];
+    }
+}
+
 #pragma mark - Image handling
 
 -(void) thumbnailButtonPressed:(id)sender
@@ -1520,7 +1581,7 @@
             }
         }
 
-        [actionSheet showInView:self.view];
+        [actionSheet showFromTabBar:self.tabBarController.tabBar];
     }
 }
 

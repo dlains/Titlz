@@ -11,12 +11,13 @@
 #import "PublisherViewController.h"
 #import "LookupViewController.h"
 #import "SellerViewController.h"
+#import "CollectionViewController.h"
 #import "NewAwardViewController.h"
 #import "NewPointViewController.h"
 
 @class Book;
 
-@interface BookDetailViewController : UITableViewController <UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, PersonSelectedDelegate, PublisherSelectedDelegate, LookupValueSelectedDelegate, SellerSelectedDelegate, NewAwardDelegate, NewPointDelegate>
+@interface BookDetailViewController : UITableViewController <UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, PersonSelectedDelegate, PublisherSelectedDelegate, LookupValueSelectedDelegate, SellerSelectedDelegate, CollectionSelectedDelegate, NewAwardDelegate, NewPointDelegate>
 {
     UITextField* releaseDateTextField;
     UITextField* purchaseDateTextField;

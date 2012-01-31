@@ -389,6 +389,7 @@
         [self.managedObjectContext deleteObject:controller.detailItem];
     }
     
+    [self.tableView reloadData];
     [self dismissModalViewControllerAnimated:YES];
 }
 

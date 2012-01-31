@@ -55,6 +55,12 @@
 		55CF1BB714D70846008D5765 /* collection@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55CF1BB114D70846008D5765 /* collection@2x.png */; };
 		55CF1BB814D70846008D5765 /* user.png in Resources */ = {isa = PBXBuildFile; fileRef = 55CF1BB214D70846008D5765 /* user.png */; };
 		55CF1BB914D70846008D5765 /* user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55CF1BB314D70846008D5765 /* user@2x.png */; };
+		55CF1BBF14D7133C008D5765 /* CollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF1BBD14D7133C008D5765 /* CollectionViewController.m */; };
+		55CF1BC014D7133C008D5765 /* CollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55CF1BBE14D7133C008D5765 /* CollectionViewController.xib */; };
+		55CF1BC414D71435008D5765 /* CollectionDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF1BC214D71435008D5765 /* CollectionDetailViewController.m */; };
+		55CF1BC514D71435008D5765 /* CollectionDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55CF1BC314D71435008D5765 /* CollectionDetailViewController.xib */; };
+		55CF1BC814D7146D008D5765 /* NewCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF1BC714D7146D008D5765 /* NewCollectionViewController.m */; };
+		55CF1BCB14D715DA008D5765 /* Collection.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF1BCA14D715DA008D5765 /* Collection.m */; };
 		55D4A74C14B55BED00BAA15E /* PersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D4A74A14B55BED00BAA15E /* PersonViewController.m */; };
 		55D4A74D14B55BED00BAA15E /* PersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55D4A74B14B55BED00BAA15E /* PersonViewController.xib */; };
 		55D4A75014B55CE700BAA15E /* NewPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D4A74F14B55CE700BAA15E /* NewPersonViewController.m */; };
@@ -148,6 +154,16 @@
 		55CF1BB114D70846008D5765 /* collection@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "collection@2x.png"; sourceTree = "<group>"; };
 		55CF1BB214D70846008D5765 /* user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user.png; sourceTree = "<group>"; };
 		55CF1BB314D70846008D5765 /* user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user@2x.png"; sourceTree = "<group>"; };
+		55CF1BBC14D7133C008D5765 /* CollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionViewController.h; sourceTree = "<group>"; };
+		55CF1BBD14D7133C008D5765 /* CollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionViewController.m; sourceTree = "<group>"; };
+		55CF1BBE14D7133C008D5765 /* CollectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectionViewController.xib; sourceTree = "<group>"; };
+		55CF1BC114D71435008D5765 /* CollectionDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionDetailViewController.h; sourceTree = "<group>"; };
+		55CF1BC214D71435008D5765 /* CollectionDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionDetailViewController.m; sourceTree = "<group>"; };
+		55CF1BC314D71435008D5765 /* CollectionDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectionDetailViewController.xib; sourceTree = "<group>"; };
+		55CF1BC614D7146D008D5765 /* NewCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCollectionViewController.h; sourceTree = "<group>"; };
+		55CF1BC714D7146D008D5765 /* NewCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCollectionViewController.m; sourceTree = "<group>"; };
+		55CF1BC914D715DA008D5765 /* Collection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Collection.h; sourceTree = "<group>"; };
+		55CF1BCA14D715DA008D5765 /* Collection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Collection.m; sourceTree = "<group>"; };
 		55D4A74914B55BED00BAA15E /* PersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonViewController.h; sourceTree = "<group>"; };
 		55D4A74A14B55BED00BAA15E /* PersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonViewController.m; sourceTree = "<group>"; };
 		55D4A74B14B55BED00BAA15E /* PersonViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonViewController.xib; sourceTree = "<group>"; };
@@ -240,6 +256,8 @@
 				556E593814C8A898000C4CBC /* Award.m */,
 				55EDF6F814C4B00B00C4BCE5 /* Book.h */,
 				55EDF6F914C4B00B00C4BCE5 /* Book.m */,
+				55CF1BC914D715DA008D5765 /* Collection.h */,
+				55CF1BCA14D715DA008D5765 /* Collection.m */,
 				5591513414BF5F2800F1C01E /* DLPoint.h */,
 				5591513514BF5F2800F1C01E /* DLPoint.m */,
 				55B5C4C814C745740022B33D /* Lookup.h */,
@@ -326,6 +344,7 @@
 			children = (
 				556E593A14C8A8F5000C4CBC /* Award */,
 				55C6968F14B2D25F00DA4172 /* Book */,
+				55CF1BBB14D7130A008D5765 /* Collection */,
 				55D4A74814B51C2700BAA15E /* Person */,
 				5508605C14C91CBA0051DEA2 /* Point */,
 				55C123E014C0AAD300827F61 /* Publisher */,
@@ -349,6 +368,8 @@
 				556E594214C8A953000C4CBC /* AwardDetailViewController.xib */,
 				55EDF6E514C4ABF600C4BCE5 /* BookViewController.xib */,
 				55EDF6E314C4ABF600C4BCE5 /* BookDetailViewController.xib */,
+				55CF1BBE14D7133C008D5765 /* CollectionViewController.xib */,
+				55CF1BC314D71435008D5765 /* CollectionDetailViewController.xib */,
 				55B5C4C514C73F8B0022B33D /* LookupViewController.xib */,
 				55D4A74B14B55BED00BAA15E /* PersonViewController.xib */,
 				55EB3C4114B13D1D00721D42 /* PersonDetailViewController.xib */,
@@ -419,6 +440,19 @@
 				55EDF6EE14C4AC1000C4BCE5 /* NewBookViewController.m */,
 			);
 			name = Book;
+			sourceTree = "<group>";
+		};
+		55CF1BBB14D7130A008D5765 /* Collection */ = {
+			isa = PBXGroup;
+			children = (
+				55CF1BBC14D7133C008D5765 /* CollectionViewController.h */,
+				55CF1BBD14D7133C008D5765 /* CollectionViewController.m */,
+				55CF1BC114D71435008D5765 /* CollectionDetailViewController.h */,
+				55CF1BC214D71435008D5765 /* CollectionDetailViewController.m */,
+				55CF1BC614D7146D008D5765 /* NewCollectionViewController.h */,
+				55CF1BC714D7146D008D5765 /* NewCollectionViewController.m */,
+			);
+			name = Collection;
 			sourceTree = "<group>";
 		};
 		55D4A74814B51C2700BAA15E /* Person */ = {
@@ -508,6 +542,8 @@
 				55CF1BB714D70846008D5765 /* collection@2x.png in Resources */,
 				55CF1BB814D70846008D5765 /* user.png in Resources */,
 				55CF1BB914D70846008D5765 /* user@2x.png in Resources */,
+				55CF1BC014D7133C008D5765 /* CollectionViewController.xib in Resources */,
+				55CF1BC514D71435008D5765 /* CollectionDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -554,6 +590,10 @@
 				559E461C14CF58D40055D52C /* ImageToDataTransformer.m in Sources */,
 				559E461F14CF7B8F0055D52C /* EditableImageAndTextCell.m in Sources */,
 				55EED62E14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m in Sources */,
+				55CF1BBF14D7133C008D5765 /* CollectionViewController.m in Sources */,
+				55CF1BC414D71435008D5765 /* CollectionDetailViewController.m in Sources */,
+				55CF1BC814D7146D008D5765 /* NewCollectionViewController.m in Sources */,
+				55CF1BCB14D715DA008D5765 /* Collection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
