@@ -105,6 +105,7 @@
     [super viewWillAppear:animated];
 
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
     [self.tableView reloadData];
 }
 
@@ -670,6 +671,156 @@
         [ContextUtil saveContext:self.detailItem.managedObjectContext];
     }   
 }
+/* The next two methods demonstrate how to replace section header views to make the labels look
+   customized. I'm not sure I want to use this. The standard blueish labels look OK. Keep it
+   around for a while just in case.
+-(UIView*) tableView:(UITableView*)tableView viewForHeaderInSection:(NSInteger)section
+{
+    NSString* headerTitle = nil;
+    
+    switch (section)
+    {
+        case BookDataSection:
+            break;
+        case BookAuthorSection:
+            if (self.detailItem.authors.count > 0 || self.editing)
+            {
+                headerTitle = NSLocalizedString(@"Authors", @"BookDetailViewController Authors section header.");
+            }
+            break;
+        case BookEditorSection:
+            if (self.detailItem.editors.count > 0 || self.editing)
+            {
+                headerTitle = NSLocalizedString(@"Editors", @"BookDetailViewController Editors section header.");
+            }
+            break;
+        case BookIllustratorSection:
+            if (self.detailItem.illustrators.count > 0 || self.editing)
+            {
+                headerTitle = NSLocalizedString(@"Illustrators", @"BookDetailViewController Illustrators section header.");
+            }
+            break;
+        case BookContributorSection:
+            if (self.detailItem.contributors.count > 0 || self.editing)
+            {
+                headerTitle = NSLocalizedString(@"Contributors", @"BookDetailViewController Contributors section header.");
+            }
+            break;
+        case BookSignatureSection:
+            if (self.detailItem.signatures.count > 0 || self.editing)
+            {
+                headerTitle = NSLocalizedString(@"Signatures", @"BookDetailViewController Signatures section header.");
+            }
+            break;
+        case BookAwardSection:
+            if (self.detailItem.awards.count > 0 || self.editing)
+            {
+                headerTitle = NSLocalizedString(@"Awards", @"BookDetailViewController Awards section header.");
+            }
+            break;
+        case BookPointSection:
+            if (self.detailItem.points.count > 0 || self.editing)
+            {
+                headerTitle = NSLocalizedString(@"Points", @"BookDetailViewController Points section header.");
+            }
+            break;
+        case BookPublisherSection:
+            if (self.detailItem.publisher || self.editing)
+            {
+                headerTitle = NSLocalizedString(@"Publisher", @"BookDetailViewController Publisher section header.");
+            }
+            break;
+        case BookBoughtFromSection:
+            if (self.detailItem.boughtFrom || self.editing)
+            {
+                headerTitle = NSLocalizedString(@"Bought From", @"BookDetailViewController Bought From section header.");
+            }
+            break;
+        case BookCollectionSection:
+            if (self.detailItem.collections.count > 0 || self.editing)
+            {
+                headerTitle = NSLocalizedString(@"Collections", @"BookDetailViewController Collections section header.");
+            }
+            break;
+        default:
+            DLog(@"Invalid BookDetailViewController section found: %i.", section);
+            break;
+    }
+
+    if (headerTitle == nil)
+        return nil;
+
+    UILabel* label = [[UILabel alloc] init];
+    label.text = headerTitle;
+    label.font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
+    label.frame = CGRectMake(0, 0, self.tableView.bounds.size.width, 30);
+    label.textColor = [UIColor colorWithRed:0.39607 green:0.32549 blue:0.0 alpha:1.0];
+    label.backgroundColor = [UIColor clearColor];
+
+    return label;
+}
+
+-(CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    switch (section)
+    {
+        case BookDataSection:
+            return UITableViewAutomaticDimension;
+        case BookAuthorSection:
+            if (self.detailItem.authors.count > 0)
+                return 30.0;
+            else
+                return 0.0;
+        case BookEditorSection:
+            if (self.detailItem.editors.count > 0)
+                return 30.0;
+            else
+                return 0.0;
+        case BookIllustratorSection:
+            if (self.detailItem.illustrators.count > 0)
+                return 30.0;
+            else
+                return 0.0;
+        case BookContributorSection:
+            if (self.detailItem.contributors.count > 0)
+                return 30.0;
+            else
+                return 0.0;
+        case BookSignatureSection:
+            if (self.detailItem.signatures.count > 0)
+                return 30.0;
+            else
+                return 0.0;
+        case BookAwardSection:
+            if (self.detailItem.awards.count > 0)
+                return 30.0;
+            else
+                return 0.0;
+        case BookPointSection:
+            if (self.detailItem.points.count > 0)
+                return 30.0;
+            else
+                return 0.0;
+        case BookPublisherSection:
+            if (self.detailItem.publisher != nil)
+                return 30.0;
+            else
+                return 0.0;
+        case BookBoughtFromSection:
+            if (self.detailItem.boughtFrom != nil)
+                return 30.0;
+            else
+                return 0.0;
+        case BookCollectionSection:
+            if (self.detailItem.collections.count > 0)
+                return 30.0;
+            else
+                return 0.0;
+        default:
+            return 0.0;
+    }
+}
+*/
 
 // Section headers.
 -(NSString*) tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section

@@ -37,14 +37,17 @@ void uncaughtExceptionHandler(NSException* exception)
 
     BookViewController* bookViewController = [[BookViewController alloc] initWithNibName:@"BookViewController" bundle:nil];
     UINavigationController* bookNavigationController = [[UINavigationController alloc] initWithRootViewController:bookViewController];
+    bookNavigationController.navigationBar.barStyle = UIBarStyleBlack;
     bookViewController.managedObjectContext = self.managedObjectContext;
     
     CollectionViewController* collectionViewController = [[CollectionViewController alloc] initWithNibName:@"CollectionViewController" bundle:nil];
     UINavigationController* collectionNavigationController = [[UINavigationController alloc] initWithRootViewController:collectionViewController];
+    collectionNavigationController.navigationBar.barStyle = UIBarStyleBlack;
     collectionViewController.managedObjectContext = self.managedObjectContext;
     
     PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
     UINavigationController* personNavigationController = [[UINavigationController alloc] initWithRootViewController:personViewController];
+    personNavigationController.navigationBar.barStyle = UIBarStyleBlack;
     personViewController.managedObjectContext = self.managedObjectContext;
     
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:bookNavigationController, collectionNavigationController, personNavigationController, nil];

@@ -73,6 +73,7 @@
     [super viewWillAppear:animated];
     
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
     [self.tableView reloadData];
 }
 
