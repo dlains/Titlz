@@ -153,6 +153,19 @@ typedef enum PersonDataSectionRowsEnum
     PersonDataSectionRowCount
 } PersonDataSectionRows;
 
+typedef enum PersonDataFieldTagEnum
+{
+    PersonFirstNameTag = 0,
+    PersonMiddleNameTag,
+    PersonLastNameTag,
+    PersonBornTag,
+    PersonDiedTag,
+    PersonWorkedTag,
+    PersonAliasTag,
+    PersonAliasOfTag,
+    PersonSignedTag
+} PersonDataFieldTag;
+
 typedef enum PointDetailSectionsEnum
 {
     PointDataSection = 0,

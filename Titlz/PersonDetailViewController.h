@@ -8,18 +8,22 @@
 
 #import <UIKit/UIKit.h>
 #import "BookViewController.h"
+#import "LookupViewController.h"
 
 @class Person;
 
-@interface PersonDetailViewController : UITableViewController <BookSelectedDelegate, PersonSelectedDelegate>
+@interface PersonDetailViewController : UITableViewController <UITextFieldDelegate, BookSelectedDelegate, PersonSelectedDelegate, LookupValueSelectedDelegate>
 {
     UITextField* bornTextField;
     UITextField* diedTextField;
+    UITextField* lookupTextField;
+    UILabel* workerLookupLabel;
 }
 
 @property(nonatomic, strong) Person* detailItem;
 @property(nonatomic, assign) NSInteger personTypeBeingAdded;
 @property(nonatomic, strong) NSUndoManager* undoManager;
+@property(nonatomic, assign) BOOL lookupJustFinished;
 
 -(void) setUpUndoManager;
 -(void) cleanUpUndoManager;

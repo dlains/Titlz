@@ -442,7 +442,7 @@
             workerLookupLabel.text = value;
             break;
         default:
-            DLog(@"Invalid LookupType found in NewBookViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
+            DLog(@"Invalid LookupType found in BookDetailViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
             break;
     }
 }
@@ -628,6 +628,8 @@
 
 -(void) tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath
 {
+    Worker* worker = nil;
+    
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
         switch (indexPath.section)
@@ -636,7 +638,9 @@
                 // Never delete the data section rows.
                 break;
             case BookWorkersSection:
-                [self.detailItem removeWorkersObject:[self sortedWorkerFromSet:self.detailItem.workers atIndexPath:indexPath]];
+                worker = [self sortedWorkerFromSet:self.detailItem.workers atIndexPath:indexPath];
+                [self.detailItem removeWorkersObject:worker];
+                [self.detailItem.managedObjectContext deleteObject:worker];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             case BookDetailsSection:
@@ -1121,16 +1125,30 @@
 {
     EditableLookupAndTextCell* workerCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableLookupAndTextCell"];
     
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+
     if (workerCell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableLookupAndTextCell" owner:self options:nil];
         workerCell = [topLevelObjects objectAtIndex:0];
-        workerCell.textField.enabled = NO;
-        UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
-        workerCell.textField.inputView = dummyView;
-        workerCell.lookupButton.enabled = NO;
         [workerCell.lookupButton addTarget:self action:@selector(lookupButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    workerCell.textField.delegate = self;
+    workerCell.textField.text = @"";
+    workerCell.textField.inputView = dummyView;
+    workerCell.textField.tag = BookWorkerTag;
+    if (self.editing)
+    {
+        workerCell.textField.enabled = YES;
+        workerCell.lookupButton.enabled = YES;
+    }
+    else
+    {
+        workerCell.textField.enabled = NO;
+        workerCell.lookupButton.enabled = NO;
     }
     
     Worker* worker = [self sortedWorkerFromSet:self.detailItem.workers atIndexPath:indexPath];
@@ -1139,13 +1157,11 @@
     {
         workerCell.fieldLabel.text = worker.title;
         workerCell.textField.text = worker.person.fullName;
-        workerCell.textField.tag = BookWorkerTag;
         workerCell.objectId = worker.objectID;
     }
     else
     {
         workerCell.fieldLabel.text = @"Author";
-        workerCell.textField.tag = BookWorkerTag;
     }
     
     return workerCell;

@@ -31,6 +31,12 @@
 -(void) loadPersonViewForPersonType:(PersonType)type;
 -(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
 -(void) loadPersonDetailViewForPerson:(Person*)person;
+
+-(void) addWorkerWithTitle:(NSString*)title andBook:(Book*)book;
+-(void) updateWorkerObject:(NSManagedObjectID*)objectId withTitle:(NSString*)title andBook:(Book*)book;
+
+-(IBAction) lookupButtonPressed:(id)sender;
+
 @end
 
 @implementation PersonDetailViewController
@@ -38,6 +44,7 @@
 @synthesize detailItem = _detailItem;
 @synthesize personTypeBeingAdded = _personTypeBeingAdded;
 @synthesize undoManager = _undoManager;
+@synthesize lookupJustFinished = _lookupJustFinished;
 
 #pragma mark - Initialization
 
@@ -77,6 +84,7 @@
 {
     [super viewWillAppear:animated];
 
+    self.lookupJustFinished = NO;
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
     [self.tableView reloadData];
@@ -172,6 +180,43 @@
     return YES;
 }
 
+-(void) textFieldDidBeginEditing:(UITextField*)textField
+{
+    if (self.lookupJustFinished)
+    {
+        self.lookupJustFinished = NO;
+        return;
+    }
+    
+    switch (textField.tag)
+    {
+        case PersonWorkedTag:
+            lookupTextField = textField;
+            [self loadBookViewForPersonType:Workers];
+            break;
+        case PersonAliasTag:
+            if (textField.text.length > 0)
+            {
+                [textField resignFirstResponder];
+                return;
+            }
+            lookupTextField = textField;
+            [self loadPersonViewForPersonType:Alias];
+            break;
+        case PersonSignedTag:
+            if (textField.text.length > 0)
+            {
+                [textField resignFirstResponder];
+                return;
+            }
+            lookupTextField = textField;
+            [self loadBookViewForPersonType:Signature];
+        default:
+            lookupTextField = nil;
+            break;
+    }
+}
+
 -(BOOL) textFieldShouldEndEditing:(UITextField*)textField
 {
     BOOL valid = YES;
@@ -181,15 +226,15 @@
     
     switch (textField.tag)
     {
-        case PersonLastNameRow:
+        case PersonLastNameTag:
             valid = [self.detailItem validateValue:&value forKey:@"lastName" error:&error];
             break;
-        case PersonBornRow:
+        case PersonBornTag:
             dateValue = self.detailItem.born;
             if (dateValue)
                 valid = [self.detailItem validateValue:&dateValue forKey:@"born" error:&error];
             break;
-        case PersonDiedRow:
+        case PersonDiedTag:
             dateValue = self.detailItem.died;
             if (dateValue)
                 valid = [self.detailItem validateValue:&dateValue forKey:@"died" error:&error];
@@ -210,14 +255,18 @@
 {
     switch (textField.tag)
     {
-        case PersonFirstNameRow:
+        case PersonFirstNameTag:
             self.detailItem.firstName = textField.text;
             break;
-        case PersonMiddleNameRow:
+        case PersonMiddleNameTag:
             self.detailItem.middleName = textField.text;
             break;
-        case PersonLastNameRow:
+        case PersonLastNameTag:
             self.detailItem.lastName = textField.text;
+            break;
+        case PersonWorkedTag:
+        case PersonAliasTag:
+        case PersonSignedTag:
             break;
         default:
             break;
@@ -236,15 +285,32 @@
     
     switch (datePicker.tag)
     {
-        case PersonBornRow:
+        case PersonBornTag:
             self.detailItem.born = datePicker.date;
             bornTextField.text = [formatter stringFromDate:datePicker.date];
             break;
-        case PersonDiedRow:
+        case PersonDiedTag:
             self.detailItem.died = datePicker.date;
             diedTextField.text = [formatter stringFromDate:datePicker.date];
             break;
         default:
+            break;
+    }
+}
+
+-(void) lookupViewController:(LookupViewController *)controller didSelectValue:(NSString *)value withLookupType:(LookupType)type
+{
+    EditableLookupAndTextCell* lookupCell = nil;
+    
+    switch (type)
+    {
+        case LookupTypeWorker:
+            lookupCell = (EditableLookupAndTextCell*)workerLookupLabel.superview.superview;
+            [self updateWorkerObject:lookupCell.objectId withTitle:value andBook:nil];
+            workerLookupLabel.text = value;
+            break;
+        default:
+            DLog(@"Invalid LookupType found in PersonDetailViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
             break;
     }
 }
@@ -374,30 +440,24 @@
 
 -(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
+    if (self.editing)
+        return;
+
     switch (indexPath.section)
     {
         case PersonDataSection:
             break;
         case PersonWorkedSection:
-            if (indexPath.row == self.detailItem.worked.count)
-                [self loadBookViewForPersonType:Workers];
-            else
-                [self loadBookDetailViewForPersonType:Workers atIndexPath:indexPath];
+            [self loadBookDetailViewForPersonType:Workers atIndexPath:indexPath];
             break;
         case PersonAliasSection:
-            if (indexPath.row == self.detailItem.aliases.count)
-                [self loadPersonViewForPersonType:Alias];
-            else
-                [self loadPersonDetailViewForPersonType:Alias atIndexPath:indexPath];
+            [self loadPersonDetailViewForPersonType:Alias atIndexPath:indexPath];
             break;
         case PersonAliasOfSection:
             [self loadPersonDetailViewForPerson:self.detailItem.aliasOf];
             break;
         case PersonBooksSignedSection:
-            if (indexPath.row == self.detailItem.booksSigned.count)
-                [self loadBookViewForPersonType:Signature];
-            else
-                [self loadBookDetailViewForPersonType:Signature atIndexPath:indexPath];
+            [self loadBookDetailViewForPersonType:Signature atIndexPath:indexPath];
             break;
         default:
             DLog(@"Invalid PersonDetailViewController section found: %i.", indexPath.section);
@@ -407,6 +467,8 @@
 
 -(void) tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath
 {
+    Worker* worker = nil;
+    
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
         switch (indexPath.section)
@@ -415,7 +477,9 @@
                 // Never delete the data section rows.
                 break;
             case PersonWorkedSection:
-                [self.detailItem removeWorkedObject:[self sortedWorkerFromSet:self.detailItem.worked atIndexPath:indexPath]];
+                worker = [self sortedWorkerFromSet:self.detailItem.worked atIndexPath:indexPath];
+                [self.detailItem removeWorkedObject:worker];
+                [self.detailItem.managedObjectContext deleteObject:worker];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             case PersonAliasSection:
@@ -437,6 +501,7 @@
     }   
 }
 
+/*
 // Section headers.
 -(NSString*) tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
 {
@@ -472,6 +537,7 @@
     
     return header;
 }
+*/
 
 -(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 {
@@ -502,39 +568,48 @@
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
         cell = [topLevelObjects objectAtIndex:0];
-        cell.textField.enabled = NO;
     }
     
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.textField.delegate = self;
+    cell.textField.inputView = nil;
+    cell.textField.keyboardType = UIKeyboardTypeDefault;
+    cell.textField.text = @"";
+    if (self.editing)
+        cell.textField.enabled = YES;
+    else
+        cell.textField.enabled = NO;
+
     switch (row)
     {
         case PersonFirstNameRow:
             cell.fieldLabel.text = NSLocalizedString(@"First", @"PersonDetailViewController firstName data field label.");
             cell.textField.text = self.detailItem.firstName;
-            cell.textField.tag = PersonFirstNameRow;
+            cell.textField.tag = PersonFirstNameTag;
             break;
         case PersonMiddleNameRow:
             cell.fieldLabel.text = NSLocalizedString(@"Middle", @"PersonDetailViewController middleName data field label.");
             cell.textField.text = self.detailItem.middleName;
-            cell.textField.tag = PersonMiddleNameRow;
+            cell.textField.tag = PersonMiddleNameTag;
             break;
         case PersonLastNameRow:
             cell.fieldLabel.text = NSLocalizedString(@"Last", @"PersonDetailViewController lastName data field label.");
             cell.textField.text = self.detailItem.lastName;
-            cell.textField.tag = PersonLastNameRow;
+            cell.textField.tag = PersonLastNameTag;
             break;
         case PersonBornRow:
             cell.fieldLabel.text = NSLocalizedString(@"Born", @"PersonDetailViewController born data field label.");
             bornTextField = cell.textField;
-            cell.textField.tag = PersonBornRow;
-            datePicker.tag = PersonBornRow;
+            cell.textField.tag = PersonBornTag;
+            datePicker.tag = PersonBornTag;
             cell.textField.inputView = datePicker;
             cell.textField.text = [formatter stringFromDate:self.detailItem.born];
             break;
         case PersonDiedRow:
             cell.fieldLabel.text = NSLocalizedString(@"Died", @"PersonDetailViewController died data field label.");
             diedTextField = cell.textField;
-            cell.textField.tag = PersonDiedRow;
-            datePicker.tag = PersonDiedRow;
+            cell.textField.tag = PersonDiedTag;
+            datePicker.tag = PersonDiedTag;
             cell.textField.inputView = datePicker;
             cell.textField.text = [formatter stringFromDate:self.detailItem.died];
             break;
@@ -549,54 +624,78 @@
 {
     EditableLookupAndTextCell* workerCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableLookupAndTextCell"];
     
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+
     if (workerCell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableLookupAndTextCell" owner:self options:nil];
         workerCell = [topLevelObjects objectAtIndex:0];
-        workerCell.textField.enabled = NO;
-        workerCell.lookupButton.enabled = NO;
         [workerCell.lookupButton addTarget:self action:@selector(lookupButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     }
     
-    if (self.editing && indexPath.row == self.detailItem.worked.count)
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    workerCell.textField.delegate = self;
+    workerCell.textField.text = @"";
+    workerCell.textField.inputView = dummyView;
+    workerCell.textField.tag = PersonWorkedTag;
+    if (self.editing)
     {
-        workerCell.fieldLabel.text = @"Author";
-        workerCell.textField.text = NSLocalizedString(@"Add Book", @"PersonDetailViewController add Book insertion row text.");
+        workerCell.textField.enabled = YES;
+        workerCell.lookupButton.enabled = YES;
     }
     else
     {
-        Worker* worker = [self sortedWorkerFromSet:self.detailItem.worked atIndexPath:indexPath];
-        
-        if (worker != nil)
-        {
-            workerCell.fieldLabel.text = worker.title;
-            workerCell.textField.text = worker.person.fullName;
-        }
+        workerCell.textField.enabled = NO;
+        workerCell.lookupButton.enabled = NO;
     }
 
+    Worker* worker = [self sortedWorkerFromSet:self.detailItem.worked atIndexPath:indexPath];
+    
+    if (worker != nil)
+    {
+        workerCell.fieldLabel.text = worker.title;
+        workerCell.textField.text = worker.book.title;
+        workerCell.objectId = worker.objectID;
+    }
+    else
+    {
+        workerCell.fieldLabel.text = @"Author";
+    }
+    
     return workerCell;
 }
 
 -(UITableViewCell*) configureAliasCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"AliasCell";
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SignatureEditableTextCell"];
     
-    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
+    // A dummy view to keep the keyboard from popping up in the lookup fields.
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    
+    if(cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
     }
     
-    if(self.editing && indexPath.row == self.detailItem.aliases.count)
-    {
-        cell.textLabel.text = NSLocalizedString(@"Add Alias...", @"PersonDetailViewController add Alias insertion row text.");
-    }
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.fieldLabel.text = NSLocalizedString(@"Alias", @"PersonDetailViewController alias cell field label text.");
+    cell.textField.delegate = self;
+    cell.textField.text = @"";
+    cell.textField.inputView = dummyView;
+    cell.textField.tag = PersonAliasTag;
+    if (self.editing)
+        cell.textField.enabled = YES;
     else
+        cell.textField.enabled = NO;
+    
+    Person* person = [self sortedPersonFromSet:self.detailItem.aliases atIndexPath:indexPath];
+    
+    if (person != nil)
     {
-        Person* person = [self sortedPersonFromSet:self.detailItem.aliases atIndexPath:indexPath];
-        cell.textLabel.text = person.fullName;
+        cell.textField.text = person.fullName;
     }
     
     return cell;
@@ -604,39 +703,69 @@
 
 -(UITableViewCell*) configureAliasOfCell
 {
-    static NSString* CellIdentifier = @"AliasOfCell";
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"AliasOfEditableTextCell"];
     
-    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
+    // A dummy view to keep the keyboard from popping up in the lookup fields.
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    
+    if(cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
     }
     
-    cell.textLabel.text = self.detailItem.aliasOf.fullName;
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.fieldLabel.text = NSLocalizedString(@"Alias of", @"PersonDetailViewController alias of cell field label text.");
+    cell.textField.delegate = self;
+    cell.textField.text = @"";
+    cell.textField.inputView = dummyView;
+    cell.textField.tag = PersonAliasOfTag;
+    if (self.editing)
+        cell.textField.enabled = YES;
+    else
+        cell.textField.enabled = NO;
+
+    Person* person = self.detailItem.aliasOf;
+    
+    if (person != nil)
+    {
+        cell.textField.text = person.fullName;
+    }
     
     return cell;
 }
 
 -(UITableViewCell*) configureBooksSignedCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"SignatureCell";
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SignatureEditableTextCell"];
     
-    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
+    // A dummy view to keep the keyboard from popping up in the lookup fields.
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    
+    if(cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
     }
     
-    if(self.editing && indexPath.row == self.detailItem.booksSigned.count)
-    {
-        cell.textLabel.text = NSLocalizedString(@"Add Signed Title...", @"PersonDetailViewController add Book Signed insertion row text.");
-    }
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.fieldLabel.text = NSLocalizedString(@"Signed", @"PersonDetailViewController booksSigned cell field label text.");
+    cell.textField.delegate = self;
+    cell.textField.text = @"";
+    cell.textField.inputView = dummyView;
+    cell.textField.tag = PersonSignedTag;
+    if (self.editing)
+        cell.textField.enabled = YES;
     else
+        cell.textField.enabled = NO;
+    
+    Book* book = [self sortedBookFromSet:self.detailItem.booksSigned atIndexPath:indexPath];
+    
+    if (book != nil)
     {
-        Book* book = [self sortedBookFromSet:self.detailItem.booksSigned atIndexPath:indexPath];
-        cell.textLabel.text = book.title;
+        cell.textField.text = book.title;
     }
     
     return cell;
@@ -644,12 +773,50 @@
 
 #pragma mark - Book Selection Delegate Method
 
+-(void) addWorkerWithTitle:(NSString*)title andBook:(Book*)book
+{
+    Worker* worker = [Worker workerInManagedObjectContext:self.detailItem.managedObjectContext];
+    
+    worker.title = title;
+    worker.book = book;
+    worker.person = self.detailItem;
+    [self.detailItem addWorkedObject:worker];
+}
+
+-(void) updateWorkerObject:(NSManagedObjectID*)objectId withTitle:(NSString*)title andBook:(Book*)book
+{
+    if (objectId != nil)
+    {
+        NSError* error;
+        Worker* worker = (Worker*)[self.detailItem.managedObjectContext existingObjectWithID:objectId error:&error];
+        if (worker != nil)
+        {
+            worker.title = title;
+            if (book != nil)
+            {
+                worker.book = book;
+            }
+            [ContextUtil saveContext:self.detailItem.managedObjectContext];
+        }
+    }
+}
+
 -(void) bookViewController:(BookViewController *)controller didSelectBook:(Book*)book forPersonType:(PersonType)type
 {
+    EditableLookupAndTextCell* workerCell = nil;
+    
     switch (type)
     {
         case Workers:
-//            [self.detailItem addWorkedObject:book];
+            workerCell = (EditableLookupAndTextCell*)lookupTextField.superview.superview;
+            if (workerCell.objectId != nil)
+            {
+                [self updateWorkerObject:workerCell.objectId withTitle:workerCell.fieldLabel.text andBook:book];
+            }
+            else
+            {
+                [self addWorkerWithTitle:workerCell.fieldLabel.text andBook:book];
+            }
             break;
         case Signature:
             [self.detailItem addBooksSignedObject:book];
@@ -660,7 +827,8 @@
     }
     
     [ContextUtil saveContext:self.detailItem.managedObjectContext];
-    
+
+    [self.navigationController dismissModalViewControllerAnimated:YES];
     [self.tableView reloadData];
 }
 
@@ -669,9 +837,9 @@
     if (type == Alias)
     {
         [self.detailItem addAliasesObject:person];
-
         [ContextUtil saveContext:self.detailItem.managedObjectContext];
         
+        [self.navigationController dismissModalViewControllerAnimated:YES];
         [self.tableView reloadData];
     }
 }
@@ -680,6 +848,9 @@
 
 -(Book*) sortedBookFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
 {
+    if (set.count <= 0 || indexPath.row > set.count - 1)
+        return nil;
+    
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     NSArray* sortedBooks = [set sortedArrayUsingDescriptors:sortDescriptors];
@@ -688,6 +859,9 @@
 
 -(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
 {
+    if (set.count <= 0 || indexPath.row > set.count - 1)
+        return nil;
+    
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     NSArray* sortedPeople = [set sortedArrayUsingDescriptors:sortDescriptors];
@@ -696,6 +870,9 @@
 
 -(Worker*) sortedWorkerFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
 {
+    if (set.count <= 0 || indexPath.row > set.count - 1)
+        return nil;
+    
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"book.title" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     NSArray* sortedWorkers = [set sortedArrayUsingDescriptors:sortDescriptors];
@@ -712,24 +889,31 @@
 
 -(void) loadBookViewForPersonType:(PersonType)type
 {
+    self.lookupJustFinished = YES;
+    
     BookViewController* bookViewController = [[BookViewController alloc] initWithNibName:@"BookViewController" bundle:nil];
     bookViewController.managedObjectContext = self.detailItem.managedObjectContext;
     bookViewController.delegate = self;
     bookViewController.selectionMode = TRUE;
     bookViewController.personSelectionType = type;
     
-    [self.navigationController pushViewController:bookViewController animated:YES];
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:bookViewController];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    [self.navigationController presentModalViewController:navController animated:YES];
 }
 
 -(void) loadBookDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath
 {
     BookDetailViewController* bookDetailViewController = [[BookDetailViewController alloc] initWithNibName:@"BookDetailViewController" bundle:nil];
     Book* selectedBook = nil;
+    Worker* worker = nil;
     
     switch (type)
     {
         case Workers:
-//            selectedBook = [self sortedBookFromSet:self.detailItem.authored atIndexPath:indexPath];
+            worker = [self sortedWorkerFromSet:self.detailItem.worked atIndexPath:indexPath];
+            selectedBook = worker.book;
             break;
         case Signature:
             selectedBook = [self sortedBookFromSet:self.detailItem.booksSigned atIndexPath:indexPath];
@@ -747,13 +931,18 @@
 
 -(void) loadPersonViewForPersonType:(PersonType)type
 {
+    self.lookupJustFinished = YES;
+    
     PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
     personViewController.delegate = self;
     personViewController.managedObjectContext = self.detailItem.managedObjectContext;
     personViewController.selectionMode = TRUE;
     personViewController.personSelectionType = type;
     
-    [self.navigationController pushViewController:personViewController animated:YES];
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:personViewController];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    [self.navigationController presentModalViewController:navController animated:YES];
 }
 
 -(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath
@@ -779,6 +968,31 @@
         personDetailViewController.detailItem = person;
         [self.navigationController pushViewController:personDetailViewController animated:YES];
     }
+}
+
+-(void) showLookupViewControllerForLookupType:(LookupType)type
+{
+    self.lookupJustFinished = YES;
+    
+    LookupViewController* controller = [[LookupViewController alloc] initWithLookupType:type];
+    controller.delegate = self;
+    controller.managedObjectContext = self.detailItem.managedObjectContext;
+    
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    [self.navigationController presentModalViewController:navController animated:YES];
+}
+
+#pragma mark - Worker Lookup Handling
+
+-(void) lookupButtonPressed:(id)sender
+{
+    UIButton* button = sender;
+    EditableLookupAndTextCell* workerCell = (EditableLookupAndTextCell*)button.superview.superview;
+    workerLookupLabel = workerCell.fieldLabel;
+    
+    [self showLookupViewControllerForLookupType:LookupTypeWorker];
 }
 
 @end
