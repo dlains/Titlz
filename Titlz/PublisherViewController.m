@@ -317,6 +317,7 @@
 	newPublisherViewController.detailItem = [Publisher publisherInManagedObjectContext:self.managedObjectContext];
 	
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newPublisherViewController];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
 	
     [self.navigationController presentModalViewController:navController animated:YES];
 }

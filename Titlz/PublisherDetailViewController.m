@@ -488,6 +488,8 @@
     controller.managedObjectContext = self.detailItem.managedObjectContext;
     
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
+    
     [self.navigationController presentModalViewController:navController animated:YES];
 }
 

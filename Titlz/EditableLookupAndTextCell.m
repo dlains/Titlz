@@ -1,24 +1,24 @@
 //
-//  EditableTextCell.m
+//  EditableLookupAndTextCell.m
 //  Titlz
 //
-//  Created by David Lains on 12/30/11.
-//  Copyright (c) 2011 Dagger Lake Software. All rights reserved.
+//  Created by David Lains on 2/2/12.
+//  Copyright (c) 2012 Dagger Lake Software. All rights reserved.
 //
 
-#import "EditableTextCell.h"
+#import "EditableLookupAndTextCell.h"
 
-@implementation EditableTextCell
+@implementation EditableLookupAndTextCell
 
-@synthesize textField = _textField;
 @synthesize fieldLabel = _fieldLabel;
+@synthesize lookupButton = _lookupButton;
+@synthesize textField = _textField;
 @synthesize objectId = _objectId;
 
--(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+-(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self)
-    {
+    if (self) {
         // Initialization code
     }
     return self;
@@ -29,10 +29,12 @@
     [super didTransitionToState:state];
     if(state == UITableViewCellStateEditingMask)
     {
+        self.lookupButton.enabled = YES;
         self.textField.enabled = YES;
     }
     if(state == UITableViewCellStateDefaultMask)
     {
+        self.lookupButton.enabled = NO;
         self.textField.enabled = NO;
     }
 }

@@ -12,5 +12,6 @@
 
 @property(nonatomic, strong) IBOutlet UILabel* fieldLabel;
 @property(nonatomic, strong) IBOutlet UITextField* textField;
+@property(nonatomic, strong) NSManagedObjectID* objectId;
 
 @end

@@ -277,6 +277,7 @@
 	newCollectionViewController.detailItem = [Collection collectionInManagedObjectContext:self.managedObjectContext];
 	
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newCollectionViewController];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
 	
     [self.navigationController presentModalViewController:navController animated:YES];
 }

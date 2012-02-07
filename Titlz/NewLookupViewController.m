@@ -51,6 +51,9 @@
         case LookupTypeState:
             self.title = NSLocalizedString(@"New State", @"NewLookupViewController State header bar title.");
             break;
+        case LookupTypeWorker:
+            self.title = NSLocalizedString(@"New Title", @"NewLookupViewController Title header bar title.");
+            break;
         default:
             DLog(@"Invalid LookupType found in LookupViewController init: %i.", self.selectedLookupType);
             break;
@@ -219,6 +222,9 @@
             break;
         case LookupTypeState:
             cell.fieldLabel.text = NSLocalizedString(@"State", @"NewLookupViewController value data field label.");
+            break;
+        case LookupTypeWorker:
+            cell.fieldLabel.text = NSLocalizedString(@"TItle", @"NewLookupViewController value data field label.");
             break;
         default:
             DLog(@"Invalid LookupType found in LookupViewController init: %i.", self.selectedLookupType);

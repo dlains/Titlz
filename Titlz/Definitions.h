@@ -32,50 +32,83 @@ typedef enum AwardDataSectionRowsEnum
 
 typedef enum PersonTypeEnum
 {
-    Author = 0,
-    Editor,
-    Illustrator,
-    Contributor,
+    Workers = 0,
     Alias,
     Signature,
 } PersonType;
 
 typedef enum BookDetailSectionsEnum
 {
-    BookDataSection = 0,
-    BookAuthorSection,
-    BookEditorSection,
-    BookIllustratorSection,
-    BookContributorSection,
+    BookTitleSection = 0,
+    BookWorkersSection,
+    BookDetailsSection,
+    BookInstanceDetailsSection,
     BookSignatureSection,
     BookAwardSection,
     BookPointSection,
-    BookPublisherSection,
-    BookBoughtFromSection,
     BookCollectionSection,
     BookDetailSectionCount
 } BookDetailSections;
 
-typedef enum BookDataSectionRowsEnum
+typedef enum BookTitleSectionRowsEnum
 {
     BookTitleRow = 0,
-    BookFormatRow,
+    BookTitleSectionRowCount
+} BookTitleSectionRows;
+
+typedef enum BookDetailsSectionRowsEnum
+{
+    BookFormatRow = 0,
     BookEditionRow,
     BookPrintingRow,
-    BookIsbnRow,
     BookPagesRow,
-    BookReleaseDateRow,
-    BookPurchaseDateRow,
+    BookIsbnRow,
     BookOriginalPriceRow,
+    BookReleaseDateRow,
+    BookPublisherRow,
+    BookDetailsSectionRowCount
+} BookDetailsSectionRows;
+
+typedef enum BookInstanceDetailsSectionRowsEnum
+{
+    BookBookConditionRow = 0,
+    BookJacketConditionRow,
+    BookPurchaseDateRow,
     BookPricePaidRow,
     BookCurrentValueRow,
-    BookBookConditionRow,
-    BookJacketConditionRow,
     BookNumberRow,
     BookPrintRunRow,
+    BookBoughtFromRow,
     BookCommentsRow,
-    BookDataSectionRowCount
-} BookDataSectionRows;
+    BookInstanceDetailsSectionRowCount
+} BookInstanceDetailsSectionRows;
+
+typedef enum BookDataFieldTagEnum
+{
+    BookTitleTag = 0,
+    BookFormatTag,
+    BookEditionTag,
+    BookPrintingTag,
+    BookPagesTag,
+    BookIsbnTag,
+    BookReleaseDateTag,
+    BookPurchaseDateTag,
+    BookOriginalPriceTag,
+    BookPricePaidTag,
+    BookCurrentValueTag,
+    BookBookConditionTag,
+    BookJacketConditionTag,
+    BookNumberTag,
+    BookPrintRunTag,
+    BookCommentsTag,
+    BookWorkerTag,
+    BookPublisherTag,
+    BookBoughtFromTag,
+    BookSignatureTag,
+    BookAwardTag,
+    BookPointTag,
+    BookCollectionTag
+} BookDataFieldTag;
 
 typedef enum CollectionDetailSectionsEnum
 {
@@ -96,18 +129,16 @@ typedef enum LookupTypeEnum
     LookupTypeFormat,
     LookupTypeCondition,
     LookupTypeCountry,
-    LookupTypeState
+    LookupTypeState,
+    LookupTypeWorker
 } LookupType;
 
 typedef enum PersonDetailSectionsEnum
 {
     PersonDataSection = 0,
+    PersonWorkedSection,
     PersonAliasSection,
     PersonAliasOfSection,
-    PersonAuthoredSection,
-    PersonEditedSection,
-    PersonIllustratedSection,
-    PersonContributedSection,
     PersonBooksSignedSection,
     PersonDetailSectionCount
 } PersonDetailSections;

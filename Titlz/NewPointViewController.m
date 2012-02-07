@@ -64,7 +64,7 @@
     [super viewDidAppear:animated];
 }
 
--(void)viewWillDisappear:(BOOL)animated
+-(void) viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
 }
@@ -111,6 +111,12 @@
     }
 }
 
+-(BOOL) textFieldShouldReturn:(UITextField*)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
 -(BOOL) textFieldShouldEndEditing:(UITextField*)textField
 {
     BOOL valid = YES;
@@ -138,12 +144,6 @@
     }
     
     return valid;
-}
-
--(BOOL) textFieldShouldReturn:(UITextField*)textField
-{
-    [textField resignFirstResponder];
-    return YES;
 }
 
 -(void) textFieldDidEndEditing:(UITextField*)textField
@@ -188,15 +188,21 @@
 
 -(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"NewPointEditableTextCell"];
     
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
         cell = [topLevelObjects objectAtIndex:0];
-        cell.textField.enabled = NO;
     }
+    
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.textField.text = @"";
+    if (self.editing)
+        cell.textField.enabled = YES;
+    else
+        cell.textField.enabled = NO;
     
     switch (indexPath.row)
     {

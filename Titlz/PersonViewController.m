@@ -369,6 +369,7 @@
 	newPersonViewController.detailItem = [Person personInManagedObjectContext:self.managedObjectContext];
 	
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newPersonViewController];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
 	
     [self.navigationController presentModalViewController:navController animated:YES];
 }

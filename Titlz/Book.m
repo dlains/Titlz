@@ -2,48 +2,53 @@
 //  Book.m
 //  Titlz
 //
-//  Created by David Lains on 1/16/12.
+//  Created by David Lains on 2/2/12.
 //  Copyright (c) 2012 Dagger Lake Software. All rights reserved.
 //
 
 #import "Book.h"
+#import "Award.h"
+#import "Collection.h"
 #import "DLPoint.h"
 #import "Person.h"
+#import "Photo.h"
 #import "Publisher.h"
 #import "Seller.h"
-#import "Photo.h"
+
 
 @implementation Book
 
 @dynamic firstLetterOfTitle;
 @dynamic title;
-@dynamic bookCondition;
-@dynamic jacketCondition;
-@dynamic comments;
-@dynamic printing;
-@dynamic number;
-@dynamic printRun;
-@dynamic originalPrice;
-@dynamic pricePaid;
-@dynamic edition;
 @dynamic format;
+@dynamic edition;
+@dynamic printing;
 @dynamic isbn;
 @dynamic pages;
 @dynamic releaseDate;
 @dynamic purchaseDate;
+@dynamic originalPrice;
+@dynamic pricePaid;
 @dynamic currentValue;
-@dynamic authors;
-@dynamic awards;
-@dynamic collections;
-@dynamic contributors;
-@dynamic editors;
-@dynamic illustrators;
-@dynamic boughtFrom;
-@dynamic publisher;
-@dynamic points;
-@dynamic signatures;
-@dynamic photo;
+@dynamic bookCondition;
+@dynamic jacketCondition;
+@dynamic number;
+@dynamic printRun;
+@dynamic comments;
 @dynamic thumbnail;
+@dynamic awards;
+@dynamic boughtFrom;
+@dynamic collections;
+@dynamic photo;
+@dynamic points;
+@dynamic publisher;
+@dynamic signatures;
+@dynamic workers;
+
++(id) bookInManagedObjectContext:(NSManagedObjectContext*)context
+{
+    return [NSEntityDescription insertNewObjectForEntityForName:@"Book" inManagedObjectContext:context];
+}
 
 -(NSString*) firstLetterOfTitle
 {
@@ -67,14 +72,9 @@
     {
         result = @"#";
     }
-
+    
     [self didAccessValueForKey:@"firstLetterOfTitle"];
     return result;
-}
-
-+(id) bookInManagedObjectContext:(NSManagedObjectContext*)context
-{
-    return [NSEntityDescription insertNewObjectForEntityForName:@"Book" inManagedObjectContext:context];
 }
 
 // Title must not be empty.

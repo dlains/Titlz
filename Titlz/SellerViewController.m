@@ -296,6 +296,7 @@
 	newSellerViewController.detailItem = [Seller sellerInManagedObjectContext:self.managedObjectContext];
 	
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newSellerViewController];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
 	
     [self.navigationController presentModalViewController:navController animated:YES];
 }

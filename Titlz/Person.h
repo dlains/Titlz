@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Person, Book;
+@class Person, Book, Worker;
 
 @interface Person : NSManagedObject
 
@@ -21,10 +21,7 @@
 @property(nonatomic, retain) NSString* middleName;
 @property(nonatomic, retain) NSSet* aliases;
 @property(nonatomic, retain) Person* aliasOf;
-@property(nonatomic, retain) NSSet* authored;
-@property(nonatomic, retain) NSSet* contributed;
-@property(nonatomic, retain) NSSet* edited;
-@property(nonatomic, retain) NSSet* illustrated;
+@property(nonatomic, retain) NSSet* worked;
 @property(nonatomic, retain) NSSet* booksSigned;
 
 // Transient properties.
@@ -36,34 +33,19 @@
 
 @interface Person (CoreDataGeneratedAccessors)
 
-- (void)addAliasesObject:(Person *)value;
-- (void)removeAliasesObject:(Person *)value;
-- (void)addAliases:(NSSet *)values;
-- (void)removeAliases:(NSSet *)values;
+-(void) addAliasesObject:(Person *)value;
+-(void) removeAliasesObject:(Person *)value;
+-(void) addAliases:(NSSet *)values;
+-(void) removeAliases:(NSSet *)values;
 
-- (void)addAuthoredObject:(Book*)value;
-- (void)removeAuthoredObject:(Book*)value;
-- (void)addAuthored:(NSSet*)values;
-- (void)removeAuthored:(NSSet*)values;
+-(void) addWorkedObject:(Worker*)value;
+-(void) removeWorkedObject:(Worker*)value;
+-(void) addWorked:(NSSet*)values;
+-(void) removeWorked:(NSSet*)values;
 
-- (void)addContributedObject:(Book*)value;
-- (void)removeContributedObject:(Book*)value;
-- (void)addContributed:(NSSet*)values;
-- (void)removeContributed:(NSSet*)values;
-
-- (void)addEditedObject:(Book*)value;
-- (void)removeEditedObject:(Book*)value;
-- (void)addEdited:(NSSet*)values;
-- (void)removeEdited:(NSSet*)values;
-
-- (void)addIllustratedObject:(Book*)value;
-- (void)removeIllustratedObject:(Book*)value;
-- (void)addIllustrated:(NSSet*)values;
-- (void)removeIllustrated:(NSSet*)values;
-
-- (void)addBooksSignedObject:(Book*)value;
-- (void)removeBooksSignedObject:(Book*)value;
-- (void)addBooksSigned:(NSSet*)values;
-- (void)removeBooksSigned:(NSSet*)values;
+-(void) addBooksSignedObject:(Book*)value;
+-(void) removeBooksSignedObject:(Book*)value;
+-(void) addBooksSigned:(NSSet*)values;
+-(void) removeBooksSigned:(NSSet*)values;
 
 @end

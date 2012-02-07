@@ -45,11 +45,15 @@
             case LookupTypeState:
                 self.title = NSLocalizedString(@"State", @"LookupViewController State header bar title.");
                 break;
+            case LookupTypeWorker:
+                self.title = NSLocalizedString(@"Title", @"LookupViewController Title header bar title.");
+                break;
             default:
                 DLog(@"Invalid LookupType found in LookupViewController init: %i.", self.selectedLookupType);
                 break;
         }
     }
+    self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
     return self;
 }
 
@@ -285,6 +289,7 @@
 	newLookupViewController.detailItem = [Lookup lookupInManagedObjectContext:self.managedObjectContext];
 	
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newLookupViewController];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
 	
     [self.navigationController presentModalViewController:navController animated:YES];
 }

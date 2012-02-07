@@ -377,6 +377,7 @@
 	newBookViewController.detailItem = [Book bookInManagedObjectContext:self.managedObjectContext];
 	
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newBookViewController];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
 	
     [self.navigationController presentModalViewController:navController animated:YES];
 }
@@ -395,6 +396,7 @@
     {
         // Canceled the insert, remove the managed object.
         [self.managedObjectContext deleteObject:controller.detailItem];
+        [ContextUtil saveContext:self.managedObjectContext];
     }
     
     [self.tableView reloadData];

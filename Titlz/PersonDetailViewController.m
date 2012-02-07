@@ -9,22 +9,22 @@
 #import "PersonDetailViewController.h"
 #import "BookViewController.h"
 #import "BookDetailViewController.h"
+#import "EditableLookupAndTextCell.h"
 #import "EditableTextCell.h"
 #import "Person.h"
+#import "Worker.h"
 #import "Book.h"
 
 @interface PersonDetailViewController ()
 -(UITableViewCell*) configureDataCellForRow:(NSInteger)row;
+-(UITableViewCell*) configureWorkedCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureAliasCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureAliasOfCell;
--(UITableViewCell*) configureAuthoredCellAtIndexPath:(NSIndexPath*)indexPath;
--(UITableViewCell*) configureEditedCellAtIndexPath:(NSIndexPath*)indexPath;
--(UITableViewCell*) configureIllustratedCellAtIndexPath:(NSIndexPath*)indexPath;
--(UITableViewCell*) configureContributedCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureBooksSignedCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection;
 -(Book*) sortedBookFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(Worker*) sortedWorkerFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
 -(void) loadBookViewForPersonType:(PersonType)type;
 -(void) loadBookDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath;
@@ -258,14 +258,11 @@
 	// Hide the back button when editing starts, and show it again when editing finishes.
     [self.navigationItem setHidesBackButton:editing animated:animated];
 
+    NSIndexPath* worked        = [NSIndexPath indexPathForRow:self.detailItem.worked.count inSection:PersonWorkedSection];
     NSIndexPath* alias         = [NSIndexPath indexPathForRow:self.detailItem.aliases.count inSection:PersonAliasSection];
-    NSIndexPath* authored      = [NSIndexPath indexPathForRow:self.detailItem.authored.count inSection:PersonAuthoredSection];
-    NSIndexPath* edited        = [NSIndexPath indexPathForRow:self.detailItem.edited.count inSection:PersonEditedSection];
-    NSIndexPath* illustrated   = [NSIndexPath indexPathForRow:self.detailItem.illustrated.count inSection:PersonIllustratedSection];
-    NSIndexPath* contributed   = [NSIndexPath indexPathForRow:self.detailItem.contributed.count inSection:PersonContributedSection];
     NSIndexPath* booksSigned   = [NSIndexPath indexPathForRow:self.detailItem.booksSigned.count inSection:PersonBooksSignedSection];
         
-    NSArray* paths = [NSArray arrayWithObjects:alias, authored, edited, illustrated, contributed, booksSigned, nil];
+    NSArray* paths = [NSArray arrayWithObjects:worked, alias, booksSigned, nil];
 
     if (editing)
     {
@@ -300,19 +297,13 @@
     switch (section)
     {
         case PersonDataSection:
-            return 5;
+            return PersonDataSectionRowCount;
+        case PersonWorkedSection:
+            return self.detailItem.worked.count + insertionRow;
         case PersonAliasSection:
             return self.detailItem.aliases.count + insertionRow;
         case PersonAliasOfSection:
             return (self.detailItem.aliasOf) ? 1 : 0;
-        case PersonAuthoredSection:
-            return self.detailItem.authored.count + insertionRow;
-        case PersonEditedSection:
-            return self.detailItem.edited.count + insertionRow;
-        case PersonIllustratedSection:
-            return self.detailItem.illustrated.count + insertionRow;
-        case PersonContributedSection:
-            return self.detailItem.contributed.count + insertionRow;
         case PersonBooksSignedSection:
             return self.detailItem.booksSigned.count + insertionRow;
         default:
@@ -329,23 +320,14 @@
         case PersonDataSection:
             cell = [self configureDataCellForRow:indexPath.row];
             break;
+        case PersonWorkedSection:
+            cell = [self configureWorkedCellAtIndexPath:indexPath];
+            break;
         case PersonAliasSection:
             cell = [self configureAliasCellAtIndexPath:indexPath];
             break;
         case PersonAliasOfSection:
             cell = [self configureAliasOfCell];
-            break;
-        case PersonAuthoredSection:
-            cell = [self configureAuthoredCellAtIndexPath:indexPath];
-            break;
-        case PersonEditedSection:
-            cell = [self configureEditedCellAtIndexPath:indexPath];
-            break;
-        case PersonIllustratedSection:
-            cell = [self configureIllustratedCellAtIndexPath:indexPath];
-            break;
-        case PersonContributedSection:
-            cell = [self configureContributedCellAtIndexPath:indexPath];
             break;
         case PersonBooksSignedSection:
             cell = [self configureBooksSignedCellAtIndexPath:indexPath];
@@ -365,18 +347,12 @@
     {
         case PersonDataSection:
             return UITableViewCellEditingStyleNone;
+        case PersonWorkedSection:
+            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.worked];
         case PersonAliasSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.aliases];
         case PersonAliasOfSection:
             return UITableViewCellEditingStyleNone;
-        case PersonAuthoredSection:
-            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.authored];
-        case PersonEditedSection:
-            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.edited];
-        case PersonIllustratedSection:
-            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.illustrated];
-        case PersonContributedSection:
-            return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.contributed];
         case PersonBooksSignedSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.booksSigned];
         default:
@@ -402,6 +378,12 @@
     {
         case PersonDataSection:
             break;
+        case PersonWorkedSection:
+            if (indexPath.row == self.detailItem.worked.count)
+                [self loadBookViewForPersonType:Workers];
+            else
+                [self loadBookDetailViewForPersonType:Workers atIndexPath:indexPath];
+            break;
         case PersonAliasSection:
             if (indexPath.row == self.detailItem.aliases.count)
                 [self loadPersonViewForPersonType:Alias];
@@ -410,30 +392,6 @@
             break;
         case PersonAliasOfSection:
             [self loadPersonDetailViewForPerson:self.detailItem.aliasOf];
-            break;
-        case PersonAuthoredSection:
-            if (indexPath.row == self.detailItem.authored.count)
-                [self loadBookViewForPersonType:Author];
-            else
-                [self loadBookDetailViewForPersonType:Author atIndexPath:indexPath];
-            break;
-        case PersonEditedSection:
-            if (indexPath.row == self.detailItem.edited.count)
-                [self loadBookViewForPersonType:Editor];
-            else
-                [self loadBookDetailViewForPersonType:Editor atIndexPath:indexPath];
-            break;
-        case PersonIllustratedSection:
-            if (indexPath.row == self.detailItem.illustrated.count)
-                [self loadBookViewForPersonType:Illustrator];
-            else
-                [self loadBookDetailViewForPersonType:Illustrator atIndexPath:indexPath];
-            break;
-        case PersonContributedSection:
-            if (indexPath.row == self.detailItem.contributed.count)
-                [self loadBookViewForPersonType:Contributor];
-            else
-                [self loadBookDetailViewForPersonType:Contributor atIndexPath:indexPath];
             break;
         case PersonBooksSignedSection:
             if (indexPath.row == self.detailItem.booksSigned.count)
@@ -456,27 +414,15 @@
             case PersonDataSection:
                 // Never delete the data section rows.
                 break;
+            case PersonWorkedSection:
+                [self.detailItem removeWorkedObject:[self sortedWorkerFromSet:self.detailItem.worked atIndexPath:indexPath]];
+                [self deleteRowAtIndexPath:indexPath];
+                break;
             case PersonAliasSection:
                 [self.detailItem removeAliasesObject:[self sortedPersonFromSet:self.detailItem.aliases atIndexPath:indexPath]];
                 [self deleteRowAtIndexPath:indexPath];
                 break;
             case PersonAliasOfSection:
-                break;
-            case PersonAuthoredSection:
-                [self.detailItem removeAuthoredObject:[self sortedBookFromSet:self.detailItem.authored atIndexPath:indexPath]];
-                [self deleteRowAtIndexPath:indexPath];
-                break;
-            case PersonEditedSection:
-                [self.detailItem removeEditedObject:[self sortedBookFromSet:self.detailItem.edited atIndexPath:indexPath]];
-                [self deleteRowAtIndexPath:indexPath];
-                break;
-            case PersonIllustratedSection:
-                [self.detailItem removeIllustratedObject:[self sortedBookFromSet:self.detailItem.illustrated atIndexPath:indexPath]];
-                [self deleteRowAtIndexPath:indexPath];
-                break;
-            case PersonContributedSection:
-                [self.detailItem removeContributedObject:[self sortedBookFromSet:self.detailItem.contributed atIndexPath:indexPath]];
-                [self deleteRowAtIndexPath:indexPath];
                 break;
             case PersonBooksSignedSection:
                 [self.detailItem removeBooksSignedObject:[self sortedBookFromSet:self.detailItem.booksSigned atIndexPath:indexPath]];
@@ -499,6 +445,7 @@
     switch (section)
     {
         case PersonDataSection:
+        case PersonWorkedSection:
             break;
         case PersonAliasSection:
             if (self.detailItem.aliases.count > 0 || self.editing)
@@ -510,30 +457,6 @@
             if (self.detailItem.aliasOf)
             {
                 header = NSLocalizedString(@"Alias Of", @"PersonDetailViewController Alias Of section header.");
-            }
-            break;
-        case PersonAuthoredSection:
-            if (self.detailItem.authored.count > 0 || self.editing)
-            {
-                header = NSLocalizedString(@"Authored", @"PersonDetailViewController Authored section header.");
-            }
-            break;
-        case PersonEditedSection:
-            if (self.detailItem.edited.count > 0 || self.editing)
-            {
-                header = NSLocalizedString(@"Edited", @"PersonDetailViewController Edited section header.");
-            }
-            break;
-        case PersonIllustratedSection:
-            if (self.detailItem.illustrated.count > 0 || self.editing)
-            {
-                header = NSLocalizedString(@"Illustrated", @"PersonDetailViewController Illustrated section header.");
-            }
-            break;
-        case PersonContributedSection:
-            if (self.detailItem.contributed.count > 0 || self.editing)
-            {
-                header = NSLocalizedString(@"Contributed", @"PersonDetailViewController Contributed section header.");
             }
             break;
         case PersonBooksSignedSection:
@@ -622,6 +545,39 @@
     return cell;
 }
 
+-(UITableViewCell*) configureWorkedCellAtIndexPath:(NSIndexPath*)indexPath
+{
+    EditableLookupAndTextCell* workerCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableLookupAndTextCell"];
+    
+    if (workerCell == nil)
+    {
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableLookupAndTextCell" owner:self options:nil];
+        workerCell = [topLevelObjects objectAtIndex:0];
+        workerCell.textField.enabled = NO;
+        workerCell.lookupButton.enabled = NO;
+        [workerCell.lookupButton addTarget:self action:@selector(lookupButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    if (self.editing && indexPath.row == self.detailItem.worked.count)
+    {
+        workerCell.fieldLabel.text = @"Author";
+        workerCell.textField.text = NSLocalizedString(@"Add Book", @"PersonDetailViewController add Book insertion row text.");
+    }
+    else
+    {
+        Worker* worker = [self sortedWorkerFromSet:self.detailItem.worked atIndexPath:indexPath];
+        
+        if (worker != nil)
+        {
+            workerCell.fieldLabel.text = worker.title;
+            workerCell.textField.text = worker.person.fullName;
+        }
+    }
+
+    return workerCell;
+}
+
 -(UITableViewCell*) configureAliasCellAtIndexPath:(NSIndexPath*)indexPath
 {
     static NSString* CellIdentifier = @"AliasCell";
@@ -662,101 +618,6 @@
     return cell;
 }
 
--(UITableViewCell*) configureAuthoredCellAtIndexPath:(NSIndexPath*)indexPath
-{
-    static NSString* CellIdentifier = @"AuthorCell";
-    
-    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-    {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-    
-    if(self.editing && indexPath.row == self.detailItem.authored.count)
-    {
-        cell.textLabel.text = NSLocalizedString(@"Add Authored Title...", @"PersonDetailViewController add Authored insertion row text.");
-    }
-    else
-    {
-        Book* book = [self sortedBookFromSet:self.detailItem.authored atIndexPath:indexPath];
-        cell.textLabel.text = book.title;
-    }
-    
-    return cell;
-}
-
--(UITableViewCell*) configureEditedCellAtIndexPath:(NSIndexPath*)indexPath
-{
-    static NSString* CellIdentifier = @"EditorCell";
-    
-    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-    {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
-    
-    if(self.editing && indexPath.row == self.detailItem.edited.count)
-    {
-        cell.textLabel.text = NSLocalizedString(@"Add Edited Title...", @"PersonDetailViewController add Edited insertion row text.");
-    }
-    else
-    {
-        Book* book = [self sortedBookFromSet:self.detailItem.edited atIndexPath:indexPath];
-        cell.textLabel.text = book.title;
-    }
-    
-    return cell;
-}
-
--(UITableViewCell*) configureIllustratedCellAtIndexPath:(NSIndexPath*)indexPath
-{
-    static NSString* CellIdentifier = @"IllustratorCell";
-    
-    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-    {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
-    
-    if(self.editing && indexPath.row == self.detailItem.illustrated.count)
-    {
-        cell.textLabel.text = NSLocalizedString(@"Add Illustrated Title...", @"PersonDetailViewController add Illustrated insertion row text.");
-    }
-    else
-    {
-        Book* book = [self sortedBookFromSet:self.detailItem.illustrated atIndexPath:indexPath];
-        cell.textLabel.text = book.title;
-    }
-    
-    return cell;
-}
-
--(UITableViewCell*) configureContributedCellAtIndexPath:(NSIndexPath*)indexPath
-{
-    static NSString* CellIdentifier = @"ContributorCell";
-    
-    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-    {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
-    
-    if(self.editing && indexPath.row == self.detailItem.contributed.count)
-    {
-        cell.textLabel.text = NSLocalizedString(@"Add Contributed Title...", @"PersonDetailViewController add Contributed insertion row text.");
-    }
-    else
-    {
-        Book* book = [self sortedBookFromSet:self.detailItem.contributed atIndexPath:indexPath];
-        cell.textLabel.text = book.title;
-    }
-    
-    return cell;
-}
-
 -(UITableViewCell*) configureBooksSignedCellAtIndexPath:(NSIndexPath*)indexPath
 {
     static NSString* CellIdentifier = @"SignatureCell";
@@ -787,17 +648,8 @@
 {
     switch (type)
     {
-        case Author:
-            [self.detailItem addAuthoredObject:book];
-            break;
-        case Editor:
-            [self.detailItem addEditedObject:book];
-            break;
-        case Illustrator:
-            [self.detailItem addIllustratedObject:book];
-            break;
-        case Contributor:
-            [self.detailItem addContributedObject:book];
+        case Workers:
+//            [self.detailItem addWorkedObject:book];
             break;
         case Signature:
             [self.detailItem addBooksSignedObject:book];
@@ -842,6 +694,14 @@
     return [sortedPeople objectAtIndex:indexPath.row];
 }
 
+-(Worker*) sortedWorkerFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"book.title" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedWorkers = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedWorkers objectAtIndex:indexPath.row];
+}
+
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath
 {
     NSIndexPath* path = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section];
@@ -868,17 +728,8 @@
     
     switch (type)
     {
-        case Author:
-            selectedBook = [self sortedBookFromSet:self.detailItem.authored atIndexPath:indexPath];
-            break;
-        case Editor:
-            selectedBook = [self sortedBookFromSet:self.detailItem.edited atIndexPath:indexPath];
-            break;
-        case Illustrator:
-            selectedBook = [self sortedBookFromSet:self.detailItem.illustrated atIndexPath:indexPath];
-            break;
-        case Contributor:
-            selectedBook = [self sortedBookFromSet:self.detailItem.contributed atIndexPath:indexPath];
+        case Workers:
+//            selectedBook = [self sortedBookFromSet:self.detailItem.authored atIndexPath:indexPath];
             break;
         case Signature:
             selectedBook = [self sortedBookFromSet:self.detailItem.booksSigned atIndexPath:indexPath];

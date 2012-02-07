@@ -17,15 +17,18 @@
 
 @class Book;
 
-@interface BookDetailViewController : UITableViewController <UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, PersonSelectedDelegate, PublisherSelectedDelegate, LookupValueSelectedDelegate, SellerSelectedDelegate, CollectionSelectedDelegate, NewAwardDelegate, NewPointDelegate>
+@interface BookDetailViewController : UITableViewController <UITextFieldDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, PersonSelectedDelegate, PublisherSelectedDelegate, LookupValueSelectedDelegate, SellerSelectedDelegate, CollectionSelectedDelegate, NewAwardDelegate, NewPointDelegate>
 {
     UITextField* releaseDateTextField;
     UITextField* purchaseDateTextField;
     UITextField* lookupTextField;
+    UILabel* workerLookupLabel;
+    UIImageView* thumbnailView;
 }
 
 @property(nonatomic, strong) Book* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;
+@property(nonatomic, assign) BOOL lookupJustFinished;
 
 -(void) setUpUndoManager;
 -(void) cleanUpUndoManager;

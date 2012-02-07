@@ -23,10 +23,7 @@
 @dynamic middleName;
 @dynamic aliases;
 @dynamic aliasOf;
-@dynamic authored;
-@dynamic contributed;
-@dynamic edited;
-@dynamic illustrated;
+@dynamic worked;
 @dynamic booksSigned;
 
 -(NSString*) fullName

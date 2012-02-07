@@ -7,11 +7,51 @@
 //
 
 #import "NewBookViewController.h"
+#import "PersonViewController.h"
+#import "CollectionDetailViewController.h"
+#import "AwardDetailViewController.h"
+#import "PointDetailViewController.h"
+#import "PersonDetailViewController.h"
+#import "EditableLookupAndTextCell.h"
+#import "EditableImageAndTextCell.h"
 #import "EditableTextCell.h"
 #import "Book.h"
+#import "Person.h"
+#import "Award.h"
+#import "DLPoint.h"
+#import "Collection.h"
+#import "Worker.h"
+#import "Publisher.h"
+#import "Seller.h"
+#import "Photo.h"
 
 @interface NewBookViewController ()
+-(UITableViewCell*) configureTitleCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configureWorkerCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configureDetailsCellAtIndexPath:(NSIndexPath *)indexPath;
+-(UITableViewCell*) configureInstanceDetailsCellAtIndexPath:(NSIndexPath *)indexPath;
+-(UITableViewCell*) configureSignatureCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configureAwardCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configurePointCellAtIndexPath:(NSIndexPath*)indexPath;
+-(UITableViewCell*) configureCollectionCellAtIndexPath:(NSIndexPath*)indexPath;
+-(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(Worker*) sortedWorkerFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(Award*) sortedAwardFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(DLPoint*) sortedPointFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(Collection*) sortedCollectionFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath;
+-(void) loadPersonViewForPersonType:(PersonType)type;
+-(void) loadPublisherView;
+-(void) loadSellerView;
+-(void) loadNewAwardView;
+-(void) loadNewPointView;
+-(void) loadCollectionView;
 -(void) showLookupViewControllerForLookupType:(LookupType)type;
+
+-(void) addWorkerWithTitle:(NSString*)title andPerson:(Person*)person;
+-(void) updateWorkerObject:(NSManagedObjectID*)objectId withTitle:(NSString*)title andPerson:(Person*)person;
+
+-(IBAction) thumbnailButtonPressed:(id)sender;
+-(IBAction) lookupButtonPressed:(id)sender;
 @end
 
 @implementation NewBookViewController
@@ -20,6 +60,7 @@
 @synthesize undoManager = _undoManager;
 @synthesize delegate = _delegate;
 @synthesize shouldValidate = _shouldValidate;
+@synthesize lookupJustFinished = _lookupJustFinished;
 
 -(void) didReceiveMemoryWarning
 {
@@ -35,7 +76,11 @@
 {
     [super viewDidLoad];
 
+    // Start with a default book title.
+    self.detailItem.title = NSLocalizedString(@"New Title", @"NewBookViewController default book title.");
+    
     self.shouldValidate = YES;
+    self.lookupJustFinished = NO;
     
     self.title = NSLocalizedString(@"New Book", @"NewBookViewController header bar title.");
     self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
@@ -114,22 +159,76 @@
 
 -(void) textFieldDidBeginEditing:(UITextField*)textField
 {
-    // Save the textField for updating when the selection is made.
-    lookupTextField = textField;
-    
+    if (self.lookupJustFinished)
+    {
+        self.lookupJustFinished = NO;
+        return;
+    }
+
     switch (textField.tag)
     {
-        case BookFormatRow:
+        case BookWorkerTag:
+            lookupTextField = textField;
+            [self loadPersonViewForPersonType:Workers];
+            break;
+        case BookFormatTag:
+            lookupTextField = textField;
             [self showLookupViewControllerForLookupType:LookupTypeFormat];
             break;
-        case BookEditionRow:
+        case BookEditionTag:
+            lookupTextField = textField;
             [self showLookupViewControllerForLookupType:LookupTypeEdition];
             break;
-        case BookBookConditionRow:
-        case BookJacketConditionRow:
+        case BookBookConditionTag:
+        case BookJacketConditionTag:
+            lookupTextField = textField;
             [self showLookupViewControllerForLookupType:LookupTypeCondition];
             break;
+        case BookPublisherTag:
+            lookupTextField = textField;
+            [self loadPublisherView];
+            break;
+        case BookBoughtFromTag:
+            lookupTextField = textField;
+            [self loadSellerView];
+        case BookSignatureTag:
+            if (textField.text.length > 0)
+            {
+                [textField resignFirstResponder];
+                return;
+            }
+            lookupTextField = textField;
+            [self loadPersonViewForPersonType:Signature];
+            break;
+        case BookAwardTag:
+            if (textField.text.length > 0)
+            {
+                [textField resignFirstResponder];
+                return;
+            }
+            lookupTextField = textField;
+            [self loadNewAwardView];
+            break;
+        case BookPointTag:
+            if (textField.text.length > 0)
+            {
+                [textField resignFirstResponder];
+                return;
+            }
+            lookupTextField = textField;
+            [self loadNewPointView];
+            break;
+        case BookCollectionTag:
+            if (textField.text.length > 0)
+            {
+                [textField resignFirstResponder];
+                return;
+            }
+            lookupTextField = textField;
+            [self loadCollectionView];
+            break;
         default:
+            lookupTextField = nil;
             break;
     }
 }
@@ -144,7 +243,7 @@
     {
         switch (textField.tag)
         {
-            case BookTitleRow:
+            case BookTitleTag:
                 valid = [self.detailItem validateValue:&value forKey:@"title" error:&error];
                 break;
             default:
@@ -164,44 +263,52 @@
 {
     switch (textField.tag)
     {
-        case BookTitleRow:
+        case BookTitleTag:
             self.detailItem.title = textField.text;
             break;
-        case BookFormatRow:
-        case BookEditionRow:
+        case BookWorkerTag:
+        case BookFormatTag:
+        case BookPublisherTag:
+        case BookBoughtFromTag:
+        case BookEditionTag:
             break;
-        case BookPrintingRow:
+        case BookPrintingTag:
             self.detailItem.printing = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
-        case BookIsbnRow:
+        case BookIsbnTag:
             self.detailItem.isbn = textField.text;
             break;
-        case BookPagesRow:
+        case BookPagesTag:
             self.detailItem.pages = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
-        case BookReleaseDateRow:
-        case BookPurchaseDateRow:
+        case BookReleaseDateTag:
+        case BookPurchaseDateTag:
             break;
-        case BookOriginalPriceRow:
+        case BookOriginalPriceTag:
             self.detailItem.originalPrice = ([textField.text length] > 0) ? [NSDecimalNumber decimalNumberWithString:textField.text] : nil;
             break;
-        case BookPricePaidRow:
+        case BookPricePaidTag:
             self.detailItem.pricePaid = ([textField.text length] > 0) ? [NSDecimalNumber decimalNumberWithString:textField.text] : nil;
             break;
-        case BookCurrentValueRow:
+        case BookCurrentValueTag:
             self.detailItem.currentValue = ([textField.text length] > 0) ? [NSDecimalNumber decimalNumberWithString:textField.text] : nil;
             break;
-        case BookBookConditionRow:
-        case BookJacketConditionRow:
+        case BookBookConditionTag:
+        case BookJacketConditionTag:
             break;
-        case BookNumberRow:
+        case BookNumberTag:
             self.detailItem.number = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
-        case BookPrintRunRow:
+        case BookPrintRunTag:
             self.detailItem.printRun = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
-        case BookCommentsRow:
+        case BookCommentsTag:
             self.detailItem.comments = textField.text;
+            break;
+        case BookSignatureTag:
+        case BookAwardTag:
+        case BookPointTag:
+        case BookCollectionTag:
             break;
         default:
             DLog(@"Invalid NewBookViewController textField.tag value found: %i.", textField.tag);
@@ -221,11 +328,11 @@
     
     switch (datePicker.tag)
     {
-        case BookReleaseDateRow:
+        case BookReleaseDateTag:
             self.detailItem.releaseDate = datePicker.date;
             releaseDateTextField.text = [formatter stringFromDate:datePicker.date];
             break;
-        case BookPurchaseDateRow:
+        case BookPurchaseDateTag:
             self.detailItem.purchaseDate = datePicker.date;
             purchaseDateTextField.text = [formatter stringFromDate:datePicker.date];
             break;
@@ -236,28 +343,41 @@
 
 -(void) lookupViewController:(LookupViewController *)controller didSelectValue:(NSString *)value withLookupType:(LookupType)type
 {
+    EditableLookupAndTextCell* lookupCell = nil;
+    
     switch (type)
     {
         case LookupTypeEdition:
             self.detailItem.edition = value;
+            lookupTextField.text = value;
             break;
         case LookupTypeFormat:
             self.detailItem.format = value;
+            lookupTextField.text = value;
             break;
         case LookupTypeCondition:
-            if (lookupTextField.tag == BookBookConditionRow)
+            if (lookupTextField.tag == BookBookConditionTag)
+            {
                 self.detailItem.bookCondition = value;
-            else if (lookupTextField.tag == BookJacketConditionRow)
+                lookupTextField.text = value;
+            }
+            else if (lookupTextField.tag == BookJacketConditionTag)
+            {
                 self.detailItem.jacketCondition = value;
+                lookupTextField.text = value;
+            }
             else
                 DLog(@"Invalid textField.tag found for LookupTypeCondition selection: %i.", lookupTextField.tag);
+            break;
+        case LookupTypeWorker:
+            lookupCell = (EditableLookupAndTextCell*)workerLookupLabel.superview.superview;
+            [self updateWorkerObject:lookupCell.objectId withTitle:value andPerson:nil];
+            workerLookupLabel.text = value;
             break;
         default:
             DLog(@"Invalid LookupType found in NewBookViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
             break;
     }
-
-    lookupTextField.text = value;
 }
 
 -(IBAction) cancel:(id)sender
@@ -274,18 +394,171 @@
 // Customize the number of sections in the table view.
 -(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
 {
-    return 1;
+    return BookDetailSectionCount;
 }
 
 -(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return BookDataSectionRowCount;
+    NSInteger insertionRow = 0;
+    
+    // If the table is in editing mode add one row for inserting new records to most of the sections.
+    if(self.editing)
+        insertionRow = 1;
+    
+    switch (section)
+    {
+        case BookTitleSection:
+            return BookTitleSectionRowCount;
+        case BookWorkersSection:
+            return self.detailItem.workers.count + insertionRow;
+        case BookDetailsSection:
+            return BookDetailsSectionRowCount;
+        case BookInstanceDetailsSection:
+            return BookInstanceDetailsSectionRowCount;
+        case BookSignatureSection:
+            return self.detailItem.signatures.count + insertionRow;
+        case BookAwardSection:
+            return self.detailItem.awards.count + insertionRow;
+        case BookPointSection:
+            return self.detailItem.points.count + insertionRow;
+        case BookCollectionSection:
+            return self.detailItem.collections.count + insertionRow;
+        default:
+            DLog(@"Invalid NewBookViewController section found: %i.", section);
+            return 0;
+    }
 }
 
 // Customize the appearance of table view cells.
 -(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
+    UITableViewCell* cell = nil;
+    
+    switch (indexPath.section)
+    {
+        case BookTitleSection:
+            cell = [self configureTitleCellAtIndexPath:indexPath];
+            break;
+        case BookWorkersSection:
+            cell = [self configureWorkerCellAtIndexPath:indexPath];
+            break;
+        case BookDetailsSection:
+            cell = [self configureDetailsCellAtIndexPath:indexPath];
+            break;
+        case BookInstanceDetailsSection:
+            cell = [self configureInstanceDetailsCellAtIndexPath:indexPath];
+            break;
+        case BookSignatureSection:
+            cell = [self configureSignatureCellAtIndexPath:indexPath];
+            break;
+        case BookAwardSection:
+            cell = [self configureAwardCellAtIndexPath:indexPath];
+            break;
+        case BookPointSection:
+            cell = [self configurePointCellAtIndexPath:indexPath];
+            break;
+        case BookCollectionSection:
+            cell = [self configureCollectionCellAtIndexPath:indexPath];
+            break;
+        default:
+            DLog(@"Invalid NewBookViewController section found: %i.", indexPath.section);
+            break;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCellEditingStyle) tableView:(UITableView*)tableView editingStyleForRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    return UITableViewCellEditingStyleNone;
+}
+
+-(CGFloat) tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    if (indexPath.section == BookTitleSection && indexPath.row == BookTitleRow)
+    {
+        return 130.0f;
+    }
+    else
+    {
+        return UITableViewAutomaticDimension;
+    }
+}
+
+-(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
+{
+	return NO;
+}
+
+-(UITableViewCell*) configureTitleCellAtIndexPath:(NSIndexPath*)indexPath
+{
+    EditableImageAndTextCell* imageCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableImageAndTextCell"];
+
+    if(imageCell == nil)
+    {
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableImageAndTextCell" owner:self options:nil];
+        imageCell = [topLevelObjects objectAtIndex:0];
+        imageCell.textField.enabled = NO;
+        imageCell.thumbnailButton.enabled = NO;
+    }
+
+    switch (indexPath.row)
+    {
+        case BookTitleRow:
+            if (self.detailItem.thumbnail == nil)
+                imageCell.thumbnailView.image = [UIImage imageNamed:@"BookCover-leather-large.jpg"];
+            else
+                imageCell.thumbnailView.image = self.detailItem.thumbnail;
+            [imageCell.thumbnailButton addTarget:self action:@selector(thumbnailButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            imageCell.textField.text = self.detailItem.title;
+            imageCell.textField.tag = BookTitleTag;
+            break;
+        default:
+            DLog(@"Invalid NewBookViewController Title section row found: %i.", indexPath.row);
+            break;
+    }
+    
+    return imageCell;
+}
+
+-(UITableViewCell*) configureWorkerCellAtIndexPath:(NSIndexPath*)indexPath
+{
+    EditableLookupAndTextCell* workerCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableLookupAndTextCell"];
+    
+    if (workerCell == nil)
+    {
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableLookupAndTextCell" owner:self options:nil];
+        workerCell = [topLevelObjects objectAtIndex:0];
+        workerCell.textField.enabled = NO;
+        UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+        workerCell.textField.inputView = dummyView;
+        workerCell.lookupButton.enabled = NO;
+        [workerCell.lookupButton addTarget:self action:@selector(lookupButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    }
+
+    Worker* worker = [self sortedWorkerFromSet:self.detailItem.workers atIndexPath:indexPath];
+    
+    if (worker != nil)
+    {
+        workerCell.fieldLabel.text = worker.title;
+        workerCell.textField.text = worker.person.fullName;
+        workerCell.textField.tag = BookWorkerTag;
+        workerCell.objectId = worker.objectID;
+    }
+    else
+    {
+        workerCell.fieldLabel.text = @"Author";
+        workerCell.textField.tag = BookWorkerTag;
+    }
+    
+    return workerCell;
+}
+
+-(UITableViewCell*) configureDetailsCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"DetailsEditableTextCell"];
     
     // Create the date picker to use for the releaseDate field.
     UIDatePicker* datePicker = [[UIDatePicker alloc] init];
@@ -295,10 +568,10 @@
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
     [formatter setTimeStyle:NSDateFormatterNoStyle];
     [formatter setDateStyle:NSDateFormatterLongStyle];
-    
-    // Create a localized currency symbol to use in the price fields.
-    NSString* currencySymbol = [[NSLocale currentLocale] objectForKey:NSLocaleCurrencySymbol];
 
+    // A dummy view to keep the keyboard from popping up in the lookup fields.
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
@@ -307,6 +580,7 @@
     }
     
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.textField.delegate = self;
     cell.textField.inputView = nil;
     cell.textField.keyboardType = UIKeyboardTypeDefault;
     cell.textField.text = @"";
@@ -317,94 +591,150 @@
     
     switch (indexPath.row)
     {
-        case BookTitleRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Title", @"NewBookViewController title data field label.");
-            cell.textField.text = self.detailItem.title;
-            cell.textField.tag = BookTitleRow;
-            break;
         case BookFormatRow:
             cell.fieldLabel.text = NSLocalizedString(@"Format", @"NewBookViewController format data field label.");
             cell.textField.text = self.detailItem.format;
-            cell.textField.tag = BookFormatRow;
+            cell.textField.inputView = dummyView;
+            cell.textField.tag = BookFormatTag;
             break;
         case BookEditionRow:
             cell.fieldLabel.text = NSLocalizedString(@"Edition", @"NewBookViewController edition data field label.");
             cell.textField.text = self.detailItem.edition;
-            cell.textField.tag = BookEditionRow;
+            cell.textField.inputView = dummyView;
+            cell.textField.tag = BookEditionTag;
             break;
         case BookPrintingRow:
             cell.fieldLabel.text = NSLocalizedString(@"Printing", @"NewBookViewController printing data field label.");
             cell.textField.text = (self.detailItem.printing == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printing intValue]];
-            cell.textField.tag = BookPrintingRow;
+            cell.textField.tag = BookPrintingTag;
+            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            break;
+        case BookPagesRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Pages", @"NewBookViewController pages data field label.");
+            cell.textField.text = (self.detailItem.pages == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.pages intValue]];
+            cell.textField.tag = BookPagesTag;
             cell.textField.keyboardType = UIKeyboardTypeNumberPad;
             break;
         case BookIsbnRow:
             cell.fieldLabel.text = NSLocalizedString(@"ISBN", @"NewBookViewController isbn data field label.");
             cell.textField.text = self.detailItem.isbn;
-            cell.textField.tag = BookIsbnRow;
+            cell.textField.tag = BookIsbnTag;
             cell.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
             break;
-        case BookPagesRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Pages", @"NewBookViewController pages data field label.");
-            cell.textField.text = (self.detailItem.pages == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.pages intValue]];
-            cell.textField.tag = BookPagesRow;
-            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+        case BookOriginalPriceRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Original Price", @"NewBookViewController originalPrice data field label.");
+            cell.textField.text = (self.detailItem.originalPrice == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.originalPrice floatValue]];
+            cell.textField.tag = BookOriginalPriceTag;
+            cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
             break;
         case BookReleaseDateRow:
             cell.fieldLabel.text = NSLocalizedString(@"Released", @"NewBookViewController releaseDate data field label.");
             releaseDateTextField = cell.textField;
-            cell.textField.tag = BookReleaseDateRow;
-            datePicker.tag = BookReleaseDateRow;
+            cell.textField.tag = BookReleaseDateTag;
+            datePicker.tag = BookReleaseDateTag;
             cell.textField.inputView = datePicker;
             cell.textField.text = [formatter stringFromDate:self.detailItem.releaseDate];
+            break;
+        case BookPublisherRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Publisher", @"NewBookViewController publisher data field label.");
+            if (self.detailItem.publisher != nil)
+                cell.textField.text = self.detailItem.publisher.name;
+            cell.textField.inputView = dummyView;
+            cell.textField.tag = BookPublisherTag;
+            break;
+        default:
+            DLog(@"Invalid NewBookViewController Data section row found: %i.", indexPath.row);
+            break;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCell*) configureInstanceDetailsCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"InstanceEditableTextCell"];
+    
+    // Create the date picker to use for the releaseDate field.
+    UIDatePicker* datePicker = [[UIDatePicker alloc] init];
+    datePicker.datePickerMode = UIDatePickerModeDate;
+    [datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    [formatter setTimeStyle:NSDateFormatterNoStyle];
+    [formatter setDateStyle:NSDateFormatterLongStyle];
+    
+    // A dummy view to keep the keyboard from popping up in the lookup fields.
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+
+    if(cell == nil)
+    {
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
+    }
+    
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.textField.delegate = self;
+    cell.textField.inputView = nil;
+    cell.textField.keyboardType = UIKeyboardTypeDefault;
+    cell.textField.text = @"";
+    if (self.editing)
+        cell.textField.enabled = YES;
+    else
+        cell.textField.enabled = NO;
+    
+    switch (indexPath.row)
+    {
+        case BookBookConditionRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Book Cond.", @"NewBookViewController bookCondition data field label.");
+            cell.textField.text = self.detailItem.bookCondition;
+            cell.textField.inputView = dummyView;
+            cell.textField.tag = BookBookConditionTag;
+            break;
+        case BookJacketConditionRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Jacket Cond.", @"NewBookViewController jacketCondition data field label.");
+            cell.textField.text = self.detailItem.jacketCondition;
+            cell.textField.inputView = dummyView;
+            cell.textField.tag = BookJacketConditionTag;
             break;
         case BookPurchaseDateRow:
             cell.fieldLabel.text = NSLocalizedString(@"Puchased", @"NewBookViewController purchaseDate data field label.");
             purchaseDateTextField = cell.textField;
-            cell.textField.tag = BookPurchaseDateRow;
-            datePicker.tag = BookPurchaseDateRow;
+            cell.textField.tag = BookPurchaseDateTag;
+            datePicker.tag = BookPurchaseDateTag;
             cell.textField.inputView = datePicker;
             cell.textField.text = [formatter stringFromDate:self.detailItem.purchaseDate];
             break;
-        case BookOriginalPriceRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Original Price", @"NewBookViewController originalPrice data field label.");
-            cell.textField.text = (self.detailItem.originalPrice == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.originalPrice floatValue]];
-            cell.textField.tag = BookOriginalPriceRow;
-            cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
-            break;
         case BookPricePaidRow:
             cell.fieldLabel.text = NSLocalizedString(@"Price Paid", @"NewBookViewController pricePaid data field label.");
-            cell.textField.text = (self.detailItem.pricePaid == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.pricePaid floatValue]];
-            cell.textField.tag = BookPricePaidRow;
+            cell.textField.text = (self.detailItem.pricePaid == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.pricePaid floatValue]];
+            cell.textField.tag = BookPricePaidTag;
             cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
             break;
         case BookCurrentValueRow:
             cell.fieldLabel.text = NSLocalizedString(@"Current Value", @"NewBookViewController currentValue data field label.");
-            cell.textField.text = (self.detailItem.currentValue == nil) ? @"" : [NSString stringWithFormat:@"%@%1.2f", currencySymbol, [self.detailItem.currentValue floatValue]];
-            cell.textField.tag = BookCurrentValueRow;
+            cell.textField.text = (self.detailItem.currentValue == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.currentValue floatValue]];
+            cell.textField.tag = BookCurrentValueTag;
             cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
-            break;
-        case BookBookConditionRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Book Condition", @"NewBookViewController bookCondition data field label.");
-            cell.textField.text = self.detailItem.bookCondition;
-            cell.textField.tag = BookBookConditionRow;
-            break;
-        case BookJacketConditionRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Jacket Condition", @"NewBookViewController jacketCondition data field label.");
-            cell.textField.text = self.detailItem.jacketCondition;
-            cell.textField.tag = BookJacketConditionRow;
             break;
         case BookNumberRow:
             cell.fieldLabel.text = NSLocalizedString(@"Number", @"NewBookViewController number data field label.");
             cell.textField.text = (self.detailItem.number == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.number intValue]];
-            cell.textField.tag = BookNumberRow;
+            cell.textField.tag = BookNumberTag;
             cell.textField.keyboardType = UIKeyboardTypeNumberPad;
             break;
         case BookPrintRunRow:
             cell.fieldLabel.text = NSLocalizedString(@"Print Run", @"NewBookViewController printRun data field label.");
             cell.textField.text = (self.detailItem.printRun == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printRun intValue]];
-            cell.textField.tag = BookPrintRunRow;
+            cell.textField.tag = BookPrintRunTag;
             cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            break;
+        case BookBoughtFromRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Seller", @"NewBookViewController boughtFrom data field label.");
+            if (self.detailItem.boughtFrom != nil)
+                cell.textField.text = self.detailItem.boughtFrom.name;
+            cell.textField.inputView = dummyView;
+            cell.textField.tag = BookBoughtFromTag;
             break;
         case BookCommentsRow:
             cell.fieldLabel.text = NSLocalizedString(@"Comments", @"NewBookViewController comments data field label.");
@@ -415,28 +745,584 @@
             DLog(@"Invalid NewBookViewController Data section row found: %i.", indexPath.row);
             break;
     }
-
+    
     return cell;
 }
 
--(UITableViewCellEditingStyle) tableView:(UITableView*)tableView editingStyleForRowAtIndexPath:(NSIndexPath*)indexPath
+-(UITableViewCell*) configureSignatureCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    return UITableViewCellEditingStyleNone;
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SignatureEditableTextCell"];
+
+    // A dummy view to keep the keyboard from popping up in the lookup fields.
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    
+    if(cell == nil)
+    {
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
+    }
+    
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.fieldLabel.text = NSLocalizedString(@"Signed by", @"NewBookViewController signature cell field label text.");
+    cell.textField.delegate = self;
+    cell.textField.text = @"";
+    cell.textField.inputView = dummyView;
+    cell.textField.tag = BookSignatureTag;
+    if (self.editing)
+        cell.textField.enabled = YES;
+    else
+        cell.textField.enabled = NO;
+    
+    Person* person = [self sortedPersonFromSet:self.detailItem.signatures atIndexPath:indexPath];
+    
+    if (person != nil)
+    {
+        cell.textField.text = person.fullName;
+    }
+    
+    return cell;
 }
 
--(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
+-(UITableViewCell*) configureAwardCellAtIndexPath:(NSIndexPath*)indexPath
 {
-	return NO;
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"AwardEditableTextCell"];
+    
+    // A dummy view to keep the keyboard from popping up in the lookup fields.
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    
+    if (cell == nil)
+    {
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
+    }
+    
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.fieldLabel.text = NSLocalizedString(@"Award", @"NewBookViewController award cell field label text.");
+    cell.textField.delegate = self;
+    cell.textField.text = @"";
+    cell.textField.inputView = dummyView;
+    cell.textField.tag = BookAwardTag;
+    if (self.editing)
+        cell.textField.enabled = YES;
+    else
+        cell.textField.enabled = NO;
+
+    Award* award = [self sortedAwardFromSet:self.detailItem.awards atIndexPath:indexPath];
+
+    if(award != nil)
+    {
+        cell.textField.text = award.name;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCell*) configurePointCellAtIndexPath:(NSIndexPath*)indexPath
+{
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"PointEditableTextCell"];
+    
+    // A dummy view to keep the keyboard from popping up in the lookup fields.
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    
+    if (cell == nil)
+    {
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
+    }
+    
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.fieldLabel.text = NSLocalizedString(@"Point", @"NewBookViewController point cell field label text.");
+    cell.textField.delegate = self;
+    cell.textField.text = @"";
+    cell.textField.inputView = dummyView;
+    cell.textField.tag = BookPointTag;
+    if (self.editing)
+        cell.textField.enabled = YES;
+    else
+        cell.textField.enabled = NO;
+    
+    DLPoint* point = [self sortedPointFromSet:self.detailItem.points atIndexPath:indexPath];
+
+    if(point != nil)
+    {
+        cell.textField.text = point.issue;
+    }
+    
+    return cell;
+}
+
+-(UITableViewCell*) configureCollectionCellAtIndexPath:(NSIndexPath*)indexPath
+{
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"CollectionEditableTextCell"];
+    
+    // A dummy view to keep the keyboard from popping up in the lookup fields.
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    
+    if (cell == nil)
+    {
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
+    }
+    
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.textField.text = @"";
+    cell.textField.delegate = self;
+    cell.textField.inputView = dummyView;
+    cell.fieldLabel.text = NSLocalizedString(@"Collection", @"NewBookViewController collection cell field label text.");
+    cell.textField.tag = BookCollectionTag;
+    if (self.editing)
+        cell.textField.enabled = YES;
+    else
+        cell.textField.enabled = NO;
+    
+    Collection* collection = [self sortedCollectionFromSet:self.detailItem.collections atIndexPath:indexPath];
+    
+    if(collection != nil)
+    {
+        cell.textField.text = collection.name;
+    }
+    
+    return cell;
+}
+
+#pragma mark - Person Selection Delegate Method
+
+-(void) addWorkerWithTitle:(NSString*)title andPerson:(Person*)person
+{
+    Worker* worker = [Worker workerInManagedObjectContext:self.detailItem.managedObjectContext];
+    
+    worker.title = title;
+    worker.book = self.detailItem;
+    worker.person = person;
+    [self.detailItem addWorkersObject:worker];
+}
+
+-(void) updateWorkerObject:(NSManagedObjectID*)objectId withTitle:(NSString*)title andPerson:(Person *)person
+{
+    if (objectId != nil)
+    {
+        NSError* error;
+        Worker* worker = (Worker*)[self.detailItem.managedObjectContext existingObjectWithID:objectId error:&error];
+        if (worker != nil)
+        {
+            worker.title = title;
+            if (person != nil)
+            {
+                worker.person = person;
+            }
+            [ContextUtil saveContext:self.detailItem.managedObjectContext];
+        }
+    }
+}
+
+-(void) personViewController:(PersonViewController *)controller didSelectPerson:(Person *)person withPersonType:(PersonType)type
+{
+    EditableLookupAndTextCell* workerCell = nil;
+    
+    switch (type)
+    {
+        case Workers:
+            workerCell = (EditableLookupAndTextCell*)lookupTextField.superview.superview;
+            if (workerCell.objectId != nil)
+            {
+                [self updateWorkerObject:workerCell.objectId withTitle:workerCell.fieldLabel.text andPerson:person];
+            }
+            else
+            {
+                [self addWorkerWithTitle:workerCell.fieldLabel.text andPerson:person];
+            }
+            break;
+        case Signature:
+            [self.detailItem addSignaturesObject:person];
+            break;
+        default:
+            DLog(@"Invalid PersonType found in TitleDetailViewController: %i.", type);
+            break;
+    }
+    
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    [self.tableView reloadData];
+}
+
+#pragma mark - Publisher Selection Delegate Method
+
+-(void) publisherViewController:(PublisherViewController *)controller didSelectPublisher:(Publisher *)publisher
+{
+    self.detailItem.publisher = publisher;
+    [ContextUtil saveContext:self.detailItem.managedObjectContext];
+    
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    [self.tableView reloadData];
+}
+
+#pragma mark - Seller Selection Delegate Method
+
+-(void) sellerViewController:(SellerViewController *)controller didSelectSeller:(Seller*)seller
+{
+    self.detailItem.boughtFrom = seller;
+    [ContextUtil saveContext:self.detailItem.managedObjectContext];
+    
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    [self.tableView reloadData];
+}
+
+#pragma mark - Collection Selection Delegate Method
+
+-(void) collectionViewController:(CollectionViewController *)controller didSelectCollection:(Collection *)collection
+{
+    [self.detailItem addCollectionsObject:collection];
+    [ContextUtil saveContext:self.detailItem.managedObjectContext];
+    
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    [self.tableView reloadData];
+}
+
+#pragma mark - New Award Handling
+
+-(void) newAwardViewController:(NewAwardViewController*)controller didFinishWithSave:(BOOL)save
+{
+    if (save)
+    {
+        [self.detailItem addAwardsObject:controller.detailItem];
+        
+        if (![ContextUtil saveContext:self.detailItem.managedObjectContext])
+        {
+            // Didn't save, so don't dismiss the modal view.
+            return;
+        }
+    }
+    else
+    {
+        // Canceled the insert, remove the managed object.
+        [self.detailItem removeAwardsObject:controller.detailItem];
+        [self.detailItem.managedObjectContext deleteObject:controller.detailItem];
+    }
+    
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    [self.tableView reloadData];
+}
+
+#pragma mark - New Point Handling
+
+-(void) newPointViewController:(NewPointViewController*)controller didFinishWithSave:(BOOL)save
+{
+    if (save)
+    {
+        [self.detailItem addPointsObject:controller.detailItem];
+        
+        if (![ContextUtil saveContext:self.detailItem.managedObjectContext])
+        {
+            // Didn't save, so don't dismiss the modal view.
+            return;
+        }
+    }
+    else
+    {
+        // Canceled the insert, remove the managed object.
+        [self.detailItem removePointsObject:controller.detailItem];
+        [self.detailItem.managedObjectContext deleteObject:controller.detailItem];
+    }
+    
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    [self.tableView reloadData];
+}
+
+#pragma mark - Local Helper Methods
+
+-(Person*) sortedPersonFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+{
+    if (set.count <= 0 || indexPath.row > set.count - 1)
+        return nil;
+
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedPeople = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedPeople objectAtIndex:indexPath.row];
+}
+
+-(Worker*) sortedWorkerFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+{
+    if (set.count <= 0 || indexPath.row > set.count - 1)
+        return nil;
+
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"person.lastName" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedWorkers = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedWorkers objectAtIndex:indexPath.row];
+}
+
+-(Award*) sortedAwardFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+{
+    if (set.count <= 0 || indexPath.row > set.count - 1)
+        return nil;
+
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedAwards = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedAwards objectAtIndex:indexPath.row];
+}
+
+-(DLPoint*) sortedPointFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+{
+    if (set.count <= 0 || indexPath.row > set.count - 1)
+        return nil;
+
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"issue" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedPoints = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedPoints objectAtIndex:indexPath.row];
+}
+
+-(Collection*) sortedCollectionFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
+{
+    if (set.count <= 0 || indexPath.row > set.count - 1)
+        return nil;
+
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    NSArray* sortedCollections = [set sortedArrayUsingDescriptors:sortDescriptors];
+    return [sortedCollections objectAtIndex:indexPath.row];
+}
+
+-(void) loadPersonViewForPersonType:(PersonType)type
+{
+    self.lookupJustFinished = YES;
+    
+    PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
+    personViewController.managedObjectContext = self.detailItem.managedObjectContext;
+    personViewController.delegate = self;
+    personViewController.selectionMode = TRUE;
+    personViewController.personSelectionType = type;
+
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:personViewController];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    [self.navigationController presentModalViewController:navController animated:YES];
+}
+
+-(void) loadPublisherView
+{
+    self.lookupJustFinished = YES;
+
+    PublisherViewController* publisherViewController = [[PublisherViewController alloc] initWithNibName:@"PublisherViewController" bundle:nil];
+    publisherViewController.managedObjectContext = self.detailItem.managedObjectContext;
+    publisherViewController.delegate = self;
+    publisherViewController.selectionMode = TRUE;
+    
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:publisherViewController];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    [self.navigationController presentModalViewController:navController animated:YES];
+}
+
+-(void) loadSellerView
+{
+    self.lookupJustFinished = YES;
+    
+    SellerViewController* sellerViewController = [[SellerViewController alloc] initWithNibName:@"SellerViewController" bundle:nil];
+    sellerViewController.managedObjectContext = self.detailItem.managedObjectContext;
+    sellerViewController.delegate = self;
+    sellerViewController.selectionMode = TRUE;
+    
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:sellerViewController];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    [self.navigationController presentModalViewController:navController animated:YES];
+}
+
+-(void) loadNewAwardView
+{
+    self.lookupJustFinished = YES;
+    
+    NewAwardViewController* newAwardViewController = [[NewAwardViewController alloc] initWithStyle:UITableViewStyleGrouped];
+	newAwardViewController.delegate = self;
+	newAwardViewController.detailItem = [Award awardInManagedObjectContext:self.detailItem.managedObjectContext];
+    
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newAwardViewController];
+	navController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    [self.navigationController presentModalViewController:navController animated:YES];
+}
+
+-(void) loadNewPointView
+{
+    self.lookupJustFinished = YES;
+    
+    NewPointViewController* newPointViewController = [[NewPointViewController alloc] initWithStyle:UITableViewStyleGrouped];
+	newPointViewController.delegate = self;
+	newPointViewController.detailItem = [DLPoint pointInManagedObjectContext:self.detailItem.managedObjectContext];
+	
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newPointViewController];
+	navController.navigationBar.barStyle = UIBarStyleBlack;
+	
+    [self.navigationController presentModalViewController:navController animated:YES];
+}
+
+-(void) loadCollectionView
+{
+    self.lookupJustFinished = YES;
+    
+    CollectionViewController* collectionViewController = [[CollectionViewController alloc] initWithNibName:@"CollectionViewController" bundle:nil];
+    collectionViewController.managedObjectContext = self.detailItem.managedObjectContext;
+	collectionViewController.delegate = self;
+    collectionViewController.selectionMode = TRUE;
+	
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:collectionViewController];
+	navController.navigationBar.barStyle = UIBarStyleBlack;
+
+    [self.navigationController presentModalViewController:navController animated:YES];
 }
 
 -(void) showLookupViewControllerForLookupType:(LookupType)type
 {
+    self.lookupJustFinished = YES;
+    
     LookupViewController* controller = [[LookupViewController alloc] initWithLookupType:type];
     controller.delegate = self;
     controller.managedObjectContext = self.detailItem.managedObjectContext;
     
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
+    
     [self.navigationController presentModalViewController:navController animated:YES];
+}
+
+#pragma mark - Worker Lookup Handling
+
+-(void) lookupButtonPressed:(id)sender
+{
+    UIButton* button = sender;
+    EditableLookupAndTextCell* workerCell = (EditableLookupAndTextCell*)button.superview.superview;
+    workerLookupLabel = workerCell.fieldLabel;
+    
+    [self showLookupViewControllerForLookupType:LookupTypeWorker];
+}
+
+#pragma mark - Image Handling
+
+-(void) thumbnailButtonPressed:(id)sender
+{
+    UIButton* button = sender;
+    EditableImageAndTextCell* imageCell = (EditableImageAndTextCell*)button.superview.superview;
+    thumbnailView = imageCell.thumbnailView;
+    
+    UIActionSheet* actionSheet;
+    
+    NSString* cancel = NSLocalizedString(@"Cancel", @"EditableImageAndTextCell action sheet cancel button title.");
+    NSString* delete = NSLocalizedString(@"Delete Photo", @"EditableImageAndTextCell action sheet delete photo button title.");
+    NSString* take   = NSLocalizedString(@"Take Photo", @"EditableImageAndTextCell action sheet take photo button title.");
+    NSString* choose = NSLocalizedString(@"Choose Photo", @"EditableImageAndTextCell action sheet choose photo button title.");
+    
+    if (button.enabled)
+    {
+        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+        {
+            // Camera available.
+            if (self.detailItem.thumbnail != nil)
+            {
+                // Image already exists, so add the edit and delete options.
+                actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:cancel destructiveButtonTitle:delete otherButtonTitles:take, choose, nil];
+            }
+            else
+            {
+                // Just the take photo and choose photo options.
+                actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:cancel destructiveButtonTitle:nil otherButtonTitles:take, choose, nil];
+            }
+        }
+        else
+        {
+            // No camera available.
+            if (self.detailItem.thumbnail != nil)
+            {
+                // Image already exists, so add the edit and delete options.
+                actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:cancel destructiveButtonTitle:delete otherButtonTitles:choose, nil];
+            }
+            else
+            {
+                // Just the choose photo option.
+                actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:cancel destructiveButtonTitle:nil otherButtonTitles:choose, nil];
+            }
+        }
+        
+        [actionSheet showInView:self.view];
+    }
+}
+
+-(void) actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSString* cancel = NSLocalizedString(@"Cancel", @"EditableImageAndTextCell action sheet cancel button title.");
+    NSString* delete = NSLocalizedString(@"Delete Photo", @"EditableImageAndTextCell action sheet delete photo button title.");
+    NSString* take   = NSLocalizedString(@"Take Photo", @"EditableImageAndTextCell action sheet take photo button title.");
+    NSString* choose = NSLocalizedString(@"Choose Photo", @"EditableImageAndTextCell action sheet choose photo button title.");
+    
+    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:cancel])
+    {
+        return;
+    }
+    
+    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:delete])
+    {
+        self.detailItem.thumbnail = nil;
+        [self.detailItem.managedObjectContext deleteObject:self.detailItem.photo];
+        [ContextUtil saveContext:self.detailItem.managedObjectContext];
+        [self.tableView reloadData];
+    }
+    
+    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:take])
+    {
+        UIImagePickerController* picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        [self.navigationController presentModalViewController:picker animated:YES];
+    }
+    
+    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:choose])
+    {
+        UIImagePickerController* picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self.navigationController presentModalViewController:picker animated:YES];
+    }
+}
+
+-(void) imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary*)info
+{
+	// If the Book already has a photo, delete it.
+	if (self.detailItem.photo)
+    {
+		[self.detailItem.managedObjectContext deleteObject:self.detailItem.photo];
+	}
+	
+	// Create a new photo object and set the image.
+	Photo* photo = [Photo photoInManagedObjectContext:self.detailItem.managedObjectContext];
+    UIImage* selectedImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+	photo.image = selectedImage;
+	
+	// Associate the photo object with the book.
+	self.detailItem.photo = photo;	
+	
+	// Create a thumbnail version of the image for the book object.
+    CGRect thumbnailRect = CGRectMake(0, 0, 175, 260);
+    
+	UIGraphicsBeginImageContext(thumbnailRect.size);
+	[selectedImage drawInRect:thumbnailRect];
+	self.detailItem.thumbnail = UIGraphicsGetImageFromCurrentImageContext();
+    thumbnailView.image = self.detailItem.thumbnail;
+	UIGraphicsEndImageContext();
+    
+	[ContextUtil saveContext:self.detailItem.managedObjectContext];
+	
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+-(void) imagePickerControllerDidCancel:(UIImagePickerController*)picker
+{
+	// The user canceled -- simply dismiss the image picker.
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 @end
