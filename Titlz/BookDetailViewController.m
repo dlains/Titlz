@@ -605,8 +605,12 @@
             [self loadPersonDetailViewForPersonType:Workers atIndexPath:indexPath];
             break;
         case BookDetailsSection:
+            if (indexPath.row == BookPublisherRow)
+                [self loadPublisherDetailViewForPublisher:self.detailItem.publisher];
             break;
         case BookInstanceDetailsSection:
+            if (indexPath.row == BookBoughtFromRow)
+                [self loadSellerDetailViewForSeller:self.detailItem.boughtFrom];
             break;
         case BookSignatureSection:
             [self loadPersonDetailViewForPersonType:Signature atIndexPath:indexPath];
@@ -876,10 +880,8 @@
             case BookTitleSection:
                 return nil;
             case BookWorkersSection:
-                return indexPath;
             case BookDetailsSection:
             case BookInstanceDetailsSection:
-                return nil;
             case BookSignatureSection:
             case BookAwardSection:
             case BookPointSection:
