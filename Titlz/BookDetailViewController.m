@@ -741,6 +741,21 @@
         imageCell.thumbnailButton.enabled = NO;
     }
     
+    if (self.editing)
+    {
+        imageCell.thumbnailButton.enabled = YES;
+        imageCell.textField.enabled = YES;
+        imageCell.textField.hidden = NO;
+        imageCell.titleLabel.hidden = YES;
+    }
+    else
+    {
+        imageCell.thumbnailButton.enabled = NO;
+        imageCell.textField.enabled = NO;
+        imageCell.textField.hidden = YES;
+        imageCell.titleLabel.hidden = NO;
+    }
+    
     switch (indexPath.row)
     {
         case BookTitleRow:
@@ -750,6 +765,7 @@
                 imageCell.thumbnailView.image = self.detailItem.thumbnail;
             [imageCell.thumbnailButton addTarget:self action:@selector(thumbnailButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
             imageCell.textField.text = self.detailItem.title;
+            imageCell.titleLabel.text = self.detailItem.title;
             imageCell.textField.tag = BookTitleRow;
             break;
         default:

@@ -13,5 +13,6 @@
 @property(nonatomic, strong) IBOutlet UIImageView* thumbnailView;
 @property(nonatomic, strong) IBOutlet UIButton* thumbnailButton;
 @property(nonatomic, strong) IBOutlet UITextField* textField;
+@property(nonatomic, strong) IBOutlet UILabel* titleLabel;
 
 @end

@@ -13,6 +13,7 @@
 @synthesize thumbnailView = _thumbnailView;
 @synthesize thumbnailButton = _thumbnailButton;
 @synthesize textField = _textField;
+@synthesize titleLabel = _titleLabel;
 
 -(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)reuseIdentifier
 {
@@ -29,12 +30,16 @@
     if(state == UITableViewCellStateEditingMask)
     {
         self.thumbnailButton.enabled = YES;
+        self.textField.hidden = NO;
         self.textField.enabled = YES;
+        self.titleLabel.hidden = YES;
     }
     if(state == UITableViewCellStateDefaultMask)
     {
         self.thumbnailButton.enabled = NO;
+        self.textField.hidden = YES;
         self.textField.enabled = NO;
+        self.titleLabel.hidden = NO;
     }
 }
 
