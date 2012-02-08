@@ -19,6 +19,7 @@
 @implementation Book
 
 @dynamic firstLetterOfTitle;
+@dynamic sortableTitle;
 @dynamic title;
 @dynamic format;
 @dynamic edition;
@@ -55,8 +56,25 @@
     [self willAccessValueForKey:@"firstLetterOfTitle"];
     
     NSString* value = [[self valueForKey:@"title"] uppercaseString];
+    NSString* result = nil;
     
-    NSString* result = [value substringWithRange:[value rangeOfComposedCharacterSequenceAtIndex:0]];
+    // Ignore 'the', 'a' and 'an' as first words in the title.
+    if ([value hasPrefix:@"THE "])
+    {
+        result = [value substringWithRange:[value rangeOfComposedCharacterSequenceAtIndex:4]];
+    }
+    else if ([value hasPrefix:@"A "])
+    {
+        result = [value substringWithRange:[value rangeOfComposedCharacterSequenceAtIndex:2]];
+    }
+    else if ([value hasPrefix:@"AN "])
+    {
+        result = [value substringWithRange:[value rangeOfComposedCharacterSequenceAtIndex:3]];
+    }
+    else
+    {
+        result = [value substringWithRange:[value rangeOfComposedCharacterSequenceAtIndex:0]];
+    }
     
     if (result == nil)
     {
@@ -75,6 +93,48 @@
     
     [self didAccessValueForKey:@"firstLetterOfTitle"];
     return result;
+}
+
+-(void) setSortableTitle:(NSString*)sortableTitle
+{
+    [self willChangeValueForKey:@"sortableTitle"];
+    
+    NSString* value = [sortableTitle uppercaseString];
+    NSString* result = nil;
+    
+    // Ignore 'the', 'a' and 'an' as first words in the title.
+    if ([value hasPrefix:@"THE "])
+    {
+        NSRange range = NSMakeRange(4, sortableTitle.length - 5);
+        result = [NSString stringWithFormat:@"%@, %@", [sortableTitle substringWithRange:range], @"The"];
+    }
+    else if ([value hasPrefix:@"A "])
+    {
+        NSRange range = NSMakeRange(2, sortableTitle.length - 3);
+        result = [NSString stringWithFormat:@"%@, %@", [sortableTitle substringWithRange:range], @"A"];
+    }
+    else if ([value hasPrefix:@"AN "])
+    {
+        NSRange range = NSMakeRange(3, sortableTitle.length - 4);
+        result = [NSString stringWithFormat:@"%@, %@", [sortableTitle substringWithRange:range], @"An"];
+    }
+    else
+    {
+        result = value;
+    }
+    
+    [self setPrimitiveValue:result forKey:@"sortableTitle"];
+    
+    [self didChangeValueForKey:@"sortableTitle"];
+}
+
+-(void) setTitle:(NSString *)title
+{
+    [self willChangeValueForKey:@"title"];
+    [self setPrimitiveValue:title forKey:@"title"];
+    [self didChangeValueForKey:@"title"];
+    
+    self.sortableTitle = title;
 }
 
 // Title must not be empty.

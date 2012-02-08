@@ -378,7 +378,7 @@
         case BookCollectionTag:
             break;
         default:
-            DLog(@"Invalid NewBookViewController textField.tag value found: %i.", textField.tag);
+            DLog(@"Invalid BookDetailViewController textField.tag value found: %i.", textField.tag);
             break;
     }
     
@@ -675,202 +675,7 @@
         [ContextUtil saveContext:self.detailItem.managedObjectContext];
     }   
 }
-/* The next two methods demonstrate how to replace section header views to make the labels look
-   customized. I'm not sure I want to use this. The standard blueish labels look OK. Keep it
-   around for a while just in case.
--(UIView*) tableView:(UITableView*)tableView viewForHeaderInSection:(NSInteger)section
-{
-    NSString* headerTitle = nil;
-    
-    switch (section)
-    {
-        case BookDataSection:
-            break;
-        case BookAuthorSection:
-            if (self.detailItem.authors.count > 0 || self.editing)
-            {
-                headerTitle = NSLocalizedString(@"Authors", @"BookDetailViewController Authors section header.");
-            }
-            break;
-        case BookEditorSection:
-            if (self.detailItem.editors.count > 0 || self.editing)
-            {
-                headerTitle = NSLocalizedString(@"Editors", @"BookDetailViewController Editors section header.");
-            }
-            break;
-        case BookIllustratorSection:
-            if (self.detailItem.illustrators.count > 0 || self.editing)
-            {
-                headerTitle = NSLocalizedString(@"Illustrators", @"BookDetailViewController Illustrators section header.");
-            }
-            break;
-        case BookContributorSection:
-            if (self.detailItem.contributors.count > 0 || self.editing)
-            {
-                headerTitle = NSLocalizedString(@"Contributors", @"BookDetailViewController Contributors section header.");
-            }
-            break;
-        case BookSignatureSection:
-            if (self.detailItem.signatures.count > 0 || self.editing)
-            {
-                headerTitle = NSLocalizedString(@"Signatures", @"BookDetailViewController Signatures section header.");
-            }
-            break;
-        case BookAwardSection:
-            if (self.detailItem.awards.count > 0 || self.editing)
-            {
-                headerTitle = NSLocalizedString(@"Awards", @"BookDetailViewController Awards section header.");
-            }
-            break;
-        case BookPointSection:
-            if (self.detailItem.points.count > 0 || self.editing)
-            {
-                headerTitle = NSLocalizedString(@"Points", @"BookDetailViewController Points section header.");
-            }
-            break;
-        case BookPublisherSection:
-            if (self.detailItem.publisher || self.editing)
-            {
-                headerTitle = NSLocalizedString(@"Publisher", @"BookDetailViewController Publisher section header.");
-            }
-            break;
-        case BookBoughtFromSection:
-            if (self.detailItem.boughtFrom || self.editing)
-            {
-                headerTitle = NSLocalizedString(@"Bought From", @"BookDetailViewController Bought From section header.");
-            }
-            break;
-        case BookCollectionSection:
-            if (self.detailItem.collections.count > 0 || self.editing)
-            {
-                headerTitle = NSLocalizedString(@"Collections", @"BookDetailViewController Collections section header.");
-            }
-            break;
-        default:
-            DLog(@"Invalid BookDetailViewController section found: %i.", section);
-            break;
-    }
 
-    if (headerTitle == nil)
-        return nil;
-
-    UILabel* label = [[UILabel alloc] init];
-    label.text = headerTitle;
-    label.font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
-    label.frame = CGRectMake(0, 0, self.tableView.bounds.size.width, 30);
-    label.textColor = [UIColor colorWithRed:0.39607 green:0.32549 blue:0.0 alpha:1.0];
-    label.backgroundColor = [UIColor clearColor];
-
-    return label;
-}
-
--(CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    switch (section)
-    {
-        case BookDataSection:
-            return UITableViewAutomaticDimension;
-        case BookAuthorSection:
-            if (self.detailItem.authors.count > 0)
-                return 30.0;
-            else
-                return 0.0;
-        case BookEditorSection:
-            if (self.detailItem.editors.count > 0)
-                return 30.0;
-            else
-                return 0.0;
-        case BookIllustratorSection:
-            if (self.detailItem.illustrators.count > 0)
-                return 30.0;
-            else
-                return 0.0;
-        case BookContributorSection:
-            if (self.detailItem.contributors.count > 0)
-                return 30.0;
-            else
-                return 0.0;
-        case BookSignatureSection:
-            if (self.detailItem.signatures.count > 0)
-                return 30.0;
-            else
-                return 0.0;
-        case BookAwardSection:
-            if (self.detailItem.awards.count > 0)
-                return 30.0;
-            else
-                return 0.0;
-        case BookPointSection:
-            if (self.detailItem.points.count > 0)
-                return 30.0;
-            else
-                return 0.0;
-        case BookPublisherSection:
-            if (self.detailItem.publisher != nil)
-                return 30.0;
-            else
-                return 0.0;
-        case BookBoughtFromSection:
-            if (self.detailItem.boughtFrom != nil)
-                return 30.0;
-            else
-                return 0.0;
-        case BookCollectionSection:
-            if (self.detailItem.collections.count > 0)
-                return 30.0;
-            else
-                return 0.0;
-        default:
-            return 0.0;
-    }
-}
-*/
-
-/*
-// Section headers.
--(NSString*) tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
-{
-    NSString* header = nil;
-    
-    switch (section)
-    {
-        case BookTitleSection:
-        case BookWorkersSection:
-        case BookDetailsSection:
-        case BookInstanceDetailsSection:
-            break;
-        case BookSignatureSection:
-            if (self.detailItem.signatures.count > 0 || self.editing)
-            {
-                header = NSLocalizedString(@"Signatures", @"BookDetailViewController Signatures section header.");
-            }
-            break;
-        case BookAwardSection:
-            if (self.detailItem.awards.count > 0 || self.editing)
-            {
-                header = NSLocalizedString(@"Awards", @"BookDetailViewController Awards section header.");
-            }
-            break;
-        case BookPointSection:
-            if (self.detailItem.points.count > 0 || self.editing)
-            {
-                header = NSLocalizedString(@"Points", @"BookDetailViewController Points section header.");
-            }
-            break;
-        case BookCollectionSection:
-            if (self.detailItem.collections.count > 0 || self.editing)
-            {
-                header = NSLocalizedString(@"Collections", @"BookDetailViewController Collections section header.");
-            }
-            break;
-        default:
-            DLog(@"Invalid BookDetailViewController section found: %i.", section);
-            break;
-    }
-    
-    return header;
-}
-*/
 -(NSIndexPath*) tableView:(UITableView*)tableView willSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
     if (!self.editing)
@@ -955,174 +760,6 @@
     return imageCell;
 }
 
-/*
--(UITableViewCell*) configureDataCellAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell* result = nil;
-    EditableTextCell* textCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
-    EditableImageAndTextCell* imageCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableImageAndTextCell"];
-    
-    // Create the date picker to use for the date fields.
-    UIDatePicker* datePicker = [[UIDatePicker alloc] init];
-    datePicker.datePickerMode = UIDatePickerModeDate;
-    [datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
-
-    // Create the date formatter to display the date data.
-    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    [formatter setTimeStyle:NSDateFormatterNoStyle];
-    [formatter setDateStyle:NSDateFormatterLongStyle];
-    
-    if(textCell == nil)
-    {
-        // Load the top-level objects from the custom cell XIB.
-        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
-        textCell = [topLevelObjects objectAtIndex:0];
-    }
-    
-    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
-    textCell.textField.inputView = nil;
-    textCell.textField.keyboardType = UIKeyboardTypeDefault;
-    textCell.textField.text = @"";
-    if (self.editing)
-        textCell.textField.enabled = YES;
-    else
-        textCell.textField.enabled = NO;
-
-    if(imageCell == nil)
-    {
-        // Load the top-level objects from the custom cell XIB.
-        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableImageAndTextCell" owner:self options:nil];
-        imageCell = [topLevelObjects objectAtIndex:0];
-        imageCell.textField.enabled = NO;
-        imageCell.thumbnailButton.enabled = NO;
-    }
-
-    switch (indexPath.row)
-    {
-        case BookTitleRow:
-            if (self.detailItem.thumbnail == nil)
-                imageCell.thumbnailView.image = [UIImage imageNamed:@"BookCover-leather-large.jpg"];
-            else
-                imageCell.thumbnailView.image = self.detailItem.thumbnail;
-            [imageCell.thumbnailButton addTarget:self action:@selector(thumbnailButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-            //imageCell.fieldLabel.text = NSLocalizedString(@"Title", @"BookDetailViewController title data field label.");
-            imageCell.textField.text = self.detailItem.title;
-            imageCell.textField.tag = BookTitleRow;
-            result = imageCell;
-            break;
-        case BookFormatRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Format", @"BookDetailViewController format data field label.");
-            textCell.textField.text = self.detailItem.format;
-            textCell.textField.tag = BookFormatRow;
-            result = textCell;
-            break;
-        case BookEditionRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Edition", @"BookDetailViewController edition data field label.");
-            textCell.textField.text = self.detailItem.edition;
-            textCell.textField.tag = BookEditionRow;
-            result = textCell;
-            break;
-        case BookPrintingRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Printing", @"BookDetailViewController printing data field label.");
-            textCell.textField.text = (self.detailItem.printing == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printing intValue]];
-            textCell.textField.tag = BookPrintingRow;
-            textCell.textField.keyboardType = UIKeyboardTypeNumberPad;
-            result = textCell;
-            break;
-        case BookIsbnRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"ISBN", @"BookDetailViewController isbn data field label.");
-            textCell.textField.text = self.detailItem.isbn;
-            textCell.textField.tag = BookIsbnRow;
-            textCell.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-            result = textCell;
-            break;
-        case BookPagesRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Pages", @"BookDetailViewController pages data field label.");
-            textCell.textField.text = (self.detailItem.pages == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.pages intValue]];
-            textCell.textField.tag = BookPagesRow;
-            textCell.textField.keyboardType = UIKeyboardTypeNumberPad;
-            result = textCell;
-            break;
-        case BookReleaseDateRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Released", @"BookDetailViewController releaseDate data field label.");
-            releaseDateTextField = textCell.textField;
-            textCell.textField.tag = BookReleaseDateRow;
-            datePicker.tag = BookReleaseDateRow;
-            textCell.textField.inputView = datePicker;
-            textCell.textField.text = [formatter stringFromDate:self.detailItem.releaseDate];
-            result = textCell;
-            break;
-        case BookPurchaseDateRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Puchased", @"BookDetailViewController purchaseDate data field label.");
-            purchaseDateTextField = textCell.textField;
-            textCell.textField.tag = BookPurchaseDateRow;
-            datePicker.tag = BookPurchaseDateRow;
-            textCell.textField.inputView = datePicker;
-            textCell.textField.text = [formatter stringFromDate:self.detailItem.purchaseDate];
-            result = textCell;
-            break;
-        case BookOriginalPriceRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Original Price", @"BookDetailViewController originalPrice data field label.");
-            textCell.textField.text = (self.detailItem.originalPrice == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.originalPrice floatValue]];
-            textCell.textField.tag = BookOriginalPriceRow;
-            textCell.textField.keyboardType = UIKeyboardTypeDecimalPad;
-            result = textCell;
-            break;
-        case BookPricePaidRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Price Paid", @"BookDetailViewController pricePaid data field label.");
-            textCell.textField.text = (self.detailItem.pricePaid == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.pricePaid floatValue]];
-            textCell.textField.tag = BookPricePaidRow;
-            textCell.textField.keyboardType = UIKeyboardTypeDecimalPad;
-            result = textCell;
-            break;
-        case BookCurrentValueRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Current Value", @"BookDetailViewController currentValue data field label.");
-            textCell.textField.text = (self.detailItem.currentValue == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.currentValue floatValue]];
-            textCell.textField.tag = BookCurrentValueRow;
-            textCell.textField.keyboardType = UIKeyboardTypeDecimalPad;
-            result = textCell;
-            break;
-        case BookBookConditionRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Book Cond.", @"BookDetailViewController bookCondition data field label.");
-            textCell.textField.text = self.detailItem.bookCondition;
-            textCell.textField.tag = BookBookConditionRow;
-            result = textCell;
-            break;
-        case BookJacketConditionRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Jacket Cond.", @"BookDetailViewController jacketCondition data field label.");
-            textCell.textField.text = self.detailItem.jacketCondition;
-            textCell.textField.tag = BookJacketConditionRow;
-            result = textCell;
-            break;
-        case BookNumberRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Number", @"BookDetailViewController number data field label.");
-            textCell.textField.text = (self.detailItem.number == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.number intValue]];
-            textCell.textField.tag = BookNumberRow;
-            textCell.textField.keyboardType = UIKeyboardTypeNumberPad;
-            result = textCell;
-            break;
-        case BookPrintRunRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Print Run", @"BookDetailViewController printRun data field label.");
-            textCell.textField.text = (self.detailItem.printRun == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printRun intValue]];
-            textCell.textField.tag = BookPrintRunRow;
-            textCell.textField.keyboardType = UIKeyboardTypeNumberPad;
-            result = textCell;
-            break;
-        case BookCommentsRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Comments", @"BookDetailViewController comments data field label.");
-            textCell.textField.text = self.detailItem.comments;
-            textCell.textField.tag = BookCommentsRow;
-            result = textCell;
-            break;
-        default:
-            DLog(@"Invalid BookDetailViewController Data section row found: %i.", indexPath.row);
-            break;
-    }
-    
-    return result;
-}
-*/
-
 -(UITableViewCell*) configureWorkerCellAtIndexPath:(NSIndexPath*)indexPath
 {
     EditableLookupAndTextCell* workerCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableLookupAndTextCell"];
@@ -1205,43 +842,43 @@
     switch (indexPath.row)
     {
         case BookFormatRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Format", @"NewBookViewController format data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Format", @"BookDetailViewController format data field label.");
             cell.textField.text = self.detailItem.format;
             cell.textField.inputView = dummyView;
             cell.textField.tag = BookFormatTag;
             break;
         case BookEditionRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Edition", @"NewBookViewController edition data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Edition", @"BookDetailViewController edition data field label.");
             cell.textField.text = self.detailItem.edition;
             cell.textField.inputView = dummyView;
             cell.textField.tag = BookEditionTag;
             break;
         case BookPrintingRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Printing", @"NewBookViewController printing data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Printing", @"BookDetailViewController printing data field label.");
             cell.textField.text = (self.detailItem.printing == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printing intValue]];
             cell.textField.tag = BookPrintingTag;
             cell.textField.keyboardType = UIKeyboardTypeNumberPad;
             break;
         case BookPagesRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Pages", @"NewBookViewController pages data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Pages", @"BookDetailViewController pages data field label.");
             cell.textField.text = (self.detailItem.pages == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.pages intValue]];
             cell.textField.tag = BookPagesTag;
             cell.textField.keyboardType = UIKeyboardTypeNumberPad;
             break;
         case BookIsbnRow:
-            cell.fieldLabel.text = NSLocalizedString(@"ISBN", @"NewBookViewController isbn data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"ISBN", @"BookDetailViewController isbn data field label.");
             cell.textField.text = self.detailItem.isbn;
             cell.textField.tag = BookIsbnTag;
             cell.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
             break;
         case BookOriginalPriceRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Original Price", @"NewBookViewController originalPrice data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Original Price", @"BookDetailViewController originalPrice data field label.");
             cell.textField.text = (self.detailItem.originalPrice == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.originalPrice floatValue]];
             cell.textField.tag = BookOriginalPriceTag;
             cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
             break;
         case BookReleaseDateRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Released", @"NewBookViewController releaseDate data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Released", @"BookDetailViewController releaseDate data field label.");
             releaseDateTextField = cell.textField;
             cell.textField.tag = BookReleaseDateTag;
             datePicker.tag = BookReleaseDateTag;
@@ -1249,14 +886,14 @@
             cell.textField.text = [formatter stringFromDate:self.detailItem.releaseDate];
             break;
         case BookPublisherRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Publisher", @"NewBookViewController publisher data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Publisher", @"BookDetailViewController publisher data field label.");
             if (self.detailItem.publisher != nil)
                 cell.textField.text = self.detailItem.publisher.name;
             cell.textField.inputView = dummyView;
             cell.textField.tag = BookPublisherTag;
             break;
         default:
-            DLog(@"Invalid NewBookViewController Data section row found: %i.", indexPath.row);
+            DLog(@"Invalid BookDetailViewController Data section row found: %i.", indexPath.row);
             break;
     }
     
@@ -1299,19 +936,19 @@
     switch (indexPath.row)
     {
         case BookBookConditionRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Book Cond.", @"NewBookViewController bookCondition data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Book Cond.", @"BookDetailViewController bookCondition data field label.");
             cell.textField.text = self.detailItem.bookCondition;
             cell.textField.inputView = dummyView;
             cell.textField.tag = BookBookConditionTag;
             break;
         case BookJacketConditionRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Jacket Cond.", @"NewBookViewController jacketCondition data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Jacket Cond.", @"BookDetailViewController jacketCondition data field label.");
             cell.textField.text = self.detailItem.jacketCondition;
             cell.textField.inputView = dummyView;
             cell.textField.tag = BookJacketConditionTag;
             break;
         case BookPurchaseDateRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Puchased", @"NewBookViewController purchaseDate data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Puchased", @"BookDetailViewController purchaseDate data field label.");
             purchaseDateTextField = cell.textField;
             cell.textField.tag = BookPurchaseDateTag;
             datePicker.tag = BookPurchaseDateTag;
@@ -1319,43 +956,43 @@
             cell.textField.text = [formatter stringFromDate:self.detailItem.purchaseDate];
             break;
         case BookPricePaidRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Price Paid", @"NewBookViewController pricePaid data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Price Paid", @"BookDetailViewController pricePaid data field label.");
             cell.textField.text = (self.detailItem.pricePaid == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.pricePaid floatValue]];
             cell.textField.tag = BookPricePaidTag;
             cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
             break;
         case BookCurrentValueRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Current Value", @"NewBookViewController currentValue data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Current Value", @"BookDetailViewController currentValue data field label.");
             cell.textField.text = (self.detailItem.currentValue == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.currentValue floatValue]];
             cell.textField.tag = BookCurrentValueTag;
             cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
             break;
         case BookNumberRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Number", @"NewBookViewController number data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Number", @"BookDetailViewController number data field label.");
             cell.textField.text = (self.detailItem.number == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.number intValue]];
             cell.textField.tag = BookNumberTag;
             cell.textField.keyboardType = UIKeyboardTypeNumberPad;
             break;
         case BookPrintRunRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Print Run", @"NewBookViewController printRun data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Print Run", @"BookDetailViewController printRun data field label.");
             cell.textField.text = (self.detailItem.printRun == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printRun intValue]];
             cell.textField.tag = BookPrintRunTag;
             cell.textField.keyboardType = UIKeyboardTypeNumberPad;
             break;
         case BookBoughtFromRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Seller", @"NewBookViewController boughtFrom data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Seller", @"BookDetailViewController boughtFrom data field label.");
             if (self.detailItem.boughtFrom != nil)
                 cell.textField.text = self.detailItem.boughtFrom.name;
             cell.textField.inputView = dummyView;
             cell.textField.tag = BookBoughtFromTag;
             break;
         case BookCommentsRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Comments", @"NewBookViewController comments data field label.");
+            cell.fieldLabel.text = NSLocalizedString(@"Comments", @"BookDetailViewController comments data field label.");
             cell.textField.text = self.detailItem.comments;
             cell.textField.tag = BookCommentsRow;
             break;
         default:
-            DLog(@"Invalid NewBookViewController Data section row found: %i.", indexPath.row);
+            DLog(@"Invalid BookDetailViewController Data section row found: %i.", indexPath.row);
             break;
     }
     
@@ -1377,7 +1014,7 @@
     }
     
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
-    cell.fieldLabel.text = NSLocalizedString(@"Signed by", @"NewBookViewController signature cell field label text.");
+    cell.fieldLabel.text = NSLocalizedString(@"Signed by", @"BookDetailViewController signature cell field label text.");
     cell.textField.delegate = self;
     cell.textField.text = @"";
     cell.textField.inputView = dummyView;
@@ -1412,7 +1049,7 @@
     }
     
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
-    cell.fieldLabel.text = NSLocalizedString(@"Award", @"NewBookViewController award cell field label text.");
+    cell.fieldLabel.text = NSLocalizedString(@"Award", @"BookDetailViewController award cell field label text.");
     cell.textField.delegate = self;
     cell.textField.text = @"";
     cell.textField.inputView = dummyView;
@@ -1447,7 +1084,7 @@
     }
     
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
-    cell.fieldLabel.text = NSLocalizedString(@"Point", @"NewBookViewController point cell field label text.");
+    cell.fieldLabel.text = NSLocalizedString(@"Point", @"BookDetailViewController point cell field label text.");
     cell.textField.delegate = self;
     cell.textField.text = @"";
     cell.textField.inputView = dummyView;
@@ -1485,7 +1122,7 @@
     cell.textField.text = @"";
     cell.textField.delegate = self;
     cell.textField.inputView = dummyView;
-    cell.fieldLabel.text = NSLocalizedString(@"Collection", @"NewBookViewController collection cell field label text.");
+    cell.fieldLabel.text = NSLocalizedString(@"Collection", @"BookDetailViewController collection cell field label text.");
     cell.textField.tag = BookCollectionTag;
     if (self.editing)
         cell.textField.enabled = YES;
@@ -1916,7 +1553,6 @@
     NSString* delete = NSLocalizedString(@"Delete Photo", @"EditableImageAndTextCell action sheet delete photo button title.");
     NSString* take   = NSLocalizedString(@"Take Photo", @"EditableImageAndTextCell action sheet take photo button title.");
     NSString* choose = NSLocalizedString(@"Choose Photo", @"EditableImageAndTextCell action sheet choose photo button title.");
-//    NSString* edit   = NSLocalizedString(@"Edit Photo", @"EditableImageAndTextCell action sheet edit photo button title.");
     
     if (button.enabled)
     {
@@ -1959,7 +1595,6 @@
     NSString* delete = NSLocalizedString(@"Delete Photo", @"EditableImageAndTextCell action sheet delete photo button title.");
     NSString* take   = NSLocalizedString(@"Take Photo", @"EditableImageAndTextCell action sheet take photo button title.");
     NSString* choose = NSLocalizedString(@"Choose Photo", @"EditableImageAndTextCell action sheet choose photo button title.");
-//    NSString* edit   = NSLocalizedString(@"Edit Photo", @"EditableImageAndTextCell action sheet edit photo button title.");
     
     if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:cancel])
     {
@@ -1989,16 +1624,6 @@
         picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         [self presentModalViewController:picker animated:YES];
     }
-
-    /*
-    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:edit])
-    {
-        UIImagePickerController* picker = [[UIImagePickerController alloc] init];
-        picker.delegate = self;
-        picker.allowsEditing = YES;
-        [self presentModalViewController:picker animated:YES];
-    }
-     */
 }
 
 -(void) imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary*)info

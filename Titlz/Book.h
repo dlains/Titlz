@@ -14,6 +14,7 @@
 @interface Book : NSManagedObject
 
 @property (nonatomic, retain) NSString* firstLetterOfTitle;
+@property (nonatomic, retain) NSString* sortableTitle;
 @property (nonatomic, retain) NSString* title;
 @property (nonatomic, retain) NSString* format;
 @property (nonatomic, retain) NSString* edition;
