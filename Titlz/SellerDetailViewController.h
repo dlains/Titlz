@@ -11,7 +11,7 @@
 
 @class Seller;
 
-@interface SellerDetailViewController : UITableViewController <LookupValueSelectedDelegate>
+@interface SellerDetailViewController : UITableViewController <UITextFieldDelegate, LookupValueSelectedDelegate>
 {
     UITextField* lookupTextField;
 }

@@ -62,7 +62,7 @@
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
     [self.tableView reloadData];
@@ -110,7 +110,7 @@
 -(void) setUpUndoManager
 {
 	/*
-	 If the title's managed object context doesn't already have an undo manager, then create one and set it for the context and self.
+	 If the managed object context doesn't already have an undo manager, then create one and set it for the context and self.
 	 The view controller needs to keep a reference to the undo manager it creates so that it can determine whether to remove the undo manager when editing finishes.
 	 */
 	if (self.detailItem.managedObjectContext.undoManager == nil)
@@ -122,11 +122,8 @@
 		self.detailItem.managedObjectContext.undoManager = self.undoManager;
 	}
 	
-	// Register as an observer of the title's context's undo manager.
-	NSUndoManager* titleUndoManager = self.detailItem.managedObjectContext.undoManager;
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidUndo:) name:NSUndoManagerDidUndoChangeNotification object:titleUndoManager];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidRedo:) name:NSUndoManagerDidRedoChangeNotification object:titleUndoManager];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidUndo:) name:NSUndoManagerDidUndoChangeNotification object:self.detailItem.managedObjectContext.undoManager];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidRedo:) name:NSUndoManagerDidRedoChangeNotification object:self.detailItem.managedObjectContext.undoManager];
 }
 
 -(void) cleanUpUndoManager
@@ -165,11 +162,14 @@
     
     switch (textField.tag)
     {
-        case PublisherStateRow:
+        case PublisherStateTag:
             [self showLookupViewControllerForLookupType:LookupTypeState];
             break;
-        case PublisherCountryRow:
+        case PublisherCountryTag:
             [self showLookupViewControllerForLookupType:LookupTypeCountry];
+            break;
+        case PublisherBookTag:
+            [textField resignFirstResponder];
             break;
         default:
             break;
@@ -184,7 +184,7 @@
     
     switch (textField.tag)
     {
-        case PublisherNameRow:
+        case PublisherNameTag:
             valid = [self.detailItem validateValue:&value forKey:@"name" error:&error];
             break;
         default:
@@ -203,28 +203,28 @@
 {
     switch (textField.tag)
     {
-        case PublisherNameRow:
+        case PublisherNameTag:
             self.detailItem.name = textField.text;
             break;
-        case PublisherParentRow:
+        case PublisherParentTag:
             self.detailItem.parent = textField.text;
             break;
-        case PublisherStreetRow:
+        case PublisherStreetTag:
             self.detailItem.street = textField.text;
             break;
-        case PublisherStreet1Row:
+        case PublisherStreet1Tag:
             self.detailItem.street1 = textField.text;
             break;
-        case PublisherCityRow:
+        case PublisherCityTag:
             self.detailItem.city = textField.text;
             break;
-        case PublisherStateRow:
+        case PublisherStateTag:
             self.detailItem.state = textField.text;
             break;
-        case PublisherPostalCodeRow:
+        case PublisherPostalCodeTag:
             self.detailItem.postalCode = textField.text;
             break;
-        case PublisherCountryRow:
+        case PublisherCountryTag:
             self.detailItem.country = textField.text;
             break;
         default:
@@ -344,29 +344,6 @@
     }
 }
 
-// Section headers.
--(NSString*) tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
-{
-    NSString* header = nil;
-    
-    switch (section)
-    {
-        case PublisherDataSection:
-            break;
-        case PublisherBooksSection:
-            if (self.detailItem.books.count > 0)
-            {
-                header = NSLocalizedString(@"Published Books", @"PublisherDetailViewController Books section header.");
-            }
-            break;
-        default:
-            DLog(@"Invalid SellerDetailViewController section found: %i.", section);
-            break;
-    }
-    
-    return header;
-}
-
 -(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 {
     return NO;
@@ -376,6 +353,8 @@
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
@@ -398,42 +377,44 @@
         case PublisherNameRow:
             cell.fieldLabel.text = NSLocalizedString(@"Name", @"PublisherDetailViewController name data field label.");
             cell.textField.text = self.detailItem.name;
-            cell.textField.tag = PublisherNameRow;
+            cell.textField.tag = PublisherNameTag;
             break;
         case PublisherParentRow:
             cell.fieldLabel.text = NSLocalizedString(@"Parent", @"PublisherDetailViewController parent data field label.");
             cell.textField.text = self.detailItem.parent;
-            cell.textField.tag = PublisherParentRow;
+            cell.textField.tag = PublisherParentTag;
             break;
         case PublisherStreetRow:
             cell.fieldLabel.text = NSLocalizedString(@"Street", @"PublisherDetailViewController street data field label.");
             cell.textField.text = self.detailItem.street;
-            cell.textField.tag = PublisherStreetRow;
+            cell.textField.tag = PublisherStreetTag;
             break;
         case PublisherStreet1Row:
             cell.fieldLabel.text = NSLocalizedString(@"Street", @"PublisherDetailViewController street data field label.");
             cell.textField.text = self.detailItem.street1;
-            cell.textField.tag = PublisherStreet1Row;
+            cell.textField.tag = PublisherStreet1Tag;
             break;
         case PublisherCityRow:
             cell.fieldLabel.text = NSLocalizedString(@"City", @"PublisherDetailViewController city data field label.");
             cell.textField.text = self.detailItem.city;
-            cell.textField.tag = PublisherCityRow;
+            cell.textField.tag = PublisherCityTag;
             break;
         case PublisherStateRow:
             cell.fieldLabel.text = NSLocalizedString(@"State", @"PublisherDetailViewController state data field label.");
             cell.textField.text = self.detailItem.state;
-            cell.textField.tag = PublisherStateRow;
+            cell.textField.inputView = dummyView;
+            cell.textField.tag = PublisherStateTag;
             break;
         case PublisherPostalCodeRow:
             cell.fieldLabel.text = NSLocalizedString(@"Postal Code", @"PublisherDetailViewController postalCode data field label.");
             cell.textField.text = self.detailItem.postalCode;
-            cell.textField.tag = PublisherPostalCodeRow;
+            cell.textField.tag = PublisherPostalCodeTag;
             break;
         case PublisherCountryRow:
             cell.fieldLabel.text = NSLocalizedString(@"Country", @"PublisherDetailViewController country data field label.");
             cell.textField.text = self.detailItem.country;
-            cell.textField.tag = PublisherCountryRow;
+            cell.textField.inputView = dummyView;
+            cell.textField.tag = PublisherCountryTag;
             break;
         default:
             break;
@@ -444,17 +425,35 @@
 
 -(UITableViewCell*) configureBooksCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"BooksCell";
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
-    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
+    // A dummy view to keep the keyboard from popping up in the lookup fields.
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    
+    if(cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
     }
     
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.fieldLabel.text = NSLocalizedString(@"Published", @"PublisherDetailViewController published cell field label text.");
+    cell.textField.delegate = self;
+    cell.textField.text = @"";
+    cell.textField.inputView = dummyView;
+    cell.textField.tag = PublisherBookTag;
+    if (self.editing)
+        cell.textField.enabled = YES;
+    else
+        cell.textField.enabled = NO;
+    
     Book* book = [self sortedBookFromSet:self.detailItem.books atIndexPath:indexPath];
-    cell.textLabel.text = book.title;
+    
+    if (book != nil)
+    {
+        cell.textField.text = book.title;
+    }
     
     return cell;
 }

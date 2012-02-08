@@ -27,6 +27,7 @@
 
 @synthesize detailItem = _detailItem;
 @synthesize undoManager = _undoManager;
+@synthesize lookupJustFinished = _lookupJustFinished;
 
 #pragma mark - Initialization
 
@@ -71,7 +72,8 @@
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+
+    self.lookupJustFinished = NO;
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
     [self.tableView reloadData];
@@ -163,6 +165,31 @@
     return YES;
 }
 
+-(void) textFieldDidBeginEditing:(UITextField*)textField
+{
+    if (self.lookupJustFinished)
+    {
+        self.lookupJustFinished = NO;
+        return;
+    }
+    
+    switch (textField.tag)
+    {
+        case CollectionBookTag:
+            if (textField.text.length > 0)
+            {
+                [textField resignFirstResponder];
+                return;
+            }
+            lookupTextField = textField;
+            [self loadBookView];
+            break;
+        default:
+            lookupTextField = nil;
+            break;
+    }
+}
+
 -(BOOL) textFieldShouldEndEditing:(UITextField*)textField
 {
     BOOL valid = YES;
@@ -171,7 +198,7 @@
     
     switch (textField.tag)
     {
-        case CollectionNameRow:
+        case CollectionNameTag:
             valid = [self.detailItem validateValue:&value forKey:@"name" error:&error];
             break;
         default:
@@ -190,7 +217,7 @@
 {
     switch (textField.tag)
     {
-        case CollectionNameRow:
+        case CollectionNameTag:
             self.detailItem.name = textField.text;
             break;
         default:
@@ -300,6 +327,9 @@
 
 -(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
+    if (self.editing)
+        return;
+    
     switch (indexPath.section)
     {
         case CollectionDataSection:
@@ -338,29 +368,6 @@
     }   
 }
 
-// Section headers.
--(NSString*) tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
-{
-    NSString* header = nil;
-    
-    switch (section)
-    {
-        case CollectionDataSection:
-            break;
-        case CollectionBookSection:
-            if (self.detailItem.books.count > 0 || self.editing)
-            {
-                header = NSLocalizedString(@"Books", @"CollectionDetailViewController Books section header.");
-            }
-            break;
-        default:
-            DLog(@"Invalid CollectionDetailViewController section found: %i.", section);
-            break;
-    }
-    
-    return header;
-}
-
 -(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 {
     switch (indexPath.section)
@@ -381,15 +388,24 @@
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
         cell = [topLevelObjects objectAtIndex:0];
-        cell.textField.enabled = NO;
     }
+    
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.textField.delegate = self;
+    cell.textField.inputView = nil;
+    cell.textField.keyboardType = UIKeyboardTypeDefault;
+    cell.textField.text = @"";
+    if (self.editing)
+        cell.textField.enabled = YES;
+    else
+        cell.textField.enabled = NO;
     
     switch (row)
     {
         case CollectionNameRow:
             cell.fieldLabel.text = NSLocalizedString(@"Name", @"CollectionDetailViewController name data field label.");
             cell.textField.text = self.detailItem.name;
-            cell.textField.tag = CollectionNameRow;
+            cell.textField.tag = CollectionNameTag;
             break;
         default:
             break;
@@ -400,23 +416,34 @@
 
 -(UITableViewCell*) configureBookCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"BookCell";
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
-    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
+    // A dummy view to keep the keyboard from popping up in the lookup fields.
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    
+    if(cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
     }
     
-    if(self.editing && indexPath.row == self.detailItem.books.count)
-    {
-        cell.textLabel.text = NSLocalizedString(@"Add Book...", @"CollectionDetailViewController add Book insertion row text.");
-    }
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.fieldLabel.text = NSLocalizedString(@"Book", @"CollectionDetailViewController books cell field label text.");
+    cell.textField.delegate = self;
+    cell.textField.text = @"";
+    cell.textField.inputView = dummyView;
+    cell.textField.tag = CollectionBookTag;
+    if (self.editing)
+        cell.textField.enabled = YES;
     else
+        cell.textField.enabled = NO;
+    
+    Book* book = [self sortedBookFromSet:self.detailItem.books atIndexPath:indexPath];
+    
+    if (book != nil)
     {
-        Book* book = [self sortedBookFromSet:self.detailItem.books atIndexPath:indexPath];
-        cell.textLabel.text = book.title;
+        cell.textField.text = book.title;
     }
     
     return cell;
@@ -427,9 +454,9 @@
 -(void) bookViewController:(BookViewController *)controller didSelectBook:(Book*)book forPersonType:(PersonType)type
 {
     [self.detailItem addBooksObject:book];
-    
     [ContextUtil saveContext:self.detailItem.managedObjectContext];
     
+    [self.navigationController dismissModalViewControllerAnimated:YES];
     [self.tableView reloadData];
 }
 
@@ -441,6 +468,8 @@
     }
     
     [ContextUtil saveContext:self.detailItem.managedObjectContext];
+
+    [self.navigationController dismissModalViewControllerAnimated:YES];
     [self.tableView reloadData];
 }
 
@@ -448,6 +477,9 @@
 
 -(Book*) sortedBookFromSet:(NSSet*)set atIndexPath:(NSIndexPath*)indexPath
 {
+    if (set.count <= 0 || indexPath.row > set.count - 1)
+        return nil;
+    
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     NSArray* sortedBooks = [set sortedArrayUsingDescriptors:sortDescriptors];
@@ -464,12 +496,17 @@
 
 -(void) loadBookView
 {
+    self.lookupJustFinished = YES;
+    
     BookViewController* bookViewController = [[BookViewController alloc] initWithNibName:@"BookViewController" bundle:nil];
     bookViewController.managedObjectContext = self.detailItem.managedObjectContext;
     bookViewController.delegate = self;
     bookViewController.selectionMode = MultipleSelection;
     
-    [self.navigationController pushViewController:bookViewController animated:YES];
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:bookViewController];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    [self.navigationController presentModalViewController:navController animated:YES];
 }
 
 -(void) loadBookDetailViewForBookAtIndexPath:(NSIndexPath*)indexPath

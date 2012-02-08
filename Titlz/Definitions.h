@@ -123,6 +123,12 @@ typedef enum CollectionDataSectionRowsEnum
     CollectionDataSectionRowCount
 } CollectionDataSectionRows;
 
+typedef enum CollectionDataFieldTagEnum
+{
+    CollectionNameTag = 0,
+    CollectionBookTag
+} CollectionDataFieldTag;
+
 typedef enum LookupTypeEnum
 {
     LookupTypeEdition = 1,
@@ -199,6 +205,19 @@ typedef enum PublisherDataSectionRowsEnum
     PublisherDataSectionRowCount
 } PublisherDataSectionRows;
 
+typedef enum PublisherDataFieldTagEnum
+{
+    PublisherNameTag = 0,
+    PublisherParentTag,
+    PublisherStreetTag,
+    PublisherStreet1Tag,
+    PublisherCityTag,
+    PublisherStateTag,
+    PublisherPostalCodeTag,
+    PublisherCountryTag,
+    PublisherBookTag
+} PublisherDataFieldTag;
+
 typedef enum SellerDetailSectionsEnum
 {
     SellerDataSection = 0,
@@ -220,5 +239,20 @@ typedef enum SellerDataSectionRowsEnum
     SellerWebsiteRow,
     SellerDataSectionRowCount
 } SellerDataSectionRows;
+
+typedef enum SellerDataFieldTagEnum
+{
+    SellerNameTag = 0,
+    SellerStreetTag,
+    SellerStreet1Tag,
+    SellerCityTag,
+    SellerStateTag,
+    SellerPostalCodeTag,
+    SellerCountryTag,
+    SellerEmailTag,
+    SellerPhoneTag,
+    SellerWebsiteTag,
+    SellerBookTag
+} SellerDataFieldTag;
 
 #endif

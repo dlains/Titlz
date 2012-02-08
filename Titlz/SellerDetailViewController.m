@@ -120,11 +120,8 @@
 		self.detailItem.managedObjectContext.undoManager = self.undoManager;
 	}
 	
-	// Register as an observer of the title's context's undo manager.
-	NSUndoManager* undoManager = self.detailItem.managedObjectContext.undoManager;
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidUndo:) name:NSUndoManagerDidUndoChangeNotification object:undoManager];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidRedo:) name:NSUndoManagerDidRedoChangeNotification object:undoManager];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidUndo:) name:NSUndoManagerDidUndoChangeNotification object:self.detailItem.managedObjectContext.undoManager];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidRedo:) name:NSUndoManagerDidRedoChangeNotification object:self.detailItem.managedObjectContext.undoManager];
 }
 
 -(void) cleanUpUndoManager
@@ -141,7 +138,7 @@
 
 -(NSUndoManager*) undoManager
 {
-    return [[self.detailItem managedObjectContext] undoManager];
+    return self.detailItem.managedObjectContext.undoManager;
 }
 
 -(void) undoManagerDidUndo:(NSNotification*)notification
@@ -163,11 +160,14 @@
     
     switch (textField.tag)
     {
-        case SellerStateRow:
+        case SellerStateTag:
             [self showLookupViewControllerForLookupType:LookupTypeState];
             break;
-        case SellerCountryRow:
+        case SellerCountryTag:
             [self showLookupViewControllerForLookupType:LookupTypeCountry];
+            break;
+        case SellerBookTag:
+            [textField resignFirstResponder];
             break;
         default:
             break;
@@ -182,7 +182,7 @@
     
     switch (textField.tag)
     {
-        case SellerNameRow:
+        case SellerNameTag:
             valid = [self.detailItem validateValue:&value forKey:@"name" error:&error];
             break;
         default:
@@ -201,34 +201,34 @@
 {
     switch (textField.tag)
     {
-        case SellerNameRow:
+        case SellerNameTag:
             self.detailItem.name = textField.text;
             break;
-        case SellerStreetRow:
+        case SellerStreetTag:
             self.detailItem.street = textField.text;
             break;
-        case SellerStreet1Row:
+        case SellerStreet1Tag:
             self.detailItem.street1 = textField.text;
             break;
-        case SellerCityRow:
+        case SellerCityTag:
             self.detailItem.city = textField.text;
             break;
-        case SellerStateRow:
+        case SellerStateTag:
             self.detailItem.state = textField.text;
             break;
-        case SellerPostalCodeRow:
+        case SellerPostalCodeTag:
             self.detailItem.postalCode = textField.text;
             break;
-        case SellerCountryRow:
+        case SellerCountryTag:
             self.detailItem.country = textField.text;
             break;
-        case SellerEmailRow:
+        case SellerEmailTag:
             self.detailItem.email = textField.text;
             break;
-        case SellerPhoneRow:
+        case SellerPhoneTag:
             self.detailItem.phone = textField.text;
             break;
-        case SellerWebsiteRow:
+        case SellerWebsiteTag:
             self.detailItem.website = textField.text;
             break;
         default:
@@ -348,29 +348,6 @@
     }
 }
 
-// Section headers.
--(NSString*) tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
-{
-    NSString* header = nil;
-    
-    switch (section)
-    {
-        case SellerDataSection:
-            break;
-        case SellerBooksSection:
-            if (self.detailItem.books.count > 0)
-            {
-                header = NSLocalizedString(@"Books Bought", @"SellerDetailViewController Books section header.");
-            }
-            break;
-        default:
-            DLog(@"Invalid SellerDetailViewController section found: %i.", section);
-            break;
-    }
-    
-    return header;
-}
-
 -(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 {
     return NO;
@@ -380,6 +357,8 @@
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
@@ -401,54 +380,56 @@
         case SellerNameRow:
             cell.fieldLabel.text = NSLocalizedString(@"Name", @"SellerDetailViewController name data field label.");
             cell.textField.text = self.detailItem.name;
-            cell.textField.tag = SellerNameRow;
+            cell.textField.tag = SellerNameTag;
             break;
         case SellerStreetRow:
             cell.fieldLabel.text = NSLocalizedString(@"Street", @"SellerDetailViewController street data field label.");
             cell.textField.text = self.detailItem.street;
-            cell.textField.tag = SellerStreetRow;
+            cell.textField.tag = SellerStreetTag;
             break;
         case SellerStreet1Row:
             cell.fieldLabel.text = NSLocalizedString(@"Street", @"SellerDetailViewController street data field label.");
             cell.textField.text = self.detailItem.street1;
-            cell.textField.tag = SellerStreet1Row;
+            cell.textField.tag = SellerStreet1Tag;
             break;
         case SellerCityRow:
             cell.fieldLabel.text = NSLocalizedString(@"City", @"SellerDetailViewController city data field label.");
             cell.textField.text = self.detailItem.city;
-            cell.textField.tag = SellerCityRow;
+            cell.textField.tag = SellerCityTag;
             break;
         case SellerStateRow:
             cell.fieldLabel.text = NSLocalizedString(@"State", @"SellerDetailViewController state data field label.");
             cell.textField.text = self.detailItem.state;
-            cell.textField.tag = SellerStateRow;
+            cell.textField.inputView = dummyView;
+            cell.textField.tag = SellerStateTag;
             break;
         case SellerPostalCodeRow:
             cell.fieldLabel.text = NSLocalizedString(@"Postal Code", @"SellerDetailViewController postalCode data field label.");
             cell.textField.text = self.detailItem.postalCode;
-            cell.textField.tag = SellerPostalCodeRow;
+            cell.textField.tag = SellerPostalCodeTag;
             break;
         case SellerCountryRow:
             cell.fieldLabel.text = NSLocalizedString(@"Country", @"SellerDetailViewController country data field label.");
             cell.textField.text = self.detailItem.country;
-            cell.textField.tag = SellerCountryRow;
+            cell.textField.inputView = dummyView;
+            cell.textField.tag = SellerCountryTag;
             break;
         case SellerEmailRow:
             cell.fieldLabel.text = NSLocalizedString(@"Email", @"SellerDetailViewController email data field label.");
             cell.textField.text = self.detailItem.email;
-            cell.textField.tag = SellerEmailRow;
+            cell.textField.tag = SellerEmailTag;
             cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
             break;
         case SellerPhoneRow:
             cell.fieldLabel.text = NSLocalizedString(@"Phone", @"SellerDetailViewController phone data field label.");
             cell.textField.text = self.detailItem.phone;
-            cell.textField.tag = SellerPhoneRow;
+            cell.textField.tag = SellerPhoneTag;
             cell.textField.keyboardType = UIKeyboardTypePhonePad;
             break;
         case SellerWebsiteRow:
             cell.fieldLabel.text = NSLocalizedString(@"Website", @"SellerDetailViewController website data field label.");
             cell.textField.text = self.detailItem.website;
-            cell.textField.tag = SellerWebsiteRow;
+            cell.textField.tag = SellerWebsiteTag;
             cell.textField.keyboardType = UIKeyboardTypeURL;
             break;
         default:
@@ -460,17 +441,35 @@
 
 -(UITableViewCell*) configureBooksCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"BooksCell";
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
-    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
+    // A dummy view to keep the keyboard from popping up in the lookup fields.
+    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    
+    if(cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
     }
     
+    // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    cell.fieldLabel.text = NSLocalizedString(@"Sold", @"SellerDetailViewController books cell field label text.");
+    cell.textField.delegate = self;
+    cell.textField.text = @"";
+    cell.textField.inputView = dummyView;
+    cell.textField.tag = SellerBookTag;
+    if (self.editing)
+        cell.textField.enabled = YES;
+    else
+        cell.textField.enabled = NO;
+    
     Book* book = [self sortedBookFromSet:self.detailItem.books atIndexPath:indexPath];
-    cell.textLabel.text = book.title;
+    
+    if (book != nil)
+    {
+        cell.textField.text = book.title;
+    }
     
     return cell;
 }

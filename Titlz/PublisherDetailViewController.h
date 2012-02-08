@@ -11,7 +11,7 @@
 
 @class Publisher;
 
-@interface PublisherDetailViewController : UITableViewController <LookupValueSelectedDelegate>
+@interface PublisherDetailViewController : UITableViewController <UITextFieldDelegate, LookupValueSelectedDelegate>
 {
     UITextField* lookupTextField;
 }

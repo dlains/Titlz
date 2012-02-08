@@ -144,11 +144,8 @@
 		self.detailItem.managedObjectContext.undoManager = self.undoManager;
 	}
 	
-	// Register as an observer of the title's context's undo manager.
-	NSUndoManager* titleUndoManager = self.detailItem.managedObjectContext.undoManager;
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidUndo:) name:NSUndoManagerDidUndoChangeNotification object:titleUndoManager];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidRedo:) name:NSUndoManagerDidRedoChangeNotification object:titleUndoManager];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidUndo:) name:NSUndoManagerDidUndoChangeNotification object:self.detailItem.managedObjectContext.undoManager];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(undoManagerDidRedo:) name:NSUndoManagerDidRedoChangeNotification object:self.detailItem.managedObjectContext.undoManager];
 }
 
 -(void) cleanUpUndoManager
@@ -211,6 +208,7 @@
             }
             lookupTextField = textField;
             [self loadBookViewForPersonType:Signature];
+            break;
         default:
             lookupTextField = nil;
             break;
@@ -500,44 +498,6 @@
         [ContextUtil saveContext:self.detailItem.managedObjectContext];
     }   
 }
-
-/*
-// Section headers.
--(NSString*) tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
-{
-    NSString* header = nil;
-    
-    switch (section)
-    {
-        case PersonDataSection:
-        case PersonWorkedSection:
-            break;
-        case PersonAliasSection:
-            if (self.detailItem.aliases.count > 0 || self.editing)
-            {
-                header = NSLocalizedString(@"Aliases", @"PersonDetailViewController Alias section header.");
-            }
-            break;
-        case PersonAliasOfSection:
-            if (self.detailItem.aliasOf)
-            {
-                header = NSLocalizedString(@"Alias Of", @"PersonDetailViewController Alias Of section header.");
-            }
-            break;
-        case PersonBooksSignedSection:
-            if (self.detailItem.booksSigned.count > 0 || self.editing)
-            {
-                header = NSLocalizedString(@"Signed", @"PersonDetailViewController Signed section header.");
-            }
-            break;
-        default:
-            DLog(@"Invalid PersonDetailViewController section found: %i.", section);
-            break;
-    }
-    
-    return header;
-}
-*/
 
 -(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 {
