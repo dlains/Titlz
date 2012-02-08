@@ -25,6 +25,8 @@
 		557B7B0114CCE78A0057FE42 /* DAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557B7B0014CCE78A0057FE42 /* DAlertView.m */; };
 		5588721E14D4B6A300F59F87 /* edit-image-overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 5588721D14D4B6A300F59F87 /* edit-image-overlay.png */; };
 		5588722114D4B7A900F59F87 /* blank-image-overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 5588722014D4B7A900F59F87 /* blank-image-overlay.png */; };
+		558AD5BC14E3155B00980C94 /* EditableTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 558AD5BB14E3155A00980C94 /* EditableTextViewCell.m */; };
+		558AD5BF14E3157300980C94 /* EditableTextViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558AD5BE14E3157300980C94 /* EditableTextViewCell.xib */; };
 		5591513614BF5F2800F1C01E /* DLPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 5591513514BF5F2800F1C01E /* DLPoint.m */; };
 		559E461814CF584D0055D52C /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = 559E461714CF584D0055D52C /* Photo.m */; };
 		559E461C14CF58D40055D52C /* ImageToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 559E461B14CF58D40055D52C /* ImageToDataTransformer.m */; };
@@ -111,6 +113,9 @@
 		557B7B0014CCE78A0057FE42 /* DAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAlertView.m; sourceTree = "<group>"; };
 		5588721D14D4B6A300F59F87 /* edit-image-overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "edit-image-overlay.png"; sourceTree = "<group>"; };
 		5588722014D4B7A900F59F87 /* blank-image-overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blank-image-overlay.png"; sourceTree = "<group>"; };
+		558AD5BA14E3155A00980C94 /* EditableTextViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableTextViewCell.h; sourceTree = "<group>"; };
+		558AD5BB14E3155A00980C94 /* EditableTextViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditableTextViewCell.m; sourceTree = "<group>"; };
+		558AD5BE14E3157300980C94 /* EditableTextViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditableTextViewCell.xib; sourceTree = "<group>"; };
 		5591513414BF5F2800F1C01E /* DLPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLPoint.h; sourceTree = "<group>"; };
 		5591513514BF5F2800F1C01E /* DLPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLPoint.m; sourceTree = "<group>"; };
 		5591513A14BF9F6F00F1C01E /* Definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Definitions.h; sourceTree = "<group>"; };
@@ -366,6 +371,8 @@
 				55A99EA814A949FA00836F4E /* AppDelegate.m */,
 				552C741A14AE926600595DE9 /* EditableTextCell.h */,
 				552C741B14AE926600595DE9 /* EditableTextCell.m */,
+				558AD5BA14E3155A00980C94 /* EditableTextViewCell.h */,
+				558AD5BB14E3155A00980C94 /* EditableTextViewCell.m */,
 				559E461D14CF7B8F0055D52C /* EditableImageAndTextCell.h */,
 				559E461E14CF7B8F0055D52C /* EditableImageAndTextCell.m */,
 				5523BE1D14DB4116003C611A /* EditableLookupAndTextCell.h */,
@@ -391,6 +398,7 @@
 				55B5C4D114C797DE0022B33D /* SellerViewController.xib */,
 				55B5C4D614C798960022B33D /* SellerDetailViewController.xib */,
 				552C741714AE8EBB00595DE9 /* EditableTextCell.xib */,
+				558AD5BE14E3157300980C94 /* EditableTextViewCell.xib */,
 				559E462014CF7BB70055D52C /* EditableImageAndTextCell.xib */,
 				5523BE1B14DB40C7003C611A /* EditableLookupAndTextCell.xib */,
 			);
@@ -558,6 +566,7 @@
 				55CF1BC014D7133C008D5765 /* CollectionViewController.xib in Resources */,
 				55CF1BC514D71435008D5765 /* CollectionDetailViewController.xib in Resources */,
 				5523BE1C14DB40C7003C611A /* EditableLookupAndTextCell.xib in Resources */,
+				558AD5BF14E3157300980C94 /* EditableTextViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -610,6 +619,7 @@
 				5523BE1914DB068D003C611A /* Book.m in Sources */,
 				5523BE1F14DB4116003C611A /* EditableLookupAndTextCell.m in Sources */,
 				5523BE2214DB47EB003C611A /* Worker.m in Sources */,
+				558AD5BC14E3155B00980C94 /* EditableTextViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,6 +18,7 @@
 #import "PointDetailViewController.h"
 #import "EditableLookupAndTextCell.h"
 #import "EditableImageAndTextCell.h"
+#import "EditableTextViewCell.h"
 #import "EditableTextCell.h"
 #import "Book.h"
 #import "Person.h"
@@ -370,8 +371,6 @@
             self.detailItem.printRun = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
         case BookCommentsTag:
-            self.detailItem.comments = textField.text;
-            break;
         case BookSignatureTag:
         case BookAwardTag:
         case BookPointTag:
@@ -379,6 +378,21 @@
             break;
         default:
             DLog(@"Invalid BookDetailViewController textField.tag value found: %i.", textField.tag);
+            break;
+    }
+    
+    [self becomeFirstResponder];
+}
+
+-(void) textViewDidEndEditing:(UITextView *)textView
+{
+    switch (textView.tag)
+    {
+        case BookCommentsTag:
+            self.detailItem.comments = textView.text;
+            break;
+        default:
+            DLog(@"Invalid BookDetailViewController textView.tag value found: %i.", textView.tag);
             break;
     }
     
@@ -709,6 +723,10 @@
     {
         return 130.0f;
     }
+    else if (indexPath.section == BookInstanceDetailsSection && indexPath.row == BookCommentsRow)
+    {
+        return 90.0f;
+    }
     else
     {
         return UITableViewAutomaticDimension;
@@ -824,7 +842,7 @@
 
 -(UITableViewCell*) configureDetailsCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"DetailsEditableTextCell"];
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
     // Create the date picker to use for the releaseDate field.
     UIDatePicker* datePicker = [[UIDatePicker alloc] init];
@@ -918,7 +936,8 @@
 
 -(UITableViewCell*) configureInstanceDetailsCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"InstanceEditableTextCell"];
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
+    EditableTextViewCell* textCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextViewCell"];
     
     // Create the date picker to use for the releaseDate field.
     UIDatePicker* datePicker = [[UIDatePicker alloc] init];
@@ -939,15 +958,29 @@
         cell = [topLevelObjects objectAtIndex:0];
     }
     
+    if(textCell == nil)
+    {
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextViewCell" owner:self options:nil];
+        textCell = [topLevelObjects objectAtIndex:0];
+    }
+
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
+    textCell.textView.delegate = self;
     cell.textField.delegate = self;
     cell.textField.inputView = nil;
     cell.textField.keyboardType = UIKeyboardTypeDefault;
     cell.textField.text = @"";
     if (self.editing)
+    {
         cell.textField.enabled = YES;
+        textCell.textView.editable = YES;
+    }
     else
+    {
         cell.textField.enabled = NO;
+        textCell.textView.editable = NO;
+    }
     
     switch (indexPath.row)
     {
@@ -1003,10 +1036,10 @@
             cell.textField.tag = BookBoughtFromTag;
             break;
         case BookCommentsRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Comments", @"BookDetailViewController comments data field label.");
-            cell.textField.text = self.detailItem.comments;
-            cell.textField.tag = BookCommentsRow;
-            break;
+            textCell.fieldLabel.text = NSLocalizedString(@"Comments", @"BookDetailViewController comments data field label.");
+            textCell.textView.text = self.detailItem.comments;
+            textCell.textView.tag = BookCommentsTag;
+            return textCell;
         default:
             DLog(@"Invalid BookDetailViewController Data section row found: %i.", indexPath.row);
             break;
@@ -1017,7 +1050,7 @@
 
 -(UITableViewCell*) configureSignatureCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SignatureEditableTextCell"];
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
     // A dummy view to keep the keyboard from popping up in the lookup fields.
     UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
@@ -1052,7 +1085,7 @@
 
 -(UITableViewCell*) configureAwardCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"AwardEditableTextCell"];
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
     // A dummy view to keep the keyboard from popping up in the lookup fields.
     UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
@@ -1087,7 +1120,7 @@
 
 -(UITableViewCell*) configurePointCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"PointEditableTextCell"];
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
     // A dummy view to keep the keyboard from popping up in the lookup fields.
     UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
@@ -1122,7 +1155,7 @@
 
 -(UITableViewCell*) configureCollectionCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"CollectionEditableTextCell"];
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
     // A dummy view to keep the keyboard from popping up in the lookup fields.
     UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
