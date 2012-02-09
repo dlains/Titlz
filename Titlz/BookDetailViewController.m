@@ -16,6 +16,7 @@
 #import "SellerDetailViewController.h"
 #import "AwardDetailViewController.h"
 #import "PointDetailViewController.h"
+#import "ImageViewController.h"
 #import "EditableLookupAndTextCell.h"
 #import "EditableImageAndTextCell.h"
 #import "EditableTextViewCell.h"
@@ -59,6 +60,7 @@
 -(void) loadPointDetailViewForPointAtIndexPath:(NSIndexPath*)indexPath;
 -(void) loadCollectionView;
 -(void) loadCollectionDetailViewForCollectionAtIndexPath:(NSIndexPath*)indexPath;
+-(void) loadImageView;
 
 -(void) addWorkerWithTitle:(NSString*)title andPerson:(Person*)person;
 -(void) updateWorkerObject:(NSManagedObjectID*)objectId withTitle:(NSString*)title andPerson:(Person*)person;
@@ -755,8 +757,6 @@
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableImageAndTextCell" owner:self options:nil];
         imageCell = [topLevelObjects objectAtIndex:0];
-        imageCell.textField.enabled = NO;
-        imageCell.thumbnailButton.enabled = NO;
     }
     
     if (self.editing)
@@ -765,13 +765,15 @@
         imageCell.textField.enabled = YES;
         imageCell.textField.hidden = NO;
         imageCell.titleLabel.hidden = YES;
+        [imageCell.thumbnailButton setImage:[UIImage imageNamed:@"edit-image-overlay.png"] forState:UIControlStateNormal];
     }
     else
     {
-        imageCell.thumbnailButton.enabled = NO;
+        imageCell.thumbnailButton.enabled = YES;
         imageCell.textField.enabled = NO;
         imageCell.textField.hidden = YES;
         imageCell.titleLabel.hidden = NO;
+        [imageCell.thumbnailButton setImage:[UIImage imageNamed:@"blank-image-overlay.png"] forState:UIControlStateNormal];
     }
     
     switch (indexPath.row)
@@ -1566,6 +1568,15 @@
     }
 }
 
+-(void) loadImageView
+{
+    ImageViewController* imageViewController = [[ImageViewController alloc] initWithNibName:@"ImageViewController" bundle:nil];
+    imageViewController.bookImage = self.detailItem.photo;
+    imageViewController.bookTitle = self.detailItem.title;
+    
+    [self.navigationController pushViewController:imageViewController animated:YES];
+}
+
 -(void) showLookupViewControllerForLookupType:(LookupType)type
 {
     self.lookupJustFinished = YES;
@@ -1595,6 +1606,12 @@
 
 -(void) thumbnailButtonPressed:(id)sender
 {
+    if (!self.editing)
+    {
+        [self loadImageView];
+        return;
+    }
+    
     UIButton* button = sender;
     UIActionSheet* actionSheet;
     

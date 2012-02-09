@@ -31,6 +31,8 @@ void uncaughtExceptionHandler(NSException* exception)
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 
     application.applicationSupportsShakeToEdit = YES;
+
+    application.statusBarStyle = UIStatusBarStyleBlackOpaque;
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.tabBarController = [[UITabBarController alloc] init];

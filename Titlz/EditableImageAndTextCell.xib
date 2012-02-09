@@ -80,10 +80,8 @@
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">edit-image-overlay.png</string>
 								</object>
-								<object class="NSCustomResource" key="IBUIDisabledImage">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">blank-image-overlay.png</string>
-								</object>
+								<reference key="IBUIDisabledImage" ref="400819705"/>
+								<reference key="IBUISelectedImage" ref="400819705"/>
 								<reference key="IBUINormalImage" ref="400819705"/>
 								<object class="IBUIFontDescription" key="IBUIFontDescription">
 									<string key="name">Helvetica-Bold</string>
@@ -103,7 +101,7 @@
 								<string key="NSFrame">{{100, 13}, {210, 31}}</string>
 								<reference key="NSSuperview" ref="903269237"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="512047749"/>
+								<reference key="NSNextKeyView" ref="1011947639"/>
 								<string key="NSReuseIdentifierKey">_NS:304</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -126,19 +124,19 @@
 									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								</object>
 								<int key="IBUIClearButtonMode">1</int>
-								<object class="IBUIFontDescription" key="IBUIFontDescription" id="333663542">
+								<object class="IBUIFontDescription" key="IBUIFontDescription" id="1062037834">
 									<string key="name">Helvetica</string>
 									<string key="family">Helvetica</string>
 									<int key="traits">0</int>
 									<double key="pointSize">15</double>
 								</object>
-								<object class="NSFont" key="IBUIFont" id="477344528">
+								<object class="NSFont" key="IBUIFont" id="286052071">
 									<string key="NSName">Helvetica</string>
 									<double key="NSSize">15</double>
 									<int key="NSfFlags">16</int>
 								</object>
 							</object>
-							<object class="IBUILabel" id="512047749">
+							<object class="IBUILabel" id="1011947639">
 								<reference key="NSNextResponder" ref="903269237"/>
 								<int key="NSvFlags">258</int>
 								<string key="NSFrame">{{100, 13}, {210, 104}}</string>
@@ -158,8 +156,8 @@
 								<float key="IBUIMinimumFontSize">15</float>
 								<int key="IBUINumberOfLines">0</int>
 								<int key="IBUILineBreakMode">0</int>
-								<reference key="IBUIFontDescription" ref="333663542"/>
-								<reference key="IBUIFont" ref="477344528"/>
+								<reference key="IBUIFontDescription" ref="1062037834"/>
+								<reference key="IBUIFont" ref="286052071"/>
 							</object>
 						</array>
 						<string key="NSFrameSize">{320, 129}</string>
@@ -218,7 +216,7 @@
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">titleLabel</string>
 						<reference key="source" ref="523352195"/>
-						<reference key="destination" ref="512047749"/>
+						<reference key="destination" ref="1011947639"/>
 					</object>
 					<int key="connectionID">15</int>
 				</object>
@@ -257,7 +255,7 @@
 							<reference ref="585758019"/>
 							<reference ref="833849222"/>
 							<reference ref="1001147064"/>
-							<reference ref="512047749"/>
+							<reference ref="1011947639"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -278,7 +276,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">14</int>
-						<reference key="object" ref="512047749"/>
+						<reference key="object" ref="1011947639"/>
 						<reference key="parent" ref="523352195"/>
 					</object>
 				</array>
@@ -293,7 +291,7 @@
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<real value="1" key="8.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
+				<real value="3" key="8.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
@@ -341,10 +339,10 @@
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="blank-image-overlay.png">{80, 120}</string>
-			<string key="edit-image-overlay.png">{80, 120}</string>
-		</dictionary>
+		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="NS.key.0">edit-image-overlay.png</string>
+			<string key="NS.object.0">{80, 120}</string>
+		</object>
 		<string key="IBCocoaTouchPluginVersion">933</string>
 	</data>
 </archive>

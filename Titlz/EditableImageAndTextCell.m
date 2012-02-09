@@ -33,13 +33,15 @@
         self.textField.hidden = NO;
         self.textField.enabled = YES;
         self.titleLabel.hidden = YES;
+        [self.thumbnailButton setImage:[UIImage imageNamed:@"edit-image-overlay.png"] forState:UIControlStateNormal];
     }
     if(state == UITableViewCellStateDefaultMask)
     {
-        self.thumbnailButton.enabled = NO;
+        self.thumbnailButton.enabled = YES;
         self.textField.hidden = YES;
         self.textField.enabled = NO;
         self.titleLabel.hidden = NO;
+        [self.thumbnailButton setImage:[UIImage imageNamed:@"blank-image-overlay.png"] forState:UIControlStateNormal];
     }
 }
 
