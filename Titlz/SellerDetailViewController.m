@@ -335,9 +335,26 @@
 
 -(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
+    NSURL* url = nil;
+    
     switch (indexPath.section)
     {
         case SellerDataSection:
+            if (indexPath.row == SellerEmailRow && self.detailItem.email.length > 0)
+            {
+                url = [NSURL URLWithString:[NSString stringWithFormat:@"mailto://%@", self.detailItem.email]];
+            }
+            else if (indexPath.row == SellerPhoneRow && self.detailItem.phone.length > 0)
+            {
+                url = [NSURL URLWithString:[NSString stringWithFormat:@"tel://%@", self.detailItem.phone]];
+            }
+            else if (indexPath.row == SellerWebsiteRow && self.detailItem.website.length > 0)
+            {
+                url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", self.detailItem.website]];
+            }
+            
+            if (url != nil)
+                [[UIApplication sharedApplication] openURL:url];
             break;
         case SellerBooksSection:
             [self loadBookDetailViewForBookAtIndexPath:indexPath];
