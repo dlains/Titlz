@@ -504,6 +504,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 55A99EBB14A949FA00836F4E /* Build configuration list for PBXNativeTarget "Titlz" */;
 			buildPhases = (
+				55BA22E514E43BBA0064FA66 /* ShellScript */,
 				55A99E8E14A949FA00836F4E /* Sources */,
 				55A99E8F14A949FA00836F4E /* Frameworks */,
 				55A99E9014A949FA00836F4E /* Resources */,
@@ -580,6 +581,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		55BA22E514E43BBA0064FA66 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" Titlz/Titlz-Info.plist)\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" Titlz/Titlz-Info.plist";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		55A99E8E14A949FA00836F4E /* Sources */ = {

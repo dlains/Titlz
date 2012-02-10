@@ -12,6 +12,7 @@
 @implementation Lookup
 
 @dynamic type;
+@dynamic order;
 @dynamic name;
 
 +(id) lookupInManagedObjectContext:(NSManagedObjectContext*)context

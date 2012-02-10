@@ -70,9 +70,6 @@
 -(void) viewDidLoad
 {
     [super viewDidLoad];
-
-	// Do any additional setup after loading the view, typically from a nib.
-    // Set up the edit and add buttons.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
     UIBarButtonItem* addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
@@ -152,10 +149,32 @@
     }   
 }
 
+-(void) tableView:(UITableView*)tableView moveRowAtIndexPath:(NSIndexPath*)sourceIndexPath toIndexPath:(NSIndexPath*)destinationIndexPath;
+{
+    NSMutableArray *items = [[self.fetchedResultsController fetchedObjects] mutableCopy];
+    
+    // Grab the item we're moving.
+    Lookup* item = [[self fetchedResultsController] objectAtIndexPath:sourceIndexPath];
+    
+    // Remove the object we're moving from the array.
+    [items removeObject:item];
+    // Now re-insert it at the destination.
+    [items insertObject:item atIndex:[destinationIndexPath row]];
+    
+    // All of the objects are now in their correct order. Update each
+    // object's order field by iterating through the array.
+    int i = 0;
+    for (Lookup* lookup in items)
+    {
+        lookup.order = [NSNumber numberWithInt:i++];
+    }
+    
+    [ContextUtil saveContext:self.managedObjectContext];
+}
+
 -(BOOL) tableView:(UITableView*)tableView canMoveRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    // The table view should not be re-orderable.
-    return NO;
+    return YES;
 }
 
 #pragma mark - Table view delegate
@@ -188,7 +207,7 @@
     [fetchRequest setPredicate:predicate];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"order" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
