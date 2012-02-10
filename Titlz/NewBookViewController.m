@@ -635,12 +635,6 @@
             cell.textField.inputView = dummyView;
             cell.textField.tag = BookEditionTag;
             break;
-        case BookPrintingRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Printing", @"NewBookViewController printing data field label.");
-            cell.textField.text = (self.detailItem.printing == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printing intValue]];
-            cell.textField.tag = BookPrintingTag;
-            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
-            break;
         case BookPagesRow:
             cell.fieldLabel.text = NSLocalizedString(@"Pages", @"NewBookViewController pages data field label.");
             cell.textField.text = (self.detailItem.pages == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.pages intValue]];
@@ -763,6 +757,12 @@
             cell.textField.text = (self.detailItem.currentValue == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.currentValue floatValue]];
             cell.textField.tag = BookCurrentValueTag;
             cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
+            break;
+        case BookPrintingRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Printing", @"NewBookViewController printing data field label.");
+            cell.textField.text = (self.detailItem.printing == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printing intValue]];
+            cell.textField.tag = BookPrintingTag;
+            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
             break;
         case BookNumberRow:
             cell.fieldLabel.text = NSLocalizedString(@"Number", @"NewBookViewController number data field label.");
