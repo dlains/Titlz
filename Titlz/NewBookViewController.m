@@ -61,7 +61,6 @@
 @synthesize undoManager = _undoManager;
 @synthesize delegate = _delegate;
 @synthesize shouldValidate = _shouldValidate;
-@synthesize lookupJustFinished = _lookupJustFinished;
 
 -(void) didReceiveMemoryWarning
 {
@@ -81,7 +80,6 @@
     self.detailItem.title = NSLocalizedString(@"New Title", @"NewBookViewController default book title.");
     
     self.shouldValidate = YES;
-    self.lookupJustFinished = NO;
     
     self.title = NSLocalizedString(@"New Book", @"NewBookViewController header bar title.");
     self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
@@ -160,37 +158,37 @@
 
 -(void) textFieldDidBeginEditing:(UITextField*)textField
 {
-    if (self.lookupJustFinished)
-    {
-        self.lookupJustFinished = NO;
-        return;
-    }
-
     switch (textField.tag)
     {
         case BookWorkerTag:
             lookupTextField = textField;
+            [textField resignFirstResponder];
             [self loadPersonViewForPersonType:Workers];
             break;
         case BookFormatTag:
             lookupTextField = textField;
+            [textField resignFirstResponder];
             [self showLookupViewControllerForLookupType:LookupTypeFormat];
             break;
         case BookEditionTag:
             lookupTextField = textField;
+            [textField resignFirstResponder];
             [self showLookupViewControllerForLookupType:LookupTypeEdition];
             break;
         case BookBookConditionTag:
         case BookJacketConditionTag:
             lookupTextField = textField;
+            [textField resignFirstResponder];
             [self showLookupViewControllerForLookupType:LookupTypeCondition];
             break;
         case BookPublisherTag:
             lookupTextField = textField;
+            [textField resignFirstResponder];
             [self loadPublisherView];
             break;
         case BookBoughtFromTag:
             lookupTextField = textField;
+            [textField resignFirstResponder];
             [self loadSellerView];
         case BookSignatureTag:
             if (textField.text.length > 0)
@@ -359,39 +357,45 @@
 {
     EditableLookupAndTextCell* lookupCell = nil;
     
-    switch (type)
+    if (value.length > 0)
     {
-        case LookupTypeEdition:
-            self.detailItem.edition = value;
-            lookupTextField.text = value;
-            break;
-        case LookupTypeFormat:
-            self.detailItem.format = value;
-            lookupTextField.text = value;
-            break;
-        case LookupTypeCondition:
-            if (lookupTextField.tag == BookBookConditionTag)
-            {
-                self.detailItem.bookCondition = value;
+        switch (type)
+        {
+            case LookupTypeEdition:
+                self.detailItem.edition = value;
                 lookupTextField.text = value;
-            }
-            else if (lookupTextField.tag == BookJacketConditionTag)
-            {
-                self.detailItem.jacketCondition = value;
+                break;
+            case LookupTypeFormat:
+                self.detailItem.format = value;
                 lookupTextField.text = value;
-            }
-            else
-                DLog(@"Invalid textField.tag found for LookupTypeCondition selection: %i.", lookupTextField.tag);
-            break;
-        case LookupTypeWorker:
-            lookupCell = (EditableLookupAndTextCell*)workerLookupLabel.superview.superview;
-            [self updateWorkerObject:lookupCell.objectId withTitle:value andPerson:nil];
-            workerLookupLabel.text = value;
-            break;
-        default:
-            DLog(@"Invalid LookupType found in NewBookViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
-            break;
+                break;
+            case LookupTypeCondition:
+                if (lookupTextField.tag == BookBookConditionTag)
+                {
+                    self.detailItem.bookCondition = value;
+                    lookupTextField.text = value;
+                }
+                else if (lookupTextField.tag == BookJacketConditionTag)
+                {
+                    self.detailItem.jacketCondition = value;
+                    lookupTextField.text = value;
+                }
+                else
+                    DLog(@"Invalid textField.tag found for LookupTypeCondition selection: %i.", lookupTextField.tag);
+                break;
+            case LookupTypeWorker:
+                lookupCell = (EditableLookupAndTextCell*)workerLookupLabel.superview.superview;
+                [self updateWorkerObject:lookupCell.objectId withTitle:value andPerson:nil];
+                workerLookupLabel.text = value;
+                break;
+            default:
+                DLog(@"Invalid LookupType found in NewBookViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
+                break;
+        }
     }
+    
+    [self becomeFirstResponder];
+    [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 -(IBAction) cancel:(id)sender
@@ -970,25 +974,28 @@
 {
     EditableLookupAndTextCell* workerCell = nil;
     
-    switch (type)
+    if (person != nil)
     {
-        case Workers:
-            workerCell = (EditableLookupAndTextCell*)lookupTextField.superview.superview;
-            if (workerCell.objectId != nil)
-            {
-                [self updateWorkerObject:workerCell.objectId withTitle:workerCell.fieldLabel.text andPerson:person];
-            }
-            else
-            {
-                [self addWorkerWithTitle:workerCell.fieldLabel.text andPerson:person];
-            }
-            break;
-        case Signature:
-            [self.detailItem addSignaturesObject:person];
-            break;
-        default:
-            DLog(@"Invalid PersonType found in TitleDetailViewController: %i.", type);
-            break;
+        switch (type)
+        {
+            case Workers:
+                workerCell = (EditableLookupAndTextCell*)lookupTextField.superview.superview;
+                if (workerCell.objectId != nil)
+                {
+                    [self updateWorkerObject:workerCell.objectId withTitle:workerCell.fieldLabel.text andPerson:person];
+                }
+                else
+                {
+                    [self addWorkerWithTitle:workerCell.fieldLabel.text andPerson:person];
+                }
+                break;
+            case Signature:
+                [self.detailItem addSignaturesObject:person];
+                break;
+            default:
+                DLog(@"Invalid PersonType found in TitleDetailViewController: %i.", type);
+                break;
+        }
     }
     
     [self.navigationController dismissModalViewControllerAnimated:YES];
@@ -999,8 +1006,11 @@
 
 -(void) publisherViewController:(PublisherViewController *)controller didSelectPublisher:(Publisher *)publisher
 {
-    self.detailItem.publisher = publisher;
-    [ContextUtil saveContext:self.detailItem.managedObjectContext];
+    if (publisher != nil)
+    {
+        self.detailItem.publisher = publisher;
+        [ContextUtil saveContext:self.detailItem.managedObjectContext];
+    }
     
     [self.navigationController dismissModalViewControllerAnimated:YES];
     [self.tableView reloadData];
@@ -1010,8 +1020,11 @@
 
 -(void) sellerViewController:(SellerViewController *)controller didSelectSeller:(Seller*)seller
 {
-    self.detailItem.boughtFrom = seller;
-    [ContextUtil saveContext:self.detailItem.managedObjectContext];
+    if (seller != nil)
+    {
+        self.detailItem.boughtFrom = seller;
+        [ContextUtil saveContext:self.detailItem.managedObjectContext];
+    }
     
     [self.navigationController dismissModalViewControllerAnimated:YES];
     [self.tableView reloadData];
@@ -1021,8 +1034,11 @@
 
 -(void) collectionViewController:(CollectionViewController *)controller didSelectCollection:(Collection *)collection
 {
-    [self.detailItem addCollectionsObject:collection];
-    [ContextUtil saveContext:self.detailItem.managedObjectContext];
+    if (collection != nil)
+    {
+        [self.detailItem addCollectionsObject:collection];
+        [ContextUtil saveContext:self.detailItem.managedObjectContext];
+    }
     
     [self.navigationController dismissModalViewControllerAnimated:YES];
     [self.tableView reloadData];
@@ -1137,8 +1153,6 @@
 
 -(void) loadPersonViewForPersonType:(PersonType)type
 {
-    self.lookupJustFinished = YES;
-    
     PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
     personViewController.managedObjectContext = self.detailItem.managedObjectContext;
     personViewController.delegate = self;
@@ -1153,8 +1167,6 @@
 
 -(void) loadPublisherView
 {
-    self.lookupJustFinished = YES;
-
     PublisherViewController* publisherViewController = [[PublisherViewController alloc] initWithNibName:@"PublisherViewController" bundle:nil];
     publisherViewController.managedObjectContext = self.detailItem.managedObjectContext;
     publisherViewController.delegate = self;
@@ -1168,8 +1180,6 @@
 
 -(void) loadSellerView
 {
-    self.lookupJustFinished = YES;
-    
     SellerViewController* sellerViewController = [[SellerViewController alloc] initWithNibName:@"SellerViewController" bundle:nil];
     sellerViewController.managedObjectContext = self.detailItem.managedObjectContext;
     sellerViewController.delegate = self;
@@ -1183,8 +1193,6 @@
 
 -(void) loadNewAwardView
 {
-    self.lookupJustFinished = YES;
-    
     NewAwardViewController* newAwardViewController = [[NewAwardViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	newAwardViewController.delegate = self;
 	newAwardViewController.detailItem = [Award awardInManagedObjectContext:self.detailItem.managedObjectContext];
@@ -1197,8 +1205,6 @@
 
 -(void) loadNewPointView
 {
-    self.lookupJustFinished = YES;
-    
     NewPointViewController* newPointViewController = [[NewPointViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	newPointViewController.delegate = self;
 	newPointViewController.detailItem = [DLPoint pointInManagedObjectContext:self.detailItem.managedObjectContext];
@@ -1211,8 +1217,6 @@
 
 -(void) loadCollectionView
 {
-    self.lookupJustFinished = YES;
-    
     CollectionViewController* collectionViewController = [[CollectionViewController alloc] initWithNibName:@"CollectionViewController" bundle:nil];
     collectionViewController.managedObjectContext = self.detailItem.managedObjectContext;
 	collectionViewController.delegate = self;
@@ -1226,8 +1230,6 @@
 
 -(void) showLookupViewControllerForLookupType:(LookupType)type
 {
-    self.lookupJustFinished = YES;
-    
     LookupViewController* controller = [[LookupViewController alloc] initWithLookupType:type];
     controller.delegate = self;
     controller.managedObjectContext = self.detailItem.managedObjectContext;

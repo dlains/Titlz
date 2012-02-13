@@ -28,7 +28,6 @@
 
 @property(nonatomic, strong) Book* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;
-@property(nonatomic, assign) BOOL lookupJustFinished;
 
 -(void) setUpUndoManager;
 -(void) cleanUpUndoManager;

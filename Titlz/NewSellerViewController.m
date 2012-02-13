@@ -131,9 +131,11 @@
     switch (textField.tag)
     {
         case SellerStateRow:
+            [textField resignFirstResponder];
             [self showLookupViewControllerForLookupType:LookupTypeState];
             break;
         case SellerCountryRow:
+            [textField resignFirstResponder];
             [self showLookupViewControllerForLookupType:LookupTypeCountry];
             break;
         default:
@@ -210,20 +212,26 @@
 
 -(void) lookupViewController:(LookupViewController *)controller didSelectValue:(NSString *)value withLookupType:(LookupType)type
 {
-    switch (type)
+    if (value.length > 0)
     {
-        case LookupTypeState:
-            self.detailItem.state = value;
-            break;
-        case LookupTypeCountry:
-            self.detailItem.country = value;
-            break;
-        default:
-            DLog(@"Invalid LookupType found in NewSellerViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
-            break;
+        switch (type)
+        {
+            case LookupTypeState:
+                self.detailItem.state = value;
+                break;
+            case LookupTypeCountry:
+                self.detailItem.country = value;
+                break;
+            default:
+                DLog(@"Invalid LookupType found in NewSellerViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
+                break;
+        }
+        
+        lookupTextField.text = value;
     }
-    
-    lookupTextField.text = value;
+
+    [self becomeFirstResponder];
+    [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 -(IBAction) cancel:(id)sender

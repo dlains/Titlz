@@ -16,6 +16,10 @@
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
 -(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate;
 -(void) selectObjects;
+
+-(IBAction) segmentAction:(id)sender;
+-(void) insertNewObject;
+
 @end
 
 @implementation BookViewController
@@ -55,15 +59,25 @@
         self.tableView.allowsMultipleSelection = YES;
         UIBarButtonItem* selectButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Select (0)", @"BookViewController multiple selection button text") style:UIBarButtonItemStyleBordered target:self action:@selector(selectObjects)];
         self.navigationItem.leftBarButtonItem = selectButton;
+
+        // "Segmented" control to the right
+        UISegmentedControl* segmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"Cancel", @"Selection mode cancel text."), NSLocalizedString(@"Add", @"Selection mode add text."), nil]];
+        [segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
+        segmentedControl.frame = CGRectMake(0, 0, 110, CustomButtonHeight);
+        segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
+        segmentedControl.momentary = YES;
+        
+        UIBarButtonItem* segmentBarItem = [[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
+        self.navigationItem.rightBarButtonItem = segmentBarItem;
     }
     else if (self.selectionMode == DetailSelection)
     {
         self.tableView.allowsMultipleSelection = NO;
         self.navigationItem.leftBarButtonItem = self.editButtonItem;
-    }
 
-    UIBarButtonItem* addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
-    self.navigationItem.rightBarButtonItem = addButton;
+        UIBarButtonItem* addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
+        self.navigationItem.rightBarButtonItem = addButton;
+    }
 }
 
 -(void) viewDidUnload
@@ -187,7 +201,6 @@
         // Get the selected book and update the correct delegate.
         Book* selectedBook = [[self fetchedResultsController] objectAtIndexPath:indexPath];
         [self.delegate bookViewController:self didSelectBook:selectedBook forPersonType:self.personSelectionType];
-        [self.navigationController popViewControllerAnimated:YES];
     }
     else if (self.selectionMode == MultipleSelection)
     {
@@ -369,6 +382,21 @@
 }
 
 #pragma mark - New Book Handling
+
+-(IBAction) segmentAction:(id)sender
+{
+	UISegmentedControl* segmentedControl = (UISegmentedControl*)sender;
+    
+    if (segmentedControl.selectedSegmentIndex == 0)
+    {
+        // Cancel operation...
+        [self.delegate bookViewController:self didSelectBooks:nil];
+    }
+    else
+    {
+        [self insertNewObject];
+    }
+}
 
 -(void) insertNewObject
 {

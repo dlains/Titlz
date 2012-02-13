@@ -16,6 +16,7 @@
 @synthesize undoManager = _undoManager;
 @synthesize delegate = _delegate;
 @synthesize selectedLookupType = _selectedLookupType;
+@synthesize order;
 @synthesize shouldValidate = _shouldValidate;
 
 -(void) didReceiveMemoryWarning
@@ -166,6 +167,7 @@
 -(void) textFieldDidEndEditing:(UITextField*)textField
 {
     self.detailItem.type = [NSNumber numberWithInt:self.selectedLookupType];
+    self.detailItem.order = [NSNumber numberWithInt:self.order];
     self.detailItem.name = textField.text;
     
     [self becomeFirstResponder];

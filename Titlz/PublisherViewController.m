@@ -13,6 +13,10 @@
 @interface PublisherViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
 -(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate;
+
+-(IBAction) segmentAction:(id)sender;
+-(void) insertNewObject;
+
 @end
 
 @implementation PublisherViewController
@@ -50,8 +54,23 @@
     // Set up the edit and add buttons.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
-    UIBarButtonItem* addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
-    self.navigationItem.rightBarButtonItem = addButton;
+    if (self.selectionMode)
+    {
+        // "Segmented" control to the right
+        UISegmentedControl* segmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"Cancel", @"Selection mode cancel text."), NSLocalizedString(@"Add", @"Selection mode add text."), nil]];
+        [segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
+        segmentedControl.frame = CGRectMake(0, 0, 110, CustomButtonHeight);
+        segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
+        segmentedControl.momentary = YES;
+        
+        UIBarButtonItem* segmentBarItem = [[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
+        self.navigationItem.rightBarButtonItem = segmentBarItem;
+    }
+    else
+    {
+        UIBarButtonItem* addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
+        self.navigationItem.rightBarButtonItem = addButton;
+    }
 }
 
 -(void) viewDidUnload
@@ -152,7 +171,6 @@
         // Get the selected person and update the correct delegate.
         Publisher* selectedPublisher = [[self fetchedResultsController] objectAtIndexPath:indexPath];
         [self.delegate publisherViewController:self didSelectPublisher:selectedPublisher];
-        [self.navigationController popViewControllerAnimated:YES];
     }
     else
     {
@@ -309,6 +327,21 @@
 }
 
 #pragma mark - New Publisher Handling
+
+-(IBAction) segmentAction:(id)sender
+{
+	UISegmentedControl* segmentedControl = (UISegmentedControl*)sender;
+    
+    if (segmentedControl.selectedSegmentIndex == 0)
+    {
+        // Cancel operation...
+        [self.delegate publisherViewController:self didSelectPublisher:nil];
+    }
+    else
+    {
+        [self insertNewObject];
+    }
+}
 
 -(void) insertNewObject
 {

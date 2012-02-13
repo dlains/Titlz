@@ -9,6 +9,8 @@
 #ifndef Titlz_Definitions_h
 #define Titlz_Definitions_h
 
+#define CustomButtonHeight 30.0
+
 typedef enum SelectionModeEnum
 {
     DetailSelection = 0,

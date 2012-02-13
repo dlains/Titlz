@@ -236,20 +236,26 @@
 
 -(void) lookupViewController:(LookupViewController *)controller didSelectValue:(NSString *)value withLookupType:(LookupType)type
 {
-    switch (type)
+    if (value.length > 0)
     {
-        case LookupTypeState:
-            self.detailItem.state = value;
-            break;
-        case LookupTypeCountry:
-            self.detailItem.country = value;
-            break;
-        default:
-            DLog(@"Invalid LookupType found in PublisherDetailViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
-            break;
+        switch (type)
+        {
+            case LookupTypeState:
+                self.detailItem.state = value;
+                break;
+            case LookupTypeCountry:
+                self.detailItem.country = value;
+                break;
+            default:
+                DLog(@"Invalid LookupType found in PublisherDetailViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
+                break;
+        }
+        
+        lookupTextField.text = value;
     }
-    
-    lookupTextField.text = value;
+
+    [self becomeFirstResponder];
+    [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - Table view data source

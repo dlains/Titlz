@@ -18,6 +18,7 @@
 @property(nonatomic, strong) NSUndoManager* undoManager;
 @property(nonatomic, assign) id <NewLookupDelegate> delegate;
 @property(nonatomic, assign) LookupType selectedLookupType;
+@property(nonatomic, assign) NSInteger order;
 @property(nonatomic, assign) BOOL shouldValidate;
 
 -(void) setUpUndoManager;

@@ -462,12 +462,15 @@
 
 -(void) bookViewController:(BookViewController *)controller didSelectBooks:(NSArray *)books
 {
-    for (Book* book in books)
+    if (books.count > 0)
     {
-        [self.detailItem addBooksObject:book];
+        for (Book* book in books)
+        {
+            [self.detailItem addBooksObject:book];
+        }
+        
+        [ContextUtil saveContext:self.detailItem.managedObjectContext];
     }
-    
-    [ContextUtil saveContext:self.detailItem.managedObjectContext];
 
     [self.navigationController dismissModalViewControllerAnimated:YES];
     [self.tableView reloadData];

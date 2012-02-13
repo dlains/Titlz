@@ -11,6 +11,10 @@
 
 @interface LookupViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
+
+-(IBAction) segmentAction:(id)sender;
+-(void) insertNewObject;
+
 @end
 
 @implementation LookupViewController
@@ -72,8 +76,18 @@
     [super viewDidLoad];
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
-    UIBarButtonItem* addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
-    self.navigationItem.rightBarButtonItem = addButton;
+    // "Segmented" control to the right
+    UISegmentedControl* segmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"Cancel", @"Selection mode cancel text."), NSLocalizedString(@"Add", @"Selection mode add text."), nil]];
+    [segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
+    segmentedControl.frame = CGRectMake(0, 0, 110, CustomButtonHeight);
+    segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
+    segmentedControl.momentary = YES;
+    
+    UIBarButtonItem* segmentBarItem = [[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
+    self.navigationItem.rightBarButtonItem = segmentBarItem;
+
+    //UIBarButtonItem* addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
+    //self.navigationItem.rightBarButtonItem = addButton;
 }
 
 -(void) viewDidUnload
@@ -184,7 +198,6 @@
     // Get the selected person and update the correct delegate.
     Lookup* selectedLookup = [[self fetchedResultsController] objectAtIndexPath:indexPath];
     [self.delegate lookupViewController:self didSelectValue:selectedLookup.name withLookupType:self.selectedLookupType];
-    [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - Fetched results controller
@@ -300,11 +313,27 @@
 
 #pragma mark - New Lookup Handling
 
+-(IBAction) segmentAction:(id)sender
+{
+	UISegmentedControl* segmentedControl = (UISegmentedControl*)sender;
+    
+    if (segmentedControl.selectedSegmentIndex == 0)
+    {
+        // Cancel operation...
+        [self.delegate lookupViewController:self didSelectValue:nil withLookupType:self.selectedLookupType];
+    }
+    else
+    {
+        [self insertNewObject];
+    }
+}
+
 -(void) insertNewObject
 {
     NewLookupViewController* newLookupViewController = [[NewLookupViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	newLookupViewController.delegate = self;
     newLookupViewController.selectedLookupType = self.selectedLookupType;
+    newLookupViewController.order = self.fetchedResultsController.fetchedObjects.count;
 	newLookupViewController.detailItem = [Lookup lookupInManagedObjectContext:self.managedObjectContext];
 	
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newLookupViewController];
