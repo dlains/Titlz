@@ -15,7 +15,7 @@
 
 @class BookDetailViewController;
 
-@interface BookViewController : UITableViewController <NSFetchedResultsControllerDelegate, NewBookDelegate>
+@interface BookViewController : UITableViewController <NSFetchedResultsControllerDelegate, UIActionSheetDelegate, NewBookDelegate>
 
 @property(nonatomic, strong) BookDetailViewController* bookDetailViewController;
 

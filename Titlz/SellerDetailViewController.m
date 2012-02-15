@@ -382,7 +382,10 @@
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
-    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    if (dummyView == nil)
+    {
+        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    }
 
     if(cell == nil)
     {
@@ -449,8 +452,7 @@
             cell.fieldLabel.text = NSLocalizedString(@"Phone", @"SellerDetailViewController phone data field label.");
             cell.textField.text = self.detailItem.phone;
             cell.textField.tag = SellerPhoneTag;
-            cell.textField.keyboardType = UIKeyboardTypePhonePad;
-            break;
+           break;
         case SellerWebsiteRow:
             cell.fieldLabel.text = NSLocalizedString(@"Website", @"SellerDetailViewController website data field label.");
             cell.textField.text = self.detailItem.website;
@@ -468,8 +470,10 @@
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
-    // A dummy view to keep the keyboard from popping up in the lookup fields.
-    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    if (dummyView == nil)
+    {
+        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    }
     
     if(cell == nil)
     {

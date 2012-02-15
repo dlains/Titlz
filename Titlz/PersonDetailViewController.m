@@ -275,21 +275,24 @@
 
 -(void) datePickerValueChanged:(id)sender
 {
-    UIDatePicker* datePicker = (UIDatePicker*)sender;
+    UIDatePicker* picker = (UIDatePicker*)sender;
     
-    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    [formatter setTimeStyle:NSDateFormatterNoStyle];
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    if (dateFormatter == nil)
+    {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+        [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+    }
     
-    switch (datePicker.tag)
+    switch (picker.tag)
     {
         case PersonBornTag:
-            self.detailItem.born = datePicker.date;
-            bornTextField.text = [formatter stringFromDate:datePicker.date];
+            self.detailItem.born = picker.date;
+            bornTextField.text = [dateFormatter stringFromDate:picker.date];
             break;
         case PersonDiedTag:
-            self.detailItem.died = datePicker.date;
-            diedTextField.text = [formatter stringFromDate:datePicker.date];
+            self.detailItem.died = picker.date;
+            diedTextField.text = [dateFormatter stringFromDate:picker.date];
             break;
         default:
             break;
@@ -515,23 +518,36 @@
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
     // Create the date picker to use for the Born and Died fields.
-    UIDatePicker* datePicker = [[UIDatePicker alloc] init];
-    datePicker.datePickerMode = UIDatePickerModeDate;
-    [datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    if (bornDatePicker == nil)
+    {
+        bornDatePicker = [[UIDatePicker alloc] init];
+        bornDatePicker.datePickerMode = UIDatePickerModeDate;
+        [bornDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    }
+    
+    if (diedDatePicker == nil)
+    {
+        diedDatePicker = [[UIDatePicker alloc] init];
+        diedDatePicker.datePickerMode = UIDatePickerModeDate;
+        [diedDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    }
 
-    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    [formatter setTimeStyle:NSDateFormatterNoStyle];
-    [formatter setDateStyle:NSDateFormatterLongStyle];
+    if (dateFormatter == nil)
+    {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+        [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+    }
 
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
         cell = [topLevelObjects objectAtIndex:0];
+        cell.textField.delegate = self;
     }
     
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
-    cell.textField.delegate = self;
     cell.textField.inputView = nil;
     cell.textField.keyboardType = UIKeyboardTypeDefault;
     cell.textField.text = @"";
@@ -561,17 +577,17 @@
             cell.fieldLabel.text = NSLocalizedString(@"Born", @"PersonDetailViewController born data field label.");
             bornTextField = cell.textField;
             cell.textField.tag = PersonBornTag;
-            datePicker.tag = PersonBornTag;
-            cell.textField.inputView = datePicker;
-            cell.textField.text = [formatter stringFromDate:self.detailItem.born];
+            bornDatePicker.tag = PersonBornTag;
+            cell.textField.inputView = bornDatePicker;
+            cell.textField.text = [dateFormatter stringFromDate:self.detailItem.born];
             break;
         case PersonDiedRow:
             cell.fieldLabel.text = NSLocalizedString(@"Died", @"PersonDetailViewController died data field label.");
             diedTextField = cell.textField;
             cell.textField.tag = PersonDiedTag;
-            datePicker.tag = PersonDiedTag;
-            cell.textField.inputView = datePicker;
-            cell.textField.text = [formatter stringFromDate:self.detailItem.died];
+            diedDatePicker.tag = PersonDiedTag;
+            cell.textField.inputView = diedDatePicker;
+            cell.textField.text = [dateFormatter stringFromDate:self.detailItem.died];
             break;
         default:
             break;
@@ -584,7 +600,10 @@
 {
     EditableLookupAndTextCell* workerCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableLookupAndTextCell"];
     
-    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    if (dummyView == nil)
+    {
+        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    }
 
     if (workerCell == nil)
     {
@@ -592,13 +611,13 @@
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableLookupAndTextCell" owner:self options:nil];
         workerCell = [topLevelObjects objectAtIndex:0];
         [workerCell.lookupButton addTarget:self action:@selector(lookupButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        workerCell.textField.delegate = self;
+        workerCell.textField.inputView = dummyView;
+        workerCell.textField.tag = PersonWorkedTag;
     }
     
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
-    workerCell.textField.delegate = self;
     workerCell.textField.text = @"";
-    workerCell.textField.inputView = dummyView;
-    workerCell.textField.tag = PersonWorkedTag;
     if (self.editing)
     {
         workerCell.textField.enabled = YES;
@@ -628,24 +647,26 @@
 
 -(UITableViewCell*) configureAliasCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SignatureEditableTextCell"];
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"AliasEditableTextCell"];
     
-    // A dummy view to keep the keyboard from popping up in the lookup fields.
-    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    if (dummyView == nil)
+    {
+        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    }
     
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
         cell = [topLevelObjects objectAtIndex:0];
+        cell.fieldLabel.text = NSLocalizedString(@"Alias", @"PersonDetailViewController alias cell field label text.");
+        cell.textField.delegate = self;
+        cell.textField.inputView = dummyView;
+        cell.textField.tag = PersonAliasTag;
     }
     
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
-    cell.fieldLabel.text = NSLocalizedString(@"Alias", @"PersonDetailViewController alias cell field label text.");
-    cell.textField.delegate = self;
     cell.textField.text = @"";
-    cell.textField.inputView = dummyView;
-    cell.textField.tag = PersonAliasTag;
     if (self.editing)
         cell.textField.enabled = YES;
     else
@@ -665,22 +686,24 @@
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"AliasOfEditableTextCell"];
     
-    // A dummy view to keep the keyboard from popping up in the lookup fields.
-    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    if (dummyView == nil)
+    {
+        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    }
     
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
         cell = [topLevelObjects objectAtIndex:0];
+        cell.fieldLabel.text = NSLocalizedString(@"Alias of", @"PersonDetailViewController alias of cell field label text.");
+        cell.textField.delegate = self;
+        cell.textField.inputView = dummyView;
+        cell.textField.tag = PersonAliasOfTag;
     }
     
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
-    cell.fieldLabel.text = NSLocalizedString(@"Alias of", @"PersonDetailViewController alias of cell field label text.");
-    cell.textField.delegate = self;
     cell.textField.text = @"";
-    cell.textField.inputView = dummyView;
-    cell.textField.tag = PersonAliasOfTag;
     if (self.editing)
         cell.textField.enabled = YES;
     else
@@ -698,24 +721,26 @@
 
 -(UITableViewCell*) configureBooksSignedCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SignatureEditableTextCell"];
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SignedEditableTextCell"];
     
-    // A dummy view to keep the keyboard from popping up in the lookup fields.
-    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    if (dummyView == nil)
+    {
+        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    }
     
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
         cell = [topLevelObjects objectAtIndex:0];
+        cell.fieldLabel.text = NSLocalizedString(@"Signed", @"PersonDetailViewController booksSigned cell field label text.");
+        cell.textField.delegate = self;
+        cell.textField.inputView = dummyView;
+        cell.textField.tag = PersonSignedTag;
     }
     
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
-    cell.fieldLabel.text = NSLocalizedString(@"Signed", @"PersonDetailViewController booksSigned cell field label text.");
-    cell.textField.delegate = self;
     cell.textField.text = @"";
-    cell.textField.inputView = dummyView;
-    cell.textField.tag = PersonSignedTag;
     if (self.editing)
         cell.textField.enabled = YES;
     else

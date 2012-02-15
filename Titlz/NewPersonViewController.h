@@ -16,6 +16,11 @@
 {
     UITextField* bornTextField;
     UITextField* diedTextField;
+    
+    UIDatePicker* bornDatePicker;
+    UIDatePicker* diedDatePicker;
+    NSDateFormatter* dateFormatter;
+    UIView* dummyView;
 }
 
 @property(nonatomic, strong) Person* detailItem;

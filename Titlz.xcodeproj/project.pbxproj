@@ -52,6 +52,9 @@
 		55B5C4D814C798960022B33D /* SellerDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55B5C4D614C798960022B33D /* SellerDetailViewController.xib */; };
 		55B5C4DB14C798B70022B33D /* NewSellerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B5C4DA14C798B70022B33D /* NewSellerViewController.m */; };
 		55B5C4DE14C799BF0022B33D /* Seller.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B5C4DD14C799BF0022B33D /* Seller.m */; };
+		55C120EF14EB17B500479537 /* OpenLibraryBookDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C120EE14EB17B500479537 /* OpenLibraryBookDetails.m */; };
+		55C120F514EB1B9500479537 /* OpenLibraryLookupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C120F314EB1B9500479537 /* OpenLibraryLookupViewController.m */; };
+		55C120F614EB1B9500479537 /* OpenLibraryLookupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55C120F414EB1B9500479537 /* OpenLibraryLookupViewController.xib */; };
 		55C123E514C0AB1700827F61 /* PublisherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C123E314C0AB1700827F61 /* PublisherViewController.m */; };
 		55C123E614C0AB1700827F61 /* PublisherViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55C123E414C0AB1700827F61 /* PublisherViewController.xib */; };
 		55C123EA14C0B29D00827F61 /* PublisherDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C123E814C0B29D00827F61 /* PublisherDetailViewController.m */; };
@@ -160,6 +163,11 @@
 		55B5C4DA14C798B70022B33D /* NewSellerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewSellerViewController.m; sourceTree = "<group>"; };
 		55B5C4DC14C799BF0022B33D /* Seller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Seller.h; sourceTree = "<group>"; };
 		55B5C4DD14C799BF0022B33D /* Seller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Seller.m; sourceTree = "<group>"; };
+		55C120ED14EB17B500479537 /* OpenLibraryBookDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenLibraryBookDetails.h; sourceTree = "<group>"; };
+		55C120EE14EB17B500479537 /* OpenLibraryBookDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenLibraryBookDetails.m; sourceTree = "<group>"; };
+		55C120F214EB1B9500479537 /* OpenLibraryLookupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenLibraryLookupViewController.h; sourceTree = "<group>"; };
+		55C120F314EB1B9500479537 /* OpenLibraryLookupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenLibraryLookupViewController.m; sourceTree = "<group>"; };
+		55C120F414EB1B9500479537 /* OpenLibraryLookupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OpenLibraryLookupViewController.xib; sourceTree = "<group>"; };
 		55C123E214C0AB1700827F61 /* PublisherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublisherViewController.h; sourceTree = "<group>"; };
 		55C123E314C0AB1700827F61 /* PublisherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublisherViewController.m; sourceTree = "<group>"; };
 		55C123E414C0AB1700827F61 /* PublisherViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PublisherViewController.xib; sourceTree = "<group>"; };
@@ -374,6 +382,8 @@
 				5591513A14BF9F6F00F1C01E /* Definitions.h */,
 				55A99EA714A949FA00836F4E /* AppDelegate.h */,
 				55A99EA814A949FA00836F4E /* AppDelegate.m */,
+				55C120ED14EB17B500479537 /* OpenLibraryBookDetails.h */,
+				55C120EE14EB17B500479537 /* OpenLibraryBookDetails.m */,
 				552C741A14AE926600595DE9 /* EditableTextCell.h */,
 				552C741B14AE926600595DE9 /* EditableTextCell.m */,
 				558AD5BA14E3155A00980C94 /* EditableTextViewCell.h */,
@@ -396,6 +406,7 @@
 				55CF1BBE14D7133C008D5765 /* CollectionViewController.xib */,
 				55CF1BC314D71435008D5765 /* CollectionDetailViewController.xib */,
 				55B5C4C514C73F8B0022B33D /* LookupViewController.xib */,
+				55C120F414EB1B9500479537 /* OpenLibraryLookupViewController.xib */,
 				55D4A74B14B55BED00BAA15E /* PersonViewController.xib */,
 				55EB3C4114B13D1D00721D42 /* PersonDetailViewController.xib */,
 				5508605F14C91CF40051DEA2 /* PointDetailViewController.xib */,
@@ -443,6 +454,17 @@
 			name = Seller;
 			sourceTree = "<group>";
 		};
+		55C120F114EB1B4400479537 /* Additional Book Views */ = {
+			isa = PBXGroup;
+			children = (
+				558AD5C014E339A800980C94 /* ImageViewController.h */,
+				558AD5C114E339A800980C94 /* ImageViewController.m */,
+				55C120F214EB1B9500479537 /* OpenLibraryLookupViewController.h */,
+				55C120F314EB1B9500479537 /* OpenLibraryLookupViewController.m */,
+			);
+			name = "Additional Book Views";
+			sourceTree = "<group>";
+		};
 		55C123E014C0AAD300827F61 /* Publisher */ = {
 			isa = PBXGroup;
 			children = (
@@ -459,14 +481,13 @@
 		55C6968F14B2D25F00DA4172 /* Book */ = {
 			isa = PBXGroup;
 			children = (
+				55C120F114EB1B4400479537 /* Additional Book Views */,
 				55EDF6EB14C4AC1000C4BCE5 /* BookViewController.h */,
 				55EDF6EC14C4AC1000C4BCE5 /* BookViewController.m */,
 				55EDF6E914C4AC1000C4BCE5 /* BookDetailViewController.h */,
 				55EDF6EA14C4AC1000C4BCE5 /* BookDetailViewController.m */,
 				55EDF6ED14C4AC1000C4BCE5 /* NewBookViewController.h */,
 				55EDF6EE14C4AC1000C4BCE5 /* NewBookViewController.m */,
-				558AD5C014E339A800980C94 /* ImageViewController.h */,
-				558AD5C114E339A800980C94 /* ImageViewController.m */,
 			);
 			name = Book;
 			sourceTree = "<group>";
@@ -577,6 +598,7 @@
 				5523BE1C14DB40C7003C611A /* EditableLookupAndTextCell.xib in Resources */,
 				558AD5BF14E3157300980C94 /* EditableTextViewCell.xib in Resources */,
 				558AD5C414E339A800980C94 /* ImageViewController.xib in Resources */,
+				55C120F614EB1B9500479537 /* OpenLibraryLookupViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -647,6 +669,8 @@
 				5523BE2214DB47EB003C611A /* Worker.m in Sources */,
 				558AD5BC14E3155B00980C94 /* EditableTextViewCell.m in Sources */,
 				558AD5C314E339A800980C94 /* ImageViewController.m in Sources */,
+				55C120EF14EB17B500479537 /* OpenLibraryBookDetails.m in Sources */,
+				55C120F514EB1B9500479537 /* OpenLibraryLookupViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

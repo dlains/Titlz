@@ -14,6 +14,7 @@
 @interface PublisherDetailViewController : UITableViewController <UITextFieldDelegate, LookupValueSelectedDelegate>
 {
     UITextField* lookupTextField;
+    UIView* dummyView;
 }
 
 @property(nonatomic, strong) Publisher* detailItem;

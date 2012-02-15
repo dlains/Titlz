@@ -253,6 +253,11 @@
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
+    if (dummyView == nil)
+    {
+        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    }
+
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
@@ -300,6 +305,7 @@
         case PublisherStateRow:
             cell.fieldLabel.text = NSLocalizedString(@"State", @"NewPublisherViewController state data field label.");
             cell.textField.text = self.detailItem.state;
+            cell.textField.inputView = dummyView;
             cell.textField.tag = PublisherStateRow;
             break;
         case PublisherPostalCodeRow:
@@ -310,6 +316,7 @@
         case PublisherCountryRow:
             cell.fieldLabel.text = NSLocalizedString(@"Country", @"NewPublisherViewController country data field label.");
             cell.textField.text = self.detailItem.country;
+            cell.textField.inputView = dummyView;
             cell.textField.tag = PublisherCountryRow;
             break;
         default:

@@ -14,6 +14,7 @@
 @interface CollectionDetailViewController : UITableViewController <UITextFieldDelegate, BookSelectedDelegate>
 {
     UITextField* lookupTextField;
+    UIView* dummyView;
 }
 
 @property(nonatomic, strong) Collection* detailItem;

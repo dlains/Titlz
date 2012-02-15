@@ -20,6 +20,8 @@
 -(IBAction) segmentAction:(id)sender;
 -(void) insertNewObject;
 
+-(void) loadNewBookView;
+
 @end
 
 @implementation BookViewController
@@ -399,6 +401,39 @@
 }
 
 -(void) insertNewObject
+{
+    NSString* title  = NSLocalizedString(@"Get book details via:", @"BookViewController new book action sheet title.");
+    NSString* cancel = NSLocalizedString(@"Cancel", @"BookViewController new book action sheet cancel button title.");
+    NSString* manual = NSLocalizedString(@"Manual Entry", @"BookViewController new book action sheet manual button title.");
+    NSString* search = NSLocalizedString(@"Open Library", @"BookViewController new book action sheet open library button title.");
+    
+    UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:cancel destructiveButtonTitle:nil otherButtonTitles:manual, search, nil];
+    [actionSheet showFromTabBar:self.tabBarController.tabBar];
+}
+
+-(void) actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSString* cancel = NSLocalizedString(@"Cancel", @"BookViewController new book action sheet cancel button title.");
+    NSString* manual = NSLocalizedString(@"Manual Entry", @"BookViewController new book action sheet manual button title.");
+    NSString* search = NSLocalizedString(@"Open Library", @"BookViewController new book action sheet open library button title.");
+
+    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:cancel])
+    {
+        return;
+    }
+    
+    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:manual])
+    {
+        [self loadNewBookView];
+    }
+    
+    if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:search])
+    {
+        DLog(@"Start looking up Open Library data and parsing it.");
+    }
+}
+
+-(void) loadNewBookView
 {
     NewBookViewController* newBookViewController = [[NewBookViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	newBookViewController.delegate = self;

@@ -24,6 +24,11 @@
     UITextField* lookupTextField;
     UILabel* workerLookupLabel;
     UIImageView* thumbnailView;
+    
+    UIDatePicker* releaseDatePicker;
+    UIDatePicker* purchaseDatePicker;
+    NSDateFormatter* dateFormatter;
+    UIView* dummyView;
 }
 
 @property(nonatomic, strong) Book* detailItem;

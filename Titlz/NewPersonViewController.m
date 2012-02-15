@@ -177,21 +177,24 @@
 
 -(void) datePickerValueChanged:(id)sender
 {
-    UIDatePicker* datePicker = (UIDatePicker*)sender;
+    UIDatePicker* picker = (UIDatePicker*)sender;
 
-    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    [formatter setTimeStyle:NSDateFormatterNoStyle];
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    if (dateFormatter == nil)
+    {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+        [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+    }
     
-    switch (datePicker.tag)
+    switch (picker.tag)
     {
         case PersonBornRow:
-            self.detailItem.born = datePicker.date;
-            bornTextField.text = [formatter stringFromDate:datePicker.date];
+            self.detailItem.born = picker.date;
+            bornTextField.text = [dateFormatter stringFromDate:picker.date];
             break;
         case PersonDiedRow:
-            self.detailItem.died = datePicker.date;
-            diedTextField.text = [formatter stringFromDate:datePicker.date];
+            self.detailItem.died = picker.date;
+            diedTextField.text = [dateFormatter stringFromDate:picker.date];
             break;
         default:
             break;
@@ -226,10 +229,20 @@
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
 
     // Create the date picker to use for the Born and Died fields.
-    UIDatePicker* datePicker = [[UIDatePicker alloc] init];
-    datePicker.datePickerMode = UIDatePickerModeDate;
-    [datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
-
+    if (bornDatePicker == nil)
+    {
+        bornDatePicker = [[UIDatePicker alloc] init];
+        bornDatePicker.datePickerMode = UIDatePickerModeDate;
+        [bornDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    }
+    
+    if (diedDatePicker == nil)
+    {
+        diedDatePicker = [[UIDatePicker alloc] init];
+        diedDatePicker.datePickerMode = UIDatePickerModeDate;
+        [diedDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    }
+    
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
@@ -256,15 +269,15 @@
             cell.fieldLabel.text = NSLocalizedString(@"Born", @"NewPersonViewController born data field label.");
             bornTextField = cell.textField;
             cell.textField.tag = PersonBornRow;
-            datePicker.tag = PersonBornRow;
-            cell.textField.inputView = datePicker;
+            bornDatePicker.tag = PersonBornRow;
+            cell.textField.inputView = bornDatePicker;
             break;
         case PersonDiedRow:
             cell.fieldLabel.text = NSLocalizedString(@"Died", @"NewPersonViewController died data field label.");
             diedTextField = cell.textField;
             cell.textField.tag = PersonDiedRow;
-            datePicker.tag = PersonDiedRow;
-            cell.textField.inputView = datePicker;
+            diedDatePicker.tag = PersonDiedRow;
+            cell.textField.inputView = diedDatePicker;
             break;
     }
     return cell;

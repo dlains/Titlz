@@ -358,15 +358,17 @@
 -(UITableViewCell*) configureDataCellForRow:(NSInteger)row
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
-    
-    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+
+    if (dummyView == nil)
+    {
+        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    }
 
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
         cell = [topLevelObjects objectAtIndex:0];
-        cell.textField.enabled = NO;
     }
     
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
@@ -433,8 +435,10 @@
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
-    // A dummy view to keep the keyboard from popping up in the lookup fields.
-    UIView* dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    if (dummyView == nil)
+    {
+        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    }
     
     if(cell == nil)
     {

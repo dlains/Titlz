@@ -14,6 +14,7 @@
 @interface SellerDetailViewController : UITableViewController <UITextFieldDelegate, LookupValueSelectedDelegate>
 {
     UITextField* lookupTextField;
+    UIView* dummyView;
 }
 
 @property(nonatomic, strong) Seller* detailItem;

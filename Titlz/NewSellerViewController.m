@@ -261,12 +261,16 @@
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
+    if (dummyView == nil)
+    {
+        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    }
+
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
         NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextCell" owner:self options:nil];
         cell = [topLevelObjects objectAtIndex:0];
-        cell.textField.enabled = NO;
     }
     
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
@@ -303,6 +307,7 @@
         case SellerStateRow:
             cell.fieldLabel.text = NSLocalizedString(@"State", @"NewSellerViewController state data field label.");
             cell.textField.text = self.detailItem.state;
+            cell.textField.inputView = dummyView;
             cell.textField.tag = SellerStateRow;
             break;
         case SellerPostalCodeRow:
@@ -313,6 +318,7 @@
         case SellerCountryRow:
             cell.fieldLabel.text = NSLocalizedString(@"Country", @"NewSellerViewController country data field label.");
             cell.textField.text = self.detailItem.country;
+            cell.textField.inputView = dummyView;
             cell.textField.tag = SellerCountryRow;
             break;
         case SellerEmailRow:
