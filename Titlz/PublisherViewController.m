@@ -27,16 +27,6 @@
 @synthesize delegate = _delegate;
 @synthesize selectionMode = _selectionMode;
 
--(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self)
-    {
-        self.title = NSLocalizedString(@"Publishers", @"PublisherViewController header bar title.");
-    }
-    return self;
-}
-
 -(void) didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
@@ -51,6 +41,10 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    self.title = NSLocalizedString(@"Publishers", @"PublisherViewController header bar title.");
+
+    self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
+
     // Set up the edit and add buttons.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
@@ -113,20 +107,10 @@
     return [[self.fetchedResultsController sections] count];
 }
 
--(NSArray*) sectionIndexTitlesForTableView:(UITableView*)tableView
-{
-    return [self.fetchedResultsController sectionIndexTitles];
-}
-
 -(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     return [sectionInfo numberOfObjects];
-}
-
--(NSInteger) tableView:(UITableView*)tableView sectionForSectionIndexTitle:(NSString*)title atIndex:(NSInteger)index
-{
-    return [self.fetchedResultsController sectionForSectionIndexTitle:title atIndex:index];
 }
 
 -(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
@@ -228,7 +212,7 @@
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfName" cacheName:cacheName];
+    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:cacheName];
     controller.delegate = self;
     self.fetchedResultsController = controller;
     

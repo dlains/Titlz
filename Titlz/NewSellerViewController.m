@@ -331,7 +331,6 @@
             cell.fieldLabel.text = NSLocalizedString(@"Phone", @"NewSellerViewController phone data field label.");
             cell.textField.text = self.detailItem.phone;
             cell.textField.tag = SellerPhoneRow;
-            cell.textField.keyboardType = UIKeyboardTypePhonePad;
             break;
         case SellerWebsiteRow:
             cell.fieldLabel.text = NSLocalizedString(@"Website", @"NewSellerViewController website data field label.");

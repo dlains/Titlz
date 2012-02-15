@@ -1481,7 +1481,7 @@
 
 -(void) loadPublisherView
 {
-    PublisherViewController* publisherViewController = [[PublisherViewController alloc] initWithNibName:@"PublisherViewController" bundle:nil];
+    PublisherViewController* publisherViewController = [[PublisherViewController alloc] initWithStyle:UITableViewStyleGrouped];
     publisherViewController.managedObjectContext = self.detailItem.managedObjectContext;
     publisherViewController.delegate = self;
     publisherViewController.selectionMode = TRUE;
@@ -1504,7 +1504,7 @@
 
 -(void) loadSellerView
 {
-    SellerViewController* sellerViewController = [[SellerViewController alloc] initWithNibName:@"SellerViewController" bundle:nil];
+    SellerViewController* sellerViewController = [[SellerViewController alloc] initWithStyle:UITableViewStyleGrouped];
     sellerViewController.managedObjectContext = self.detailItem.managedObjectContext;
     sellerViewController.delegate = self;
     sellerViewController.selectionMode = TRUE;

@@ -26,17 +26,7 @@
 @synthesize delegate = _delegate;
 @synthesize selectionMode = _selectionMode;
 
--(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self)
-    {
-        self.title = NSLocalizedString(@"Sellers", @"SellerViewController header bar title.");
-    }
-    return self;
-}
-
-- (void)didReceiveMemoryWarning
+-(void) didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -46,10 +36,14 @@
 
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad
+-(void) viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    self.title = NSLocalizedString(@"Sellers", @"SellerViewController header bar title.");
+
+    self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
+
     // Set up the edit and add buttons.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
@@ -72,34 +66,34 @@
     }
 }
 
-- (void)viewDidUnload
+-(void) viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
+-(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+-(void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
+-(void) viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+-(void) viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+-(BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -107,18 +101,18 @@
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+-(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
 {
     return [[self.fetchedResultsController sections] count];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+-(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     return [sectionInfo numberOfObjects];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+-(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
     static NSString* CellIdentifier = @"SellerCell";
     
