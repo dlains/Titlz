@@ -126,7 +126,8 @@
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
     [self configureCell:cell atIndexPath:indexPath];
@@ -284,6 +285,7 @@
 {
     Collection* collection = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = collection.name;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%i Books", collection.books.count];
 }
 
 #pragma mark - New Lookup Handling
