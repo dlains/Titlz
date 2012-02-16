@@ -854,7 +854,7 @@
 
 -(UITableViewCell*) configureDetailsCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"DetailsEditableTextCell"];
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     
     // Create the date picker to use for the releaseDate field.
     if (releaseDatePicker == nil)
@@ -950,7 +950,7 @@
 
 -(UITableViewCell*) configureInstanceDetailsCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"InstanceDetailsEditableTextCell"];
+    EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     EditableTextViewCell* textCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextViewCell"];
     
     // Create the date picker to use for the purchaseDate field.
