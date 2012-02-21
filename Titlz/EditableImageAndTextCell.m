@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Dagger Lake Software. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "EditableImageAndTextCell.h"
 
 @implementation EditableImageAndTextCell
@@ -18,10 +19,22 @@
 -(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        // Initialization code
+    if (self)
+    {
+        [self.thumbnailView.layer setMasksToBounds:YES];
+        [self.thumbnailView.layer setCornerRadius:3.0f];
+        [self.thumbnailView.layer setBorderWidth:1.0f];
+        [self.thumbnailView.layer setBorderColor:[[UIColor darkGrayColor] CGColor]];
     }
     return self;
+}
+
+-(void) awakeFromNib
+{
+    [self.thumbnailView.layer setMasksToBounds:YES];
+    [self.thumbnailView.layer setCornerRadius:3.0f];
+    [self.thumbnailView.layer setBorderWidth:1.0f];
+    [self.thumbnailView.layer setBorderColor:[[UIColor darkGrayColor] CGColor]];
 }
 
 -(void) didTransitionToState:(UITableViewCellStateMask)state
