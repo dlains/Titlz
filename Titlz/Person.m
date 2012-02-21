@@ -80,6 +80,51 @@
     return [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:context];
 }
 
++(Person*) findPersonInContext:(NSManagedObjectContext*)context withFirstName:(NSString*)firstName middleName:(NSString*)middleName andLastName:(NSString*)lastName
+{
+    NSPredicate* predicate = nil;
+    
+    if (firstName.length > 0 && middleName.length > 0 && lastName.length > 0)
+    {
+        predicate = [NSPredicate predicateWithFormat:@"firstName ==[cd] %@ AND middleName ==[cd] %@ AND lastName ==[cd] %@", firstName, middleName, lastName];
+    }
+    else if (firstName.length > 0 && lastName.length > 0)
+    {
+        predicate = [NSPredicate predicateWithFormat:@"firstName ==[cd] %@ AND lastName ==[cd] %@", firstName, lastName];
+    }
+    else if (lastName.length > 0)
+    {
+        predicate = [NSPredicate predicateWithFormat:@"lastName ==[cd] %@", lastName];
+    }
+    
+    NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
+    fetchRequest.entity = [NSEntityDescription entityForName:@"Person" inManagedObjectContext:context];
+    fetchRequest.predicate = predicate;
+    
+    NSArray* result = [context executeFetchRequest:fetchRequest error:nil];
+    Person* person = [result lastObject];
+    
+    if (person == nil)
+    {
+        person = [Person personInManagedObjectContext:context];
+        person.firstName = firstName;
+        person.middleName = middleName;
+        person.lastName = lastName;
+    }
+    
+    return person;
+}
+
++(Person*) findPersonInContext:(NSManagedObjectContext*)context withFirstName:(NSString*)firstName andLastName:(NSString*)lastName
+{
+    return [self findPersonInContext:context withFirstName:firstName middleName:nil andLastName:lastName];
+}
+
++(Person*) findPersonInContext:(NSManagedObjectContext*)context withLastName:(NSString*)lastName
+{
+    return [self findPersonInContext:context withFirstName:nil middleName:nil andLastName:lastName];
+}
+
 #pragma mark - Validation
 
 // Last name must not be empty.

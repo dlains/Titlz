@@ -11,6 +11,7 @@
 #import "Book.h"
 #import "Photo.h"
 #import "AlphaIndexFetchedResultsController.h"
+#import "OpenLibraryLookupViewController.h"
 
 @interface BookViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
@@ -21,6 +22,7 @@
 -(void) insertNewObject;
 
 -(void) loadNewBookView;
+-(void) loadOpenLibraryLookupView;
 
 @end
 
@@ -429,7 +431,7 @@
     
     if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:search])
     {
-        DLog(@"Start looking up Open Library data and parsing it.");
+        [self loadOpenLibraryLookupView];
     }
 }
 
@@ -438,11 +440,23 @@
     NewBookViewController* newBookViewController = [[NewBookViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	newBookViewController.delegate = self;
 	newBookViewController.detailItem = [Book bookInManagedObjectContext:self.managedObjectContext];
-	
+
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newBookViewController];
     navController.navigationBar.barStyle = UIBarStyleBlack;
 	
     [self.navigationController presentModalViewController:navController animated:YES];
+}
+
+-(void) loadOpenLibraryLookupView
+{
+    OpenLibraryLookupViewController* lookupController = [[OpenLibraryLookupViewController alloc] initWithNibName:@"OpenLibraryLookupViewController" bundle:nil];
+    lookupController.managedObjectContext = self.managedObjectContext;
+    
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:lookupController];
+    navController.navigationBar.barStyle = UIBarStyleBlack;
+	
+    [self.navigationController presentViewController:navController animated:YES completion:nil];
+//    [self.navigationController presentModalViewController:navController animated:YES];
 }
 
 -(void) newBookViewController:(NewBookViewController*)controller didFinishWithSave:(BOOL)save

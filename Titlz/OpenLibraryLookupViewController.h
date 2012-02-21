@@ -7,7 +7,24 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OpenLibrarySearch.h"
+#import "NewBookViewController.h"
 
-@interface OpenLibraryLookupViewController : UIViewController
+@interface OpenLibraryLookupViewController : UIViewController <UITableViewDelegate, UITextFieldDelegate, OpenLibrarySearchDelegate, NewBookDelegate>
+
+@property(nonatomic, strong) IBOutlet UITextField* searchTextField;
+@property(nonatomic, strong) IBOutlet UIActivityIndicatorView* activityIndicator;
+@property(nonatomic, strong) IBOutlet UIButton* searchButton;
+@property(nonatomic, strong) IBOutlet UIButton* cancelButton;
+@property(nonatomic, strong) IBOutlet UILabel* resultLabel;
+
+@property(nonatomic, strong) NSManagedObjectContext* managedObjectContext;
+
+@property(nonatomic, assign) OpenLibrarySearchType selectedSearchType;
+@property(nonatomic, strong) OpenLibrarySearch* openLibrarySearch;
+
+-(IBAction) segmentValueChanged:(id)sender;
+-(IBAction) searchButtonPressed:(id)sender;
+-(IBAction) cancelButtonPressed:(id)sender;
 
 @end

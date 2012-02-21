@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5501580D14EEC02F00458477 /* DConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5501580C14EEC02F00458477 /* DConnection.m */; };
 		5508606014C91CF40051DEA2 /* PointDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5508605E14C91CF40051DEA2 /* PointDetailViewController.m */; };
 		5508606114C91CF40051DEA2 /* PointDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5508605F14C91CF40051DEA2 /* PointDetailViewController.xib */; };
 		5508606414C91D4B0051DEA2 /* NewPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5508606314C91D4B0051DEA2 /* NewPointViewController.m */; };
@@ -17,6 +18,7 @@
 		5523BE2214DB47EB003C611A /* Worker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5523BE2114DB47EB003C611A /* Worker.m */; };
 		552C741814AE8EBB00595DE9 /* EditableTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552C741714AE8EBB00595DE9 /* EditableTextCell.xib */; };
 		552C741C14AE926600595DE9 /* EditableTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C741B14AE926600595DE9 /* EditableTextCell.m */; };
+		5544D8F914ED930E00298405 /* OpenLibrarySearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 5544D8F814ED930E00298405 /* OpenLibrarySearch.m */; };
 		5548F42A14C9F800004C8BA8 /* ContextUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 5548F42914C9F800004C8BA8 /* ContextUtil.m */; };
 		556E593914C8A898000C4CBC /* Award.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E593814C8A898000C4CBC /* Award.m */; };
 		556E594314C8A953000C4CBC /* AwardDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E594114C8A953000C4CBC /* AwardDetailViewController.m */; };
@@ -89,6 +91,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5501580B14EEC02F00458477 /* DConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DConnection.h; sourceTree = "<group>"; };
+		5501580C14EEC02F00458477 /* DConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DConnection.m; sourceTree = "<group>"; };
 		5508605D14C91CF40051DEA2 /* PointDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointDetailViewController.h; sourceTree = "<group>"; };
 		5508605E14C91CF40051DEA2 /* PointDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointDetailViewController.m; sourceTree = "<group>"; };
 		5508605F14C91CF40051DEA2 /* PointDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointDetailViewController.xib; sourceTree = "<group>"; };
@@ -105,6 +109,8 @@
 		552C741714AE8EBB00595DE9 /* EditableTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditableTextCell.xib; sourceTree = "<group>"; };
 		552C741A14AE926600595DE9 /* EditableTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableTextCell.h; sourceTree = "<group>"; };
 		552C741B14AE926600595DE9 /* EditableTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditableTextCell.m; sourceTree = "<group>"; };
+		5544D8F714ED930E00298405 /* OpenLibrarySearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenLibrarySearch.h; sourceTree = "<group>"; };
+		5544D8F814ED930E00298405 /* OpenLibrarySearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenLibrarySearch.m; sourceTree = "<group>"; };
 		5548F42814C9F800004C8BA8 /* ContextUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextUtil.h; sourceTree = "<group>"; };
 		5548F42914C9F800004C8BA8 /* ContextUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextUtil.m; sourceTree = "<group>"; };
 		556E593714C8A898000C4CBC /* Award.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Award.h; sourceTree = "<group>"; };
@@ -260,6 +266,19 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		5544D8F514ED922F00298405 /* Open Library */ = {
+			isa = PBXGroup;
+			children = (
+				55C120ED14EB17B500479537 /* OpenLibraryBookDetails.h */,
+				55C120EE14EB17B500479537 /* OpenLibraryBookDetails.m */,
+				5544D8F714ED930E00298405 /* OpenLibrarySearch.h */,
+				5544D8F814ED930E00298405 /* OpenLibrarySearch.m */,
+				55C120F214EB1B9500479537 /* OpenLibraryLookupViewController.h */,
+				55C120F314EB1B9500479537 /* OpenLibraryLookupViewController.m */,
+			);
+			name = "Open Library";
+			sourceTree = "<group>";
+		};
 		5548F42614C9F704004C8BA8 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
@@ -269,6 +288,8 @@
 				55EB3C3C14B0CC1300721D42 /* DLog.m */,
 				557B7AFF14CCE78A0057FE42 /* DAlertView.h */,
 				557B7B0014CCE78A0057FE42 /* DAlertView.m */,
+				5501580B14EEC02F00458477 /* DConnection.h */,
+				5501580C14EEC02F00458477 /* DConnection.m */,
 				55EED62C14D2174F00AFA726 /* AlphaIndexFetchedResultsController.h */,
 				55EED62D14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m */,
 			);
@@ -370,6 +391,7 @@
 		55A99EBE14A94A3A00836F4E /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				5544D8F514ED922F00298405 /* Open Library */,
 				556E593A14C8A8F5000C4CBC /* Award */,
 				55C6968F14B2D25F00DA4172 /* Book */,
 				55CF1BBB14D7130A008D5765 /* Collection */,
@@ -382,8 +404,6 @@
 				5591513A14BF9F6F00F1C01E /* Definitions.h */,
 				55A99EA714A949FA00836F4E /* AppDelegate.h */,
 				55A99EA814A949FA00836F4E /* AppDelegate.m */,
-				55C120ED14EB17B500479537 /* OpenLibraryBookDetails.h */,
-				55C120EE14EB17B500479537 /* OpenLibraryBookDetails.m */,
 				552C741A14AE926600595DE9 /* EditableTextCell.h */,
 				552C741B14AE926600595DE9 /* EditableTextCell.m */,
 				558AD5BA14E3155A00980C94 /* EditableTextViewCell.h */,
@@ -459,8 +479,6 @@
 			children = (
 				558AD5C014E339A800980C94 /* ImageViewController.h */,
 				558AD5C114E339A800980C94 /* ImageViewController.m */,
-				55C120F214EB1B9500479537 /* OpenLibraryLookupViewController.h */,
-				55C120F314EB1B9500479537 /* OpenLibraryLookupViewController.m */,
 			);
 			name = "Additional Book Views";
 			sourceTree = "<group>";
@@ -671,6 +689,8 @@
 				558AD5C314E339A800980C94 /* ImageViewController.m in Sources */,
 				55C120EF14EB17B500479537 /* OpenLibraryBookDetails.m in Sources */,
 				55C120F514EB1B9500479537 /* OpenLibraryLookupViewController.m in Sources */,
+				5544D8F914ED930E00298405 /* OpenLibrarySearch.m in Sources */,
+				5501580D14EEC02F00458477 /* DConnection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

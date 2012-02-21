@@ -77,7 +77,10 @@
     [super viewDidLoad];
 
     // Start with a default book title.
-    self.detailItem.title = NSLocalizedString(@"New Title", @"NewBookViewController default book title.");
+    if (self.detailItem.title == nil)
+    {
+        self.detailItem.title = NSLocalizedString(@"New Title", @"NewBookViewController default book title.");
+    }
     
     self.shouldValidate = YES;
     

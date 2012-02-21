@@ -25,6 +25,7 @@
 @property (nonatomic, retain) NSSet* books;
 
 +(id) publisherInManagedObjectContext:(NSManagedObjectContext*)context;
++(Publisher*) findPublisherInContext:(NSManagedObjectContext*)context withName:(NSString*)name;
 
 @end
 

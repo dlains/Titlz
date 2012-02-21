@@ -28,6 +28,9 @@
 @property (nonatomic, readonly) NSString* fullName;
 
 +(id) personInManagedObjectContext:(NSManagedObjectContext*)context;
++(Person*) findPersonInContext:(NSManagedObjectContext*)context withFirstName:(NSString*)firstName middleName:(NSString*)middleName andLastName:(NSString*)lastName;
++(Person*) findPersonInContext:(NSManagedObjectContext*)context withFirstName:(NSString*)firstName andLastName:(NSString*)lastName;
++(Person*) findPersonInContext:(NSManagedObjectContext*)context withLastName:(NSString*)lastName;
 
 @end
 

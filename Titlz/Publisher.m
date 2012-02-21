@@ -39,6 +39,25 @@
     return [NSEntityDescription insertNewObjectForEntityForName:@"Publisher" inManagedObjectContext:context];
 }
 
++(Publisher*) findPublisherInContext:(NSManagedObjectContext*)context withName:(NSString*)name
+{
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"name ==[cd] %@", name];
+    NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
+    fetchRequest.entity = [NSEntityDescription entityForName:@"Publisher" inManagedObjectContext:context];
+    fetchRequest.predicate = predicate;
+    
+    NSArray* result = [context executeFetchRequest:fetchRequest error:nil];
+    Publisher* publisher = [result lastObject];
+    
+    if (publisher == nil)
+    {
+        publisher = [Publisher publisherInManagedObjectContext:context];
+        publisher.name = name;
+    }
+    
+    return publisher;
+}
+
 // Name must not be empty.
 -(BOOL) validateName:(id*)value error:(NSError**)error
 {
