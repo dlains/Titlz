@@ -20,6 +20,12 @@
 		552C741C14AE926600595DE9 /* EditableTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C741B14AE926600595DE9 /* EditableTextCell.m */; };
 		5544D8F914ED930E00298405 /* OpenLibrarySearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 5544D8F814ED930E00298405 /* OpenLibrarySearch.m */; };
 		5548F42A14C9F800004C8BA8 /* ContextUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 5548F42914C9F800004C8BA8 /* ContextUtil.m */; };
+		555BA80714F41FDB0005A376 /* home.png in Resources */ = {isa = PBXBuildFile; fileRef = 555BA80514F41FDB0005A376 /* home.png */; };
+		555BA80814F41FDB0005A376 /* home@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 555BA80614F41FDB0005A376 /* home@2x.png */; };
+		555BA80E14F420B00005A376 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 555BA80C14F420B00005A376 /* HomeViewController.m */; };
+		555BA80F14F420B00005A376 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 555BA80D14F420B00005A376 /* HomeViewController.xib */; };
+		555BA81314F42CF90005A376 /* SearchAppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 555BA81114F42CF90005A376 /* SearchAppViewController.m */; };
+		555BA81414F42CF90005A376 /* SearchAppViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 555BA81214F42CF90005A376 /* SearchAppViewController.xib */; };
 		556E593914C8A898000C4CBC /* Award.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E593814C8A898000C4CBC /* Award.m */; };
 		556E594314C8A953000C4CBC /* AwardDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E594114C8A953000C4CBC /* AwardDetailViewController.m */; };
 		556E594414C8A953000C4CBC /* AwardDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556E594214C8A953000C4CBC /* AwardDetailViewController.xib */; };
@@ -113,6 +119,14 @@
 		5544D8F814ED930E00298405 /* OpenLibrarySearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenLibrarySearch.m; sourceTree = "<group>"; };
 		5548F42814C9F800004C8BA8 /* ContextUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextUtil.h; sourceTree = "<group>"; };
 		5548F42914C9F800004C8BA8 /* ContextUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextUtil.m; sourceTree = "<group>"; };
+		555BA80514F41FDB0005A376 /* home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home.png; sourceTree = "<group>"; };
+		555BA80614F41FDB0005A376 /* home@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home@2x.png"; sourceTree = "<group>"; };
+		555BA80B14F420B00005A376 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
+		555BA80C14F420B00005A376 /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
+		555BA80D14F420B00005A376 /* HomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
+		555BA81014F42CF90005A376 /* SearchAppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchAppViewController.h; sourceTree = "<group>"; };
+		555BA81114F42CF90005A376 /* SearchAppViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchAppViewController.m; sourceTree = "<group>"; };
+		555BA81214F42CF90005A376 /* SearchAppViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchAppViewController.xib; sourceTree = "<group>"; };
 		556E593714C8A898000C4CBC /* Award.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Award.h; sourceTree = "<group>"; };
 		556E593814C8A898000C4CBC /* Award.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Award.m; sourceTree = "<group>"; };
 		556E594014C8A953000C4CBC /* AwardDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AwardDetailViewController.h; sourceTree = "<group>"; };
@@ -257,6 +271,8 @@
 				55CF1BAF14D70846008D5765 /* book@2x.png */,
 				55CF1BB014D70846008D5765 /* collection.png */,
 				55CF1BB114D70846008D5765 /* collection@2x.png */,
+				555BA80514F41FDB0005A376 /* home.png */,
+				555BA80614F41FDB0005A376 /* home@2x.png */,
 				55CF1BB214D70846008D5765 /* user.png */,
 				55CF1BB314D70846008D5765 /* user@2x.png */,
 				5588722014D4B7A900F59F87 /* blank-image-overlay.png */,
@@ -294,6 +310,17 @@
 				55EED62D14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m */,
 			);
 			name = Utility;
+			sourceTree = "<group>";
+		};
+		555BA80A14F420010005A376 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				555BA80B14F420B00005A376 /* HomeViewController.h */,
+				555BA80C14F420B00005A376 /* HomeViewController.m */,
+				555BA81014F42CF90005A376 /* SearchAppViewController.h */,
+				555BA81114F42CF90005A376 /* SearchAppViewController.m */,
+			);
+			name = Home;
 			sourceTree = "<group>";
 		};
 		5562329C14AAF1FA0099765E /* Entities */ = {
@@ -391,6 +418,7 @@
 		55A99EBE14A94A3A00836F4E /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				555BA80A14F420010005A376 /* Home */,
 				5544D8F514ED922F00298405 /* Open Library */,
 				556E593A14C8A8F5000C4CBC /* Award */,
 				55C6968F14B2D25F00DA4172 /* Book */,
@@ -422,6 +450,7 @@
 				556E594214C8A953000C4CBC /* AwardDetailViewController.xib */,
 				55EDF6E514C4ABF600C4BCE5 /* BookViewController.xib */,
 				55EDF6E314C4ABF600C4BCE5 /* BookDetailViewController.xib */,
+				555BA80D14F420B00005A376 /* HomeViewController.xib */,
 				558AD5C214E339A800980C94 /* ImageViewController.xib */,
 				55CF1BBE14D7133C008D5765 /* CollectionViewController.xib */,
 				55CF1BC314D71435008D5765 /* CollectionDetailViewController.xib */,
@@ -432,6 +461,7 @@
 				5508605F14C91CF40051DEA2 /* PointDetailViewController.xib */,
 				55C123E414C0AB1700827F61 /* PublisherViewController.xib */,
 				55C123E914C0B29D00827F61 /* PublisherDetailViewController.xib */,
+				555BA81214F42CF90005A376 /* SearchAppViewController.xib */,
 				55B5C4D114C797DE0022B33D /* SellerViewController.xib */,
 				55B5C4D614C798960022B33D /* SellerDetailViewController.xib */,
 				552C741714AE8EBB00595DE9 /* EditableTextCell.xib */,
@@ -617,6 +647,10 @@
 				558AD5BF14E3157300980C94 /* EditableTextViewCell.xib in Resources */,
 				558AD5C414E339A800980C94 /* ImageViewController.xib in Resources */,
 				55C120F614EB1B9500479537 /* OpenLibraryLookupViewController.xib in Resources */,
+				555BA80714F41FDB0005A376 /* home.png in Resources */,
+				555BA80814F41FDB0005A376 /* home@2x.png in Resources */,
+				555BA80F14F420B00005A376 /* HomeViewController.xib in Resources */,
+				555BA81414F42CF90005A376 /* SearchAppViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -691,6 +725,8 @@
 				55C120F514EB1B9500479537 /* OpenLibraryLookupViewController.m in Sources */,
 				5544D8F914ED930E00298405 /* OpenLibrarySearch.m in Sources */,
 				5501580D14EEC02F00458477 /* DConnection.m in Sources */,
+				555BA80E14F420B00005A376 /* HomeViewController.m in Sources */,
+				555BA81314F42CF90005A376 /* SearchAppViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

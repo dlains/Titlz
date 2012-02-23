@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 
 #import "BookViewController.h"
+#import "HomeViewController.h"
 #import "Lookup.h"
 
 void uncaughtExceptionHandler(NSException* exception);
@@ -51,6 +52,11 @@ void uncaughtExceptionHandler(NSException* exception)
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.tabBarController = [[UITabBarController alloc] init];
 
+    HomeViewController* homeViewController = [[HomeViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    homeViewController.managedObjectContext = self.managedObjectContext;
+    UINavigationController* homeNavigationController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
+    homeNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+    
     BookViewController* bookViewController = [[BookViewController alloc] initWithNibName:@"BookViewController" bundle:nil];
     UINavigationController* bookNavigationController = [[UINavigationController alloc] initWithRootViewController:bookViewController];
     bookNavigationController.navigationBar.barStyle = UIBarStyleBlack;
@@ -67,7 +73,7 @@ void uncaughtExceptionHandler(NSException* exception)
     personNavigationController.navigationBar.barStyle = UIBarStyleBlack;
     personViewController.managedObjectContext = self.managedObjectContext;
     
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:bookNavigationController, collectionNavigationController, personNavigationController, nil];
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:homeNavigationController, bookNavigationController, collectionNavigationController, personNavigationController, nil];
 
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
