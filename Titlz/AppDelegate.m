@@ -10,11 +10,21 @@
 
 #import "BookViewController.h"
 #import "HomeViewController.h"
+#import "Publisher.h"
+#import "Person.h"
+#import "Book.h"
 #import "Lookup.h"
+#import "Photo.h"
+#import "Worker.h"
 
 void uncaughtExceptionHandler(NSException* exception);
 
 @interface AppDelegate()
+-(void) loadInitialBookData;
+-(NSDate*) dateWithDay:(NSInteger)day month:(NSInteger)month year:(NSInteger)year;
+-(Person*) personWithFirst:(NSString*)first middle:(NSString*)middle last:(NSString*)last;
+-(Publisher*) publisherWithName:(NSString*)name parent:(NSString*)parent street:(NSString*)street city:(NSString*)city state:(NSString*)state postalCode:(NSString*)postalCode country:(NSString*)country;
+-(void) createBooks;
 -(void) loadLookupData;
 -(void) createEditionValues;
 -(void) createFormatValues;
@@ -52,7 +62,7 @@ void uncaughtExceptionHandler(NSException* exception)
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.tabBarController = [[UITabBarController alloc] init];
 
-    HomeViewController* homeViewController = [[HomeViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    HomeViewController* homeViewController = [[HomeViewController alloc] initWithStyle:UITableViewStylePlain];
     homeViewController.managedObjectContext = self.managedObjectContext;
     UINavigationController* homeNavigationController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
     homeNavigationController.navigationBar.barStyle = UIBarStyleBlack;
@@ -80,6 +90,7 @@ void uncaughtExceptionHandler(NSException* exception)
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"firstLaunch"])
     {
+        [self loadInitialBookData];
         [self loadLookupData];
     }
     
@@ -213,6 +224,129 @@ void uncaughtExceptionHandler(NSException* exception)
     }    
     
     return __persistentStoreCoordinator;
+}
+
+#pragma mark - Initial Book Data
+
+-(void) loadInitialBookData
+{
+    DLog(@"Populating book data on first application run.");
+    
+    [self createBooks];
+    
+    [ContextUtil saveContext:self.managedObjectContext];
+}
+
+-(Person*) personWithFirst:(NSString*)first middle:(NSString*)middle last:(NSString*)last
+{
+    Person* person = [Person personInManagedObjectContext:self.managedObjectContext];
+    
+    person.firstName = first;
+    person.middleName = middle;
+    person.lastName = last;
+    
+    return person;
+}
+
+-(Publisher*) publisherWithName:(NSString*)name parent:(NSString*)parent street:(NSString*)street city:(NSString*)city state:(NSString*)state postalCode:(NSString*)postalCode country:(NSString*)country
+{
+    Publisher* publisher = [Publisher publisherInManagedObjectContext:self.managedObjectContext];
+    
+    publisher.name = name;
+    publisher.parent = parent;
+    publisher.street = street;
+    publisher.city = city;
+    publisher.state = state;
+    publisher.postalCode = postalCode;
+    publisher.country = country;
+    
+    return publisher;
+}
+
+-(NSDate*) dateWithDay:(NSInteger)day month:(NSInteger)month year:(NSInteger)year
+{
+    NSDateComponents* date = [[NSDateComponents alloc] init];
+    date.day = 10;
+    date.month = 4;
+    date.year = 1925;
+    return [[NSCalendar currentCalendar] dateFromComponents:date];
+}
+
+-(void) createBooks
+{
+    Book* book = nil;
+    Worker* worker = nil;
+    
+    // The Great Gatsby
+    book = [Book bookInManagedObjectContext:self.managedObjectContext];
+    worker = [Worker workerInManagedObjectContext:self.managedObjectContext];
+    book.title = @"The Great Gatsby";
+    worker.person = [self personWithFirst:@"F." middle:@"Scott" last:@"Fitzgerald"];
+    worker.title = @"Author";
+    [book addWorkersObject:worker];
+    book.thumbnail = [UIImage imageNamed:@"thegreatgatsby.png"];
+    book.edition = @"First Edition";
+    book.format = @"Hardcover";
+    book.pages = [NSNumber numberWithInt:218];
+    book.releaseDate = [self dateWithDay:10 month:4 year:1925];
+    book.publisher = [self publisherWithName:@"Scribner" parent:@"Simon & Schuster" street:@"1230 Avenue of the Americas" city:@"New York" state:@"New York" postalCode:@"10020" country:@"United States"];
+
+    // The Grapes of Wrath
+    book = [Book bookInManagedObjectContext:self.managedObjectContext];
+    worker = [Worker workerInManagedObjectContext:self.managedObjectContext];
+    book.title = @"The Grapes of Wrath";
+    worker.person = [self personWithFirst:@"John" middle:nil last:@"Steinbeck"];
+    worker.title = @"Author";
+    [book addWorkersObject:worker];
+    book.thumbnail = [UIImage imageNamed:@"thegrapesofwrath.png"];
+    book.edition = @"First Edition";
+    book.format = @"Hardcover";
+    book.pages = [NSNumber numberWithInt:619];
+    book.releaseDate = [self dateWithDay:1 month:1 year:1939];
+    book.publisher = [self publisherWithName:@"Viking" parent:@"The Penguin Group" street:@"375 Hudson Street" city:@"New York" state:@"New York" postalCode:@"10014" country:@"United States"];
+
+    // Catch 22
+    book = [Book bookInManagedObjectContext:self.managedObjectContext];
+    worker = [Worker workerInManagedObjectContext:self.managedObjectContext];
+    book.title = @"Catch-22";
+    worker.person = [self personWithFirst:@"Joseph" middle:nil last:@"Heller"];
+    worker.title = @"Author";
+    [book addWorkersObject:worker];
+    book.thumbnail = [UIImage imageNamed:@"catch22.png"];
+    book.edition = @"First Edition";
+    book.format = @"Hardcover";
+    book.pages = [NSNumber numberWithInt:453];
+    book.isbn = @"0-684-83339-5";
+    book.releaseDate = [self dateWithDay:11 month:11 year:1961];
+    book.publisher = [self publisherWithName:@"Simon & Schuster" parent:nil street:@"1230 Avenue of the Americas" city:@"New York" state:@"New York" postalCode:@"10020" country:@"United States"];
+    
+    // Slaughterhouse Five
+    book = [Book bookInManagedObjectContext:self.managedObjectContext];
+    worker = [Worker workerInManagedObjectContext:self.managedObjectContext];
+    book.title = @"Slaughterhouse-Five";
+    worker.person = [self personWithFirst:@"Kurt" middle:nil last:@"Vonnegut"];
+    worker.title = @"Author";
+    [book addWorkersObject:worker];
+    book.thumbnail = [UIImage imageNamed:@"slaughterhouse-five.png"];
+    book.edition = @"First Edition";
+    book.format = @"Hardcover";
+    book.pages = [NSNumber numberWithInt:186];
+    book.isbn = @"0-385-31208-3";
+    book.releaseDate = [self dateWithDay:1 month:1 year:1969];
+    book.publisher = [self publisherWithName:@"Delacorte" parent:@"Random House" street:@"1745 Broadway" city:@"New York" state:@"New York" postalCode:@"10019" country:@"United States"];
+
+    // The Maltese Falcon
+    book = [Book bookInManagedObjectContext:self.managedObjectContext];
+    worker = [Worker workerInManagedObjectContext:self.managedObjectContext];
+    book.title = @"The Maltese Falcon";
+    worker.person = [self personWithFirst:@"Dashiell" middle:nil last:@"Hammett"];
+    worker.title = @"Author";
+    [book addWorkersObject:worker];
+    book.thumbnail = [UIImage imageNamed:@"themaltesefalcon.png"];
+    book.edition = @"First Edition";
+    book.format = @"Hardcover";
+    book.releaseDate = [self dateWithDay:1 month:1 year:1930];
+    book.publisher = [self publisherWithName:@"Alfred A. Knopf" parent:@"Knopf Doubleday Publishing" street:@"1745 Broadway" city:@"New York" state:@"New York" postalCode:@"10019" country:@"United States"];
 }
 
 #pragma mark - Initial Lookup Data

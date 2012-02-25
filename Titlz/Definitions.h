@@ -32,6 +32,12 @@ typedef enum AwardDataSectionRowsEnum
     AwardDataSectionRowCount,
 } AwardDataSectionRows;
 
+typedef enum HomeSectionsEnum
+{
+    HomeRecentAdditionsSection = 0,
+    HomeSectionCount
+} HomeSections;
+
 typedef enum PersonTypeEnum
 {
     Workers = 0,

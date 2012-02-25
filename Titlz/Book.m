@@ -18,11 +18,15 @@
 
 @implementation Book
 
+@dynamic createdDate;
+@dynamic lastReadDate;
 @dynamic firstLetterOfTitle;
 @dynamic sortableTitle;
 @dynamic title;
 @dynamic format;
 @dynamic edition;
+@dynamic seriesName;
+@dynamic genre;
 @dynamic printing;
 @dynamic isbn;
 @dynamic pages;
@@ -48,7 +52,9 @@
 
 +(id) bookInManagedObjectContext:(NSManagedObjectContext*)context
 {
-    return [NSEntityDescription insertNewObjectForEntityForName:@"Book" inManagedObjectContext:context];
+    Book* newBook = [NSEntityDescription insertNewObjectForEntityForName:@"Book" inManagedObjectContext:context];
+    newBook.createdDate = [NSDate date];
+    return newBook;
 }
 
 -(NSString*) firstLetterOfTitle

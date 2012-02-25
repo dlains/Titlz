@@ -8,9 +8,12 @@
 
 #import "HomeViewController.h"
 #import "SearchAppViewController.h"
+#import "RecentAdditionsCell.h"
+#import "Book.h"
 
 @interface HomeViewController()
 -(void) searchApp;
+-(UITableViewCell*) configureRecentAdditionsCell;
 @end
 
 @implementation HomeViewController
@@ -43,16 +46,11 @@
 {
     [super viewDidLoad];
 
-    self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
+    self.tableView.backgroundColor = [UIColor darkGrayColor];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
     UIBarButtonItem* searchButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchApp)];
     self.navigationItem.rightBarButtonItem = searchButton;
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 -(void) viewDidUnload
@@ -92,28 +90,49 @@
 
 -(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
 {
-    return 1;
+    return HomeSectionCount;
 }
 
 -(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
+    switch (section)
+    {
+        case HomeRecentAdditionsSection:
+            return 1;
+        default:
+            break;
+    }
     return 0;
 }
 
 -(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    UITableViewCell* cell = nil;
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    switch (indexPath.section)
+    {
+        case HomeRecentAdditionsSection:
+            cell = [self configureRecentAdditionsCell];
+            break;
+        default:
+            DLog(@"Invalid HomeViewController section found: %i.", indexPath.section);
+            break;
     }
-    
-    // Configure the cell...
     
     return cell;
 }
 
+-(CGFloat) tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    if (indexPath.section == HomeRecentAdditionsSection)
+    {
+        return 150.0f;
+    }
+    else
+    {
+        return UITableViewAutomaticDimension;
+    }
+}
 /*
 // Override to support conditional editing of the table view.
 -(BOOL) tableView:(UITableView*)tableView canEditRowAtIndexPath:(NSIndexPath*)indexPath
@@ -166,7 +185,31 @@
      */
 }
 
-#pragma mark - Search App
+-(UITableViewCell*) configureRecentAdditionsCell
+{
+    RecentAdditionsCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"RecentAdditionsCell"];
+    
+    if(cell == nil)
+    {
+        // Load the top-level objects from the custom cell XIB.
+        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"RecentAdditionsCell" owner:self options:nil];
+        cell = [topLevelObjects objectAtIndex:0];
+    }
+    
+    NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
+    fetchRequest.entity = [NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext];
+    fetchRequest.fetchLimit = 5;
+    
+    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"createdDate" ascending:NO];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    fetchRequest.sortDescriptors = sortDescriptors;
+    
+    [cell setRecentAdditions:[self.managedObjectContext executeFetchRequest:fetchRequest error:nil]];
+    
+    return cell;
+}
+
+#pragma mark - Local Methods
 
 -(void) searchApp
 {

@@ -13,11 +13,15 @@
 
 @interface Book : NSManagedObject
 
+@property (nonatomic, retain) NSDate* createdDate;
+@property (nonatomic, retain) NSDate* lastReadDate;
 @property (nonatomic, retain) NSString* firstLetterOfTitle;
 @property (nonatomic, retain) NSString* sortableTitle;
 @property (nonatomic, retain) NSString* title;
 @property (nonatomic, retain) NSString* format;
 @property (nonatomic, retain) NSString* edition;
+@property (nonatomic, retain) NSString* seriesName;
+@property (nonatomic, retain) NSString* genre;
 @property (nonatomic, retain) NSNumber* printing;
 @property (nonatomic, retain) NSString* isbn;
 @property (nonatomic, retain) NSNumber* pages;

@@ -26,6 +26,11 @@
 		555BA80F14F420B00005A376 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 555BA80D14F420B00005A376 /* HomeViewController.xib */; };
 		555BA81314F42CF90005A376 /* SearchAppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 555BA81114F42CF90005A376 /* SearchAppViewController.m */; };
 		555BA81414F42CF90005A376 /* SearchAppViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 555BA81214F42CF90005A376 /* SearchAppViewController.xib */; };
+		5567223E14F8491900A5F372 /* catch22.png in Resources */ = {isa = PBXBuildFile; fileRef = 5567223914F8491900A5F372 /* catch22.png */; };
+		5567223F14F8491900A5F372 /* slaughterhouse-five.png in Resources */ = {isa = PBXBuildFile; fileRef = 5567223A14F8491900A5F372 /* slaughterhouse-five.png */; };
+		5567224014F8491900A5F372 /* thegrapesofwrath.png in Resources */ = {isa = PBXBuildFile; fileRef = 5567223B14F8491900A5F372 /* thegrapesofwrath.png */; };
+		5567224114F8491900A5F372 /* thegreatgatsby.png in Resources */ = {isa = PBXBuildFile; fileRef = 5567223C14F8491900A5F372 /* thegreatgatsby.png */; };
+		5567224214F8491900A5F372 /* themaltesefalcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5567223D14F8491900A5F372 /* themaltesefalcon.png */; };
 		556E593914C8A898000C4CBC /* Award.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E593814C8A898000C4CBC /* Award.m */; };
 		556E594314C8A953000C4CBC /* AwardDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E594114C8A953000C4CBC /* AwardDetailViewController.m */; };
 		556E594414C8A953000C4CBC /* AwardDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556E594214C8A953000C4CBC /* AwardDetailViewController.xib */; };
@@ -50,6 +55,9 @@
 		55A99EA514A949FA00836F4E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A99EA414A949FA00836F4E /* main.m */; };
 		55A99EA914A949FA00836F4E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A99EA814A949FA00836F4E /* AppDelegate.m */; };
 		55A99EAC14A949FA00836F4E /* Titlz.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 55A99EAA14A949FA00836F4E /* Titlz.xcdatamodeld */; };
+		55B0885014F6D09D003AD612 /* RecentAdditionsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B0884F14F6D09D003AD612 /* RecentAdditionsCell.m */; };
+		55B0885314F6D0F1003AD612 /* RecentAdditionsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55B0885214F6D0F1003AD612 /* RecentAdditionsCell.xib */; };
+		55B0885514F6EF73003AD612 /* BookPageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55B0885414F6EF73003AD612 /* BookPageView.xib */; };
 		55B5C4C614C73F8B0022B33D /* LookupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B5C4C414C73F8B0022B33D /* LookupViewController.m */; };
 		55B5C4C714C73F8B0022B33D /* LookupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55B5C4C514C73F8B0022B33D /* LookupViewController.xib */; };
 		55B5C4CA14C745740022B33D /* Lookup.m in Sources */ = {isa = PBXBuildFile; fileRef = 55B5C4C914C745740022B33D /* Lookup.m */; };
@@ -127,6 +135,11 @@
 		555BA81014F42CF90005A376 /* SearchAppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchAppViewController.h; sourceTree = "<group>"; };
 		555BA81114F42CF90005A376 /* SearchAppViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchAppViewController.m; sourceTree = "<group>"; };
 		555BA81214F42CF90005A376 /* SearchAppViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchAppViewController.xib; sourceTree = "<group>"; };
+		5567223914F8491900A5F372 /* catch22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = catch22.png; sourceTree = "<group>"; };
+		5567223A14F8491900A5F372 /* slaughterhouse-five.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "slaughterhouse-five.png"; sourceTree = "<group>"; };
+		5567223B14F8491900A5F372 /* thegrapesofwrath.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thegrapesofwrath.png; sourceTree = "<group>"; };
+		5567223C14F8491900A5F372 /* thegreatgatsby.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thegreatgatsby.png; sourceTree = "<group>"; };
+		5567223D14F8491900A5F372 /* themaltesefalcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = themaltesefalcon.png; sourceTree = "<group>"; };
 		556E593714C8A898000C4CBC /* Award.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Award.h; sourceTree = "<group>"; };
 		556E593814C8A898000C4CBC /* Award.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Award.m; sourceTree = "<group>"; };
 		556E594014C8A953000C4CBC /* AwardDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AwardDetailViewController.h; sourceTree = "<group>"; };
@@ -166,6 +179,10 @@
 		55A99EA714A949FA00836F4E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		55A99EA814A949FA00836F4E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		55A99EAB14A949FA00836F4E /* Titlz.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Titlz.xcdatamodel; sourceTree = "<group>"; };
+		55B0884E14F6D09D003AD612 /* RecentAdditionsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentAdditionsCell.h; sourceTree = "<group>"; };
+		55B0884F14F6D09D003AD612 /* RecentAdditionsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecentAdditionsCell.m; sourceTree = "<group>"; };
+		55B0885214F6D0F1003AD612 /* RecentAdditionsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RecentAdditionsCell.xib; sourceTree = "<group>"; };
+		55B0885414F6EF73003AD612 /* BookPageView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookPageView.xib; sourceTree = "<group>"; };
 		55B5C4C314C73F8B0022B33D /* LookupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LookupViewController.h; sourceTree = "<group>"; };
 		55B5C4C414C73F8B0022B33D /* LookupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LookupViewController.m; sourceTree = "<group>"; };
 		55B5C4C514C73F8B0022B33D /* LookupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LookupViewController.xib; sourceTree = "<group>"; };
@@ -267,6 +284,11 @@
 		550B680C14D0D9D80080115C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5567223914F8491900A5F372 /* catch22.png */,
+				5567223A14F8491900A5F372 /* slaughterhouse-five.png */,
+				5567223B14F8491900A5F372 /* thegrapesofwrath.png */,
+				5567223C14F8491900A5F372 /* thegreatgatsby.png */,
+				5567223D14F8491900A5F372 /* themaltesefalcon.png */,
 				55CF1BAE14D70846008D5765 /* book.png */,
 				55CF1BAF14D70846008D5765 /* book@2x.png */,
 				55CF1BB014D70846008D5765 /* collection.png */,
@@ -440,6 +462,8 @@
 				559E461E14CF7B8F0055D52C /* EditableImageAndTextCell.m */,
 				5523BE1D14DB4116003C611A /* EditableLookupAndTextCell.h */,
 				5523BE1E14DB4116003C611A /* EditableLookupAndTextCell.m */,
+				55B0884E14F6D09D003AD612 /* RecentAdditionsCell.h */,
+				55B0884F14F6D09D003AD612 /* RecentAdditionsCell.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -468,6 +492,8 @@
 				558AD5BE14E3157300980C94 /* EditableTextViewCell.xib */,
 				559E462014CF7BB70055D52C /* EditableImageAndTextCell.xib */,
 				5523BE1B14DB40C7003C611A /* EditableLookupAndTextCell.xib */,
+				55B0885214F6D0F1003AD612 /* RecentAdditionsCell.xib */,
+				55B0885414F6EF73003AD612 /* BookPageView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -651,6 +677,13 @@
 				555BA80814F41FDB0005A376 /* home@2x.png in Resources */,
 				555BA80F14F420B00005A376 /* HomeViewController.xib in Resources */,
 				555BA81414F42CF90005A376 /* SearchAppViewController.xib in Resources */,
+				55B0885314F6D0F1003AD612 /* RecentAdditionsCell.xib in Resources */,
+				55B0885514F6EF73003AD612 /* BookPageView.xib in Resources */,
+				5567223E14F8491900A5F372 /* catch22.png in Resources */,
+				5567223F14F8491900A5F372 /* slaughterhouse-five.png in Resources */,
+				5567224014F8491900A5F372 /* thegrapesofwrath.png in Resources */,
+				5567224114F8491900A5F372 /* thegreatgatsby.png in Resources */,
+				5567224214F8491900A5F372 /* themaltesefalcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -727,6 +760,7 @@
 				5501580D14EEC02F00458477 /* DConnection.m in Sources */,
 				555BA80E14F420B00005A376 /* HomeViewController.m in Sources */,
 				555BA81314F42CF90005A376 /* SearchAppViewController.m in Sources */,
+				55B0885014F6D09D003AD612 /* RecentAdditionsCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
