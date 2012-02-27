@@ -13,6 +13,7 @@
 
 @interface HomeViewController()
 -(void) searchApp;
+-(NSArray*) recentAdditions;
 -(UITableViewCell*) configureRecentAdditionsCell;
 @end
 
@@ -63,6 +64,8 @@
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self.tableView reloadData];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -196,15 +199,7 @@
         cell = [topLevelObjects objectAtIndex:0];
     }
     
-    NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
-    fetchRequest.entity = [NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext];
-    fetchRequest.fetchLimit = 5;
-    
-    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"createdDate" ascending:NO];
-    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
-    fetchRequest.sortDescriptors = sortDescriptors;
-    
-    [cell setRecentAdditions:[self.managedObjectContext executeFetchRequest:fetchRequest error:nil]];
+    [cell setRecentAdditions:[self recentAdditions]];
     
     return cell;
 }
@@ -220,6 +215,19 @@
     }
     self.searchAppViewController.managedObjectContext = self.managedObjectContext;
     [self.navigationController pushViewController:self.searchAppViewController animated:YES];
+}
+
+-(NSArray*) recentAdditions
+{
+    NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
+    fetchRequest.entity = [NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext];
+    fetchRequest.fetchLimit = 5;
+    
+    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"createdDate" ascending:NO];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    fetchRequest.sortDescriptors = sortDescriptors;
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
 }
 
 @end

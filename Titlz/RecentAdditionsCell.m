@@ -58,7 +58,11 @@
         NSArray* nib = [[NSBundle mainBundle] loadNibNamed:@"BookPageView" owner:self options:nil];
         UIView* v = [nib objectAtIndex:0];
 
-        self.thumbnailView.image = book.thumbnail;
+        if (book.thumbnail == nil)
+            self.thumbnailView.image = [UIImage imageNamed:@"BookCover-leather-large.jpg"];
+        else
+            self.thumbnailView.image = book.thumbnail;
+
         self.titleLabel.text = book.title;
         Worker* worker = [book.workers anyObject];
         if (worker != nil)
