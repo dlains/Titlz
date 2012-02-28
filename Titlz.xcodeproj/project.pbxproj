@@ -31,6 +31,7 @@
 		5567224014F8491900A5F372 /* thegrapesofwrath.png in Resources */ = {isa = PBXBuildFile; fileRef = 5567223B14F8491900A5F372 /* thegrapesofwrath.png */; };
 		5567224114F8491900A5F372 /* thegreatgatsby.png in Resources */ = {isa = PBXBuildFile; fileRef = 5567223C14F8491900A5F372 /* thegreatgatsby.png */; };
 		5567224214F8491900A5F372 /* themaltesefalcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5567223D14F8491900A5F372 /* themaltesefalcon.png */; };
+		556873C714FC5988000709A8 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 556873C614FC5988000709A8 /* Default@2x.png */; };
 		556E593914C8A898000C4CBC /* Award.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E593814C8A898000C4CBC /* Award.m */; };
 		556E594314C8A953000C4CBC /* AwardDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E594114C8A953000C4CBC /* AwardDetailViewController.m */; };
 		556E594414C8A953000C4CBC /* AwardDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556E594214C8A953000C4CBC /* AwardDetailViewController.xib */; };
@@ -43,6 +44,8 @@
 		558AD5C314E339A800980C94 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 558AD5C114E339A800980C94 /* ImageViewController.m */; };
 		558AD5C414E339A800980C94 /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 558AD5C214E339A800980C94 /* ImageViewController.xib */; };
 		5591513614BF5F2800F1C01E /* DLPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 5591513514BF5F2800F1C01E /* DLPoint.m */; };
+		5598C6B314FC385C0062EC77 /* InitialData.m in Sources */ = {isa = PBXBuildFile; fileRef = 5598C6B214FC385C0062EC77 /* InitialData.m */; };
+		5598C6BA14FC58420062EC77 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5598C6B914FC58420062EC77 /* Default.png */; };
 		559E461814CF584D0055D52C /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = 559E461714CF584D0055D52C /* Photo.m */; };
 		559E461C14CF58D40055D52C /* ImageToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 559E461B14CF58D40055D52C /* ImageToDataTransformer.m */; };
 		559E461F14CF7B8F0055D52C /* EditableImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 559E461E14CF7B8F0055D52C /* EditableImageAndTextCell.m */; };
@@ -140,6 +143,7 @@
 		5567223B14F8491900A5F372 /* thegrapesofwrath.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thegrapesofwrath.png; sourceTree = "<group>"; };
 		5567223C14F8491900A5F372 /* thegreatgatsby.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thegreatgatsby.png; sourceTree = "<group>"; };
 		5567223D14F8491900A5F372 /* themaltesefalcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = themaltesefalcon.png; sourceTree = "<group>"; };
+		556873C614FC5988000709A8 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		556E593714C8A898000C4CBC /* Award.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Award.h; sourceTree = "<group>"; };
 		556E593814C8A898000C4CBC /* Award.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Award.m; sourceTree = "<group>"; };
 		556E594014C8A953000C4CBC /* AwardDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AwardDetailViewController.h; sourceTree = "<group>"; };
@@ -160,6 +164,9 @@
 		5591513414BF5F2800F1C01E /* DLPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLPoint.h; sourceTree = "<group>"; };
 		5591513514BF5F2800F1C01E /* DLPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLPoint.m; sourceTree = "<group>"; };
 		5591513A14BF9F6F00F1C01E /* Definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Definitions.h; sourceTree = "<group>"; };
+		5598C6B114FC385C0062EC77 /* InitialData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InitialData.h; sourceTree = "<group>"; };
+		5598C6B214FC385C0062EC77 /* InitialData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InitialData.m; sourceTree = "<group>"; };
+		5598C6B914FC58420062EC77 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		559E461614CF584D0055D52C /* Photo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Photo.h; sourceTree = "<group>"; };
 		559E461714CF584D0055D52C /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
 		559E461A14CF58D40055D52C /* ImageToDataTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageToDataTransformer.h; sourceTree = "<group>"; };
@@ -328,6 +335,8 @@
 				557B7B0014CCE78A0057FE42 /* DAlertView.m */,
 				5501580B14EEC02F00458477 /* DConnection.h */,
 				5501580C14EEC02F00458477 /* DConnection.m */,
+				5598C6B114FC385C0062EC77 /* InitialData.h */,
+				5598C6B214FC385C0062EC77 /* InitialData.m */,
 				55EED62C14D2174F00AFA726 /* AlphaIndexFetchedResultsController.h */,
 				55EED62D14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m */,
 			);
@@ -388,6 +397,8 @@
 		55A99E8714A949FA00836F4E = {
 			isa = PBXGroup;
 			children = (
+				556873C614FC5988000709A8 /* Default@2x.png */,
+				5598C6B914FC58420062EC77 /* Default.png */,
 				55A99E9E14A949FA00836F4E /* Titlz */,
 				55A99E9514A949FA00836F4E /* Frameworks */,
 				55A99E9314A949FA00836F4E /* Products */,
@@ -684,6 +695,8 @@
 				5567224014F8491900A5F372 /* thegrapesofwrath.png in Resources */,
 				5567224114F8491900A5F372 /* thegreatgatsby.png in Resources */,
 				5567224214F8491900A5F372 /* themaltesefalcon.png in Resources */,
+				5598C6BA14FC58420062EC77 /* Default.png in Resources */,
+				556873C714FC5988000709A8 /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -761,6 +774,7 @@
 				555BA80E14F420B00005A376 /* HomeViewController.m in Sources */,
 				555BA81314F42CF90005A376 /* SearchAppViewController.m in Sources */,
 				55B0885014F6D09D003AD612 /* RecentAdditionsCell.m in Sources */,
+				5598C6B314FC385C0062EC77 /* InitialData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

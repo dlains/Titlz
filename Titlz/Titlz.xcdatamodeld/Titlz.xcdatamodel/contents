@@ -14,7 +14,6 @@
         <attribute name="edition" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="firstLetterOfTitle" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="format" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="genre" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isbn" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="jacketCondition" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastReadDate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -101,7 +100,7 @@
     </entity>
     <elements>
         <element name="Award" positionX="-8937" positionY="-7893" width="128" height="105"/>
-        <element name="Book" positionX="-8973" positionY="-7746" width="137" height="510"/>
+        <element name="Book" positionX="-8973" positionY="-7746" width="137" height="495"/>
         <element name="Collection" positionX="-8964" positionY="-7434" width="128" height="75"/>
         <element name="Lookup" positionX="160" positionY="192" width="128" height="90"/>
         <element name="Person" positionX="-8244" positionY="-7524" width="128" height="225"/>
