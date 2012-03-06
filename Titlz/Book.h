@@ -34,6 +34,7 @@
 @property (nonatomic, retain) NSString* jacketCondition;
 @property (nonatomic, retain) NSNumber* number;
 @property (nonatomic, retain) NSNumber* printRun;
+@property (nonatomic, retain) NSString* location;
 @property (nonatomic, retain) NSString* comments;
 @property (nonatomic, retain) UIImage* thumbnail;
 @property (nonatomic, retain) NSSet* awards;

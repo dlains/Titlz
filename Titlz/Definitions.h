@@ -74,6 +74,7 @@ typedef enum BookDetailsSectionRowsEnum
     BookEditionRow,
     BookPagesRow,
     BookIsbnRow,
+    BookSeriesNameRow,
     BookOriginalPriceRow,
     BookReleaseDateRow,
     BookPublisherRow,
@@ -84,13 +85,15 @@ typedef enum BookInstanceDetailsSectionRowsEnum
 {
     BookBookConditionRow = 0,
     BookJacketConditionRow,
+    BookPrintingRow,
     BookPurchaseDateRow,
     BookPricePaidRow,
     BookCurrentValueRow,
-    BookPrintingRow,
+    BookLastReadRow,
     BookNumberRow,
     BookPrintRunRow,
     BookBoughtFromRow,
+    BookLocationRow,
     BookCommentsRow,
     BookInstanceDetailsSectionRowCount
 } BookInstanceDetailsSectionRows;
@@ -119,7 +122,10 @@ typedef enum BookDataFieldTagEnum
     BookSignatureTag,
     BookAwardTag,
     BookPointTag,
-    BookCollectionTag
+    BookCollectionTag,
+    BookLastReadTag,
+    BookSeriesNameTag,
+    BookLocationTag
 } BookDataFieldTag;
 
 typedef enum CollectionDetailSectionsEnum
@@ -148,7 +154,8 @@ typedef enum LookupTypeEnum
     LookupTypeCondition,
     LookupTypeCountry,
     LookupTypeState,
-    LookupTypeWorker
+    LookupTypeWorker,
+    LookupTypeLocation
 } LookupType;
 
 typedef enum PersonDetailSectionsEnum

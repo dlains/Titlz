@@ -262,6 +262,12 @@
             lookupTextField = textField;
             [textField resignFirstResponder];
             [self loadSellerView];
+            break;
+        case BookLocationTag:
+            lookupTextField = textField;
+            [textField resignFirstResponder];
+            [self showLookupViewControllerForLookupType:LookupTypeLocation];
+            break;
         case BookSignatureTag:
             if (textField.text.length > 0)
             {
@@ -340,11 +346,11 @@
         case BookBoughtFromTag:
         case BookEditionTag:
             break;
-        case BookPrintingTag:
-            self.detailItem.printing = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
-            break;
         case BookIsbnTag:
             self.detailItem.isbn = textField.text;
+            break;
+        case BookSeriesNameTag:
+            self.detailItem.seriesName = textField.text;
             break;
         case BookPagesTag:
             self.detailItem.pages = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
@@ -364,12 +370,18 @@
         case BookBookConditionTag:
         case BookJacketConditionTag:
             break;
+        case BookPrintingTag:
+            self.detailItem.printing = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
+            break;
+        case BookLastReadTag:
+            break;
         case BookNumberTag:
             self.detailItem.number = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
         case BookPrintRunTag:
             self.detailItem.printRun = ([textField.text length] > 0) ? [NSNumber numberWithInt:[textField.text intValue]] : nil;
             break;
+        case BookLocationTag:
         case BookCommentsTag:
         case BookSignatureTag:
         case BookAwardTag:
@@ -420,6 +432,10 @@
             self.detailItem.purchaseDate = picker.date;
             purchaseDateTextField.text = [dateFormatter stringFromDate:picker.date];
             break;
+        case BookLastReadTag:
+            self.detailItem.lastReadDate = picker.date;
+            lastReadDateTextField.text = [dateFormatter stringFromDate:picker.date];
+            break;
         default:
             break;
     }
@@ -459,6 +475,10 @@
                 lookupCell = (EditableLookupAndTextCell*)workerLookupLabel.superview.superview;
                 [self updateWorkerObject:lookupCell.objectId withTitle:value andPerson:nil];
                 workerLookupLabel.text = value;
+                break;
+            case LookupTypeLocation:
+                self.detailItem.location = value;
+                lookupTextField.text = value;
                 break;
             default:
                 DLog(@"Invalid LookupType found in BookDetailViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
@@ -919,6 +939,11 @@
             cell.textField.tag = BookIsbnTag;
             cell.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
             break;
+        case BookSeriesNameRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Series Name", @"BookDetailViewController seriesName field label.");
+            cell.textField.text = self.detailItem.seriesName;
+            cell.textField.tag = BookSeriesNameTag;
+            break;
         case BookOriginalPriceRow:
             cell.fieldLabel.text = NSLocalizedString(@"Original Price", @"BookDetailViewController originalPrice data field label.");
             cell.textField.text = (self.detailItem.originalPrice == nil) ? @"" : [NSString stringWithFormat:@"%1.2f", [self.detailItem.originalPrice floatValue]];
@@ -959,6 +984,13 @@
         purchaseDatePicker = [[UIDatePicker alloc] init];
         purchaseDatePicker.datePickerMode = UIDatePickerModeDate;
         [purchaseDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    }
+    
+    if (lastReadDatePicker == nil)
+    {
+        lastReadDatePicker = [[UIDatePicker alloc] init];
+        lastReadDatePicker.datePickerMode = UIDatePickerModeDate;
+        [lastReadDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
     }
     
     if (dateFormatter == nil)
@@ -1018,6 +1050,12 @@
             cell.textField.inputView = dummyView;
             cell.textField.tag = BookJacketConditionTag;
             break;
+        case BookPrintingRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Printing", @"BookDetailViewController printing data field label.");
+            cell.textField.text = (self.detailItem.printing == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printing intValue]];
+            cell.textField.tag = BookPrintingTag;
+            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+            break;
         case BookPurchaseDateRow:
             cell.fieldLabel.text = NSLocalizedString(@"Puchased", @"BookDetailViewController purchaseDate data field label.");
             purchaseDateTextField = cell.textField;
@@ -1038,11 +1076,13 @@
             cell.textField.tag = BookCurrentValueTag;
             cell.textField.keyboardType = UIKeyboardTypeDecimalPad;
             break;
-        case BookPrintingRow:
-            cell.fieldLabel.text = NSLocalizedString(@"Printing", @"BookDetailViewController printing data field label.");
-            cell.textField.text = (self.detailItem.printing == nil) ? @"" : [NSString stringWithFormat:@"%i", [self.detailItem.printing intValue]];
-            cell.textField.tag = BookPrintingTag;
-            cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+        case BookLastReadRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Last Read", @"BookDetailViewController lastRead data field label.");
+            lastReadDateTextField = cell.textField;
+            cell.textField.tag = BookLastReadTag;
+            lastReadDatePicker.tag = BookLastReadTag;
+            cell.textField.inputView = lastReadDatePicker;
+            cell.textField.text = [dateFormatter stringFromDate:self.detailItem.lastReadDate];
             break;
         case BookNumberRow:
             cell.fieldLabel.text = NSLocalizedString(@"Number", @"BookDetailViewController number data field label.");
@@ -1062,6 +1102,12 @@
                 cell.textField.text = self.detailItem.boughtFrom.name;
             cell.textField.inputView = dummyView;
             cell.textField.tag = BookBoughtFromTag;
+            break;
+        case BookLocationRow:
+            cell.fieldLabel.text = NSLocalizedString(@"Location", @"BookDetailViewController location data field label.");
+            cell.textField.text = self.detailItem.location;
+            cell.textField.inputView = dummyView;
+            cell.textField.tag = BookLocationTag;
             break;
         case BookCommentsRow:
             textCell.fieldLabel.text = NSLocalizedString(@"Comments", @"BookDetailViewController comments data field label.");

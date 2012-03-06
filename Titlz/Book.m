@@ -39,6 +39,7 @@
 @dynamic jacketCondition;
 @dynamic number;
 @dynamic printRun;
+@dynamic location;
 @dynamic comments;
 @dynamic thumbnail;
 @dynamic awards;

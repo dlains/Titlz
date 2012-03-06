@@ -31,6 +31,7 @@
 -(void) createCountryValues;
 -(void) createStateValues;
 -(void) createWorkerValues;
+-(void) createLocationValues;
 @end
 
 
@@ -239,6 +240,7 @@
     [self createCountryValues];
     [self createStateValues];
     [self createWorkerValues];
+    [self createLocationValues];
 }
 
 -(void) createEditionValues
@@ -639,6 +641,21 @@
     lookup.type  = [NSNumber numberWithInt:LookupTypeWorker];
     lookup.order = [NSNumber numberWithInt:4];
     lookup.name  = NSLocalizedString(@"Translator", @"Book Worker 'Translator' lookup type");
+}
+
+-(void) createLocationValues
+{
+    Lookup* lookup = nil;
+    
+    lookup       = [Lookup lookupInManagedObjectContext:self.managedObjectContext];
+    lookup.type  = [NSNumber numberWithInt:LookupTypeLocation];
+    lookup.order = [NSNumber numberWithInt:0];
+    lookup.name  = NSLocalizedString(@"Library Bookshelf", @"Book Location 'Library Bookshelf' lookup type");
+    
+    lookup       = [Lookup lookupInManagedObjectContext:self.managedObjectContext];
+    lookup.type  = [NSNumber numberWithInt:LookupTypeLocation];
+    lookup.order = [NSNumber numberWithInt:1];
+    lookup.name  = NSLocalizedString(@"Storage Box 1", @"Book Location 'Storage Box 1' lookup type");
 }
 
 @end

@@ -17,6 +17,7 @@
         <attribute name="isbn" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="jacketCondition" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastReadDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="number" optional="YES" attributeType="Integer 32" syncable="YES"/>
         <attribute name="originalPrice" optional="YES" attributeType="Decimal" syncable="YES"/>
         <attribute name="pages" optional="YES" attributeType="Integer 32" syncable="YES"/>
@@ -45,7 +46,7 @@
     <entity name="Lookup" representedClassName="Lookup" syncable="YES">
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="order" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="type" attributeType="Integer 32" maxValueString="6" syncable="YES"/>
+        <attribute name="type" attributeType="Integer 32" maxValueString="7" syncable="YES"/>
     </entity>
     <entity name="Person" representedClassName="Person" syncable="YES">
         <attribute name="born" optional="YES" attributeType="Date" syncable="YES"/>

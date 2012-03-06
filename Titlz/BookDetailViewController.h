@@ -21,12 +21,14 @@
 {
     UITextField* releaseDateTextField;
     UITextField* purchaseDateTextField;
+    UITextField* lastReadDateTextField;
     UITextField* lookupTextField;
     UILabel* workerLookupLabel;
     UIImageView* thumbnailView;
     
     UIDatePicker* releaseDatePicker;
     UIDatePicker* purchaseDatePicker;
+    UIDatePicker* lastReadDatePicker;
     NSDateFormatter* dateFormatter;
     UIView* dummyView;
 }
