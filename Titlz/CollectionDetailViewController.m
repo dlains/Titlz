@@ -507,6 +507,7 @@
     bookViewController.managedObjectContext = self.detailItem.managedObjectContext;
     bookViewController.delegate = self;
     bookViewController.selectionMode = MultipleSelection;
+    bookViewController.excludedBooks = self.detailItem.books;
     
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:bookViewController];
     navController.navigationBar.barStyle = UIBarStyleBlack;

@@ -36,6 +36,7 @@
 @synthesize delegate = _delegate;
 @synthesize selectionMode = _selectionMode;
 @synthesize personSelectionType = _personSelectionType;
+@synthesize excludedBooks = _excludedBooks;
 
 -(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
@@ -242,7 +243,14 @@
         return __fetchedResultsController;
     }
     
-    self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:nil];
+    if (self.selectionMode == MultipleSelection && self.excludedBooks != nil)
+    {
+        NSPredicate* predicate = [NSPredicate predicateWithFormat:@"NOT (self IN %@)", self.excludedBooks];
+
+        self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:predicate];
+    }
+    else
+        self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:nil];
     
     return __fetchedResultsController;
 }    

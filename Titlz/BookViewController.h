@@ -24,6 +24,7 @@
 @property(nonatomic, assign) id <BookSelectedDelegate> delegate;
 @property(nonatomic, assign) SelectionMode selectionMode;
 @property(nonatomic, assign) PersonType personSelectionType;
+@property(nonatomic, strong) NSSet* excludedBooks;
 
 @end
 
