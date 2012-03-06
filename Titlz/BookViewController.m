@@ -10,6 +10,8 @@
 #import "BookDetailViewController.h"
 #import "Book.h"
 #import "Photo.h"
+#import "Person.h"
+#import "Worker.h"
 #import "AlphaIndexFetchedResultsController.h"
 #import "OpenLibraryLookupViewController.h"
 
@@ -352,21 +354,39 @@
     cell.textLabel.text = book.title;
     
     NSMutableString* detail = [NSMutableString stringWithCapacity:10];
-    if (book.edition.length > 0)
+
+    // Try book workers for the detail line first.
+    if (book.workers.count > 0)
     {
-        [detail appendString:book.edition];
-    }
-    
-    if (book.format.length > 0)
-    {
-        if (detail.length > 0)
+        int count = 0;
+        for (Worker* worker in book.workers)
         {
-            [detail appendString:@" - "];
-            [detail appendString:book.format];
+            if (count > 0)
+            {
+                [detail appendString:@", "];
+            }
+            [detail appendString:worker.person.fullName];
+            count++;
         }
-        else
+    }
+    else // Get the edition and format.
+    {
+        if (book.edition.length > 0)
         {
-            [detail appendString:book.format];
+            [detail appendString:book.edition];
+        }
+        
+        if (book.format.length > 0)
+        {
+            if (detail.length > 0)
+            {
+                [detail appendString:@" - "];
+                [detail appendString:book.format];
+            }
+            else
+            {
+                [detail appendString:book.format];
+            }
         }
     }
 

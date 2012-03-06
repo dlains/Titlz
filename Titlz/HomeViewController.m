@@ -66,8 +66,7 @@
 {
     [super viewDidLoad];
 
-    //self.tableView.backgroundColor = [UIColor darkGrayColor];
-    //self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
 
     UIBarButtonItem* searchButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchApp)];
     self.navigationItem.rightBarButtonItem = searchButton;
@@ -199,25 +198,7 @@
 
 -(NSIndexPath*) tableView:(UITableView*)tableView willSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    switch (indexPath.section)
-    {
-        case HomeRecentAdditionsSection:
-            return indexPath;
-        default:
-            return nil;
-    }
-}
-
--(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
-{
-    switch (indexPath.section)
-    {
-        case HomeRecentAdditionsSection:
-            [self loadBookDetailView];
-            break;
-        default:
-            break;
-    }
+    return nil;
 }
 
 -(UITableViewCell*) configureRecentAdditionsCell
@@ -249,9 +230,6 @@
     
     cell.textLabel.text = NSLocalizedString(@"Collection Size", @"HomeViewController:configureCollectionSizeCell cell text.");
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", self.collectionSize];
-    //cell.detailTextLabel.backgroundColor = [UIColor whiteColor];
-    //cell.textLabel.backgroundColor = [UIColor whiteColor];
-    //cell.contentView.backgroundColor = [UIColor whiteColor];
     
     return cell;
 }
@@ -268,9 +246,6 @@
     
     cell.textLabel.text = NSLocalizedString(@"Collection Value", @"HomeViewController:configureCollectionValueCell cell text.");
     cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", self.collectionValue];
-    //cell.detailTextLabel.backgroundColor = [UIColor whiteColor];
-    //cell.textLabel.backgroundColor = [UIColor whiteColor];
-    //cell.contentView.backgroundColor = [UIColor whiteColor];
     
     return cell;
 }
@@ -287,9 +262,6 @@
     
     cell.textLabel.text = NSLocalizedString(@"Collection Cost", @"HomeViewController:configureCollectionCostCell cell text.");
     cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", self.collectionCost];
-    //cell.detailTextLabel.backgroundColor = [UIColor whiteColor];
-    //cell.textLabel.backgroundColor = [UIColor whiteColor];
-    //cell.contentView.backgroundColor = [UIColor whiteColor];
     
     return cell;
 }
@@ -321,9 +293,6 @@
         cell.detailTextLabel.text = [NSString stringWithFormat:@"$(%@)", total];
         cell.detailTextLabel.textColor = [UIColor redColor];
     }
-    //cell.detailTextLabel.backgroundColor = [UIColor whiteColor];
-    //cell.textLabel.backgroundColor = [UIColor whiteColor];
-    //cell.contentView.backgroundColor = [UIColor whiteColor];
     
     return cell;
 }
