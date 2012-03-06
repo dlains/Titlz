@@ -8,19 +8,38 @@
 
 #import "HomeViewController.h"
 #import "SearchAppViewController.h"
-#import "RecentAdditionsCell.h"
+#import "BookDetailViewController.h"
 #import "Book.h"
 
 @interface HomeViewController()
+
+@property(nonatomic, assign) NSUInteger collectionSize;
+@property(nonatomic, strong) NSDecimalNumber* collectionValue;
+@property(nonatomic, strong) NSDecimalNumber* collectionCost;
+@property(nonatomic, assign) NSInteger recentAdditionsPage;
+
+-(UITableViewCell*) configureRecentAdditionsCell;
+-(UITableViewCell*) configureCollectionSizeCell;
+-(UITableViewCell*) configureCollectionValueCell;
+-(UITableViewCell*) configureCollectionCostCell;
+-(UITableViewCell*) configureCollectionTotalCell;
+
 -(void) searchApp;
 -(NSArray*) recentAdditions;
--(UITableViewCell*) configureRecentAdditionsCell;
+-(void) updateCollectionSize;
+-(void) updateCollectionValue;
+-(void) updateCollectionCost;
+-(void) loadBookDetailView;
 @end
 
 @implementation HomeViewController
 
 @synthesize searchAppViewController = _searchAppViewController;
 @synthesize managedObjectContext = _managedObjectContext;
+@synthesize collectionSize = _collectionSize;
+@synthesize collectionValue = _collectionValue;
+@synthesize collectionCost = _collectionCost;
+@synthesize recentAdditionsPage = _recentAdditionsPage;
 
 -(id) initWithStyle:(UITableViewStyle)style
 {
@@ -47,11 +66,16 @@
 {
     [super viewDidLoad];
 
-    self.tableView.backgroundColor = [UIColor darkGrayColor];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    //self.tableView.backgroundColor = [UIColor darkGrayColor];
+    //self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 
     UIBarButtonItem* searchButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchApp)];
     self.navigationItem.rightBarButtonItem = searchButton;
+    
+    self.recentAdditionsPage = 0;
+    [self updateCollectionSize];
+    [self updateCollectionValue];
+    [self updateCollectionCost];
 }
 
 -(void) viewDidUnload
@@ -64,6 +88,10 @@
 -(void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self updateCollectionSize];
+    [self updateCollectionValue];
+    [self updateCollectionCost];
     
     [self.tableView reloadData];
 }
@@ -102,6 +130,14 @@
     {
         case HomeRecentAdditionsSection:
             return 1;
+        case HomeCollectionSizeSection:
+            return 1;
+        case HomeCollectionValueSection:
+            return 1;
+        case HomeCollectionCostSection:
+            return 1;
+        case HomeCollectionTotalSection:
+            return 1;
         default:
             break;
     }
@@ -116,6 +152,18 @@
     {
         case HomeRecentAdditionsSection:
             cell = [self configureRecentAdditionsCell];
+            break;
+        case HomeCollectionSizeSection:
+            cell = [self configureCollectionSizeCell];
+            break;
+        case HomeCollectionValueSection:
+            cell = [self configureCollectionValueCell];
+            break;
+        case HomeCollectionCostSection:
+            cell = [self configureCollectionCostCell];
+            break;
+        case HomeCollectionTotalSection:
+            cell = [self configureCollectionTotalCell];
             break;
         default:
             DLog(@"Invalid HomeViewController section found: %i.", indexPath.section);
@@ -136,56 +184,40 @@
         return UITableViewAutomaticDimension;
     }
 }
-/*
-// Override to support conditional editing of the table view.
+
 -(BOOL) tableView:(UITableView*)tableView canEditRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    return NO;
 }
-*/
 
-/*
-// Override to support editing the table view.
--(void) tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
--(void) tableView:(UITableView*)tableView moveRowAtIndexPath:(NSIndexPath*)fromIndexPath toIndexPath:(NSIndexPath*)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
 -(BOOL) tableView:(UITableView*)tableView canMoveRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
+    return NO;
 }
-*/
 
 #pragma mark - Table view delegate
 
+-(NSIndexPath*) tableView:(UITableView*)tableView willSelectRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    switch (indexPath.section)
+    {
+        case HomeRecentAdditionsSection:
+            return indexPath;
+        default:
+            return nil;
+    }
+}
+
 -(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    switch (indexPath.section)
+    {
+        case HomeRecentAdditionsSection:
+            [self loadBookDetailView];
+            break;
+        default:
+            break;
+    }
 }
 
 -(UITableViewCell*) configureRecentAdditionsCell
@@ -199,9 +231,113 @@
         cell = [topLevelObjects objectAtIndex:0];
     }
     
+    cell.delegate = self;
     [cell setRecentAdditions:[self recentAdditions]];
     
     return cell;
+}
+
+-(UITableViewCell*) configureCollectionSizeCell
+{
+    static NSString* CellIdentifier = @"CollectionCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    }
+    
+    cell.textLabel.text = NSLocalizedString(@"Collection Size", @"HomeViewController:configureCollectionSizeCell cell text.");
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", self.collectionSize];
+    //cell.detailTextLabel.backgroundColor = [UIColor whiteColor];
+    //cell.textLabel.backgroundColor = [UIColor whiteColor];
+    //cell.contentView.backgroundColor = [UIColor whiteColor];
+    
+    return cell;
+}
+
+-(UITableViewCell*) configureCollectionValueCell
+{
+    static NSString* CellIdentifier = @"CollectionCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    }
+    
+    cell.textLabel.text = NSLocalizedString(@"Collection Value", @"HomeViewController:configureCollectionValueCell cell text.");
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", self.collectionValue];
+    //cell.detailTextLabel.backgroundColor = [UIColor whiteColor];
+    //cell.textLabel.backgroundColor = [UIColor whiteColor];
+    //cell.contentView.backgroundColor = [UIColor whiteColor];
+    
+    return cell;
+}
+
+-(UITableViewCell*) configureCollectionCostCell
+{
+    static NSString* CellIdentifier = @"CollectionCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    }
+    
+    cell.textLabel.text = NSLocalizedString(@"Collection Cost", @"HomeViewController:configureCollectionCostCell cell text.");
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", self.collectionCost];
+    //cell.detailTextLabel.backgroundColor = [UIColor whiteColor];
+    //cell.textLabel.backgroundColor = [UIColor whiteColor];
+    //cell.contentView.backgroundColor = [UIColor whiteColor];
+    
+    return cell;
+}
+
+-(UITableViewCell*) configureCollectionTotalCell
+{
+    static NSString* CellIdentifier = @"CollectionCell";
+    
+    UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    }
+    
+    cell.textLabel.text = NSLocalizedString(@"Collection Total", @"HomeViewController:configureCollectionTotalCell cell text.");
+    
+    NSDecimalNumber* total = [self.collectionValue decimalNumberBySubtracting:self.collectionCost];
+    
+    NSComparisonResult result = [total compare:[NSDecimalNumber zero]];
+    if (result == NSOrderedDescending || result == NSOrderedSame)
+    {
+        // Total is greater than or equal to zero.
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", total];
+        cell.detailTextLabel.textColor = [UIColor colorWithRed:0.19607 green:0.30980 blue:0.52156 alpha:1.0];
+    }
+    else
+    {
+        // Total is less than zero.
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"$(%@)", total];
+        cell.detailTextLabel.textColor = [UIColor redColor];
+    }
+    //cell.detailTextLabel.backgroundColor = [UIColor whiteColor];
+    //cell.textLabel.backgroundColor = [UIColor whiteColor];
+    //cell.contentView.backgroundColor = [UIColor whiteColor];
+    
+    return cell;
+}
+
+#pragma mark - Recent Additions Page Delegate
+
+-(void) didUpdateCurrentPageTo:(NSInteger)page
+{
+    self.recentAdditionsPage = page;
+}
+
+-(void) didSelectCurrentPage
+{
+    [self loadBookDetailView];
 }
 
 #pragma mark - Local Methods
@@ -228,6 +364,100 @@
     fetchRequest.sortDescriptors = sortDescriptors;
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+}
+
+-(void) updateCollectionSize
+{
+    NSFetchRequest* request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext]];
+    
+    NSError* error = nil;
+    self.collectionSize = [self.managedObjectContext countForFetchRequest:request error:&error];
+}
+
+-(void) updateCollectionValue
+{
+    NSFetchRequest* request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext]];
+    
+    // Specify that the request should return dictionaries.
+    [request setResultType:NSDictionaryResultType];
+    
+    // Create an expression for the key path.
+    NSExpression* keyPathExpression = [NSExpression expressionForKeyPath:@"currentValue"];
+    
+    // Create an expression to represent the minimum value at the key path 'creationDate'
+    NSExpression* sumExpression = [NSExpression expressionForFunction:@"sum:" arguments:[NSArray arrayWithObject:keyPathExpression]];
+    
+    // Create an expression description using the minExpression and returning a date.
+    NSExpressionDescription* expressionDescription = [[NSExpressionDescription alloc] init];
+    
+    // The name is the key that will be used in the dictionary for the return value.
+    [expressionDescription setName:@"collectionValue"];
+    [expressionDescription setExpression:sumExpression];
+    [expressionDescription setExpressionResultType:NSDecimalAttributeType];
+    
+    // Set the request's properties to fetch just the property represented by the expressions.
+    [request setPropertiesToFetch:[NSArray arrayWithObject:expressionDescription]];
+    
+    // Execute the fetch.
+    NSError* error = nil;
+    NSArray* objects = [self.managedObjectContext executeFetchRequest:request error:&error];
+
+    if (objects.count > 0)
+    {
+        self.collectionValue = [[objects objectAtIndex:0] valueForKey:@"collectionValue"];
+    }
+    else
+    {
+        self.collectionValue = [NSDecimalNumber zero];
+    }
+}
+
+-(void) updateCollectionCost
+{
+    NSFetchRequest* request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext]];
+    
+    // Specify that the request should return dictionaries.
+    [request setResultType:NSDictionaryResultType];
+    
+    // Create an expression for the key path.
+    NSExpression* keyPathExpression = [NSExpression expressionForKeyPath:@"pricePaid"];
+    
+    // Create an expression to represent the minimum value at the key path 'creationDate'
+    NSExpression* sumExpression = [NSExpression expressionForFunction:@"sum:" arguments:[NSArray arrayWithObject:keyPathExpression]];
+    
+    // Create an expression description using the minExpression and returning a date.
+    NSExpressionDescription* expressionDescription = [[NSExpressionDescription alloc] init];
+    
+    // The name is the key that will be used in the dictionary for the return value.
+    [expressionDescription setName:@"collectionCost"];
+    [expressionDescription setExpression:sumExpression];
+    [expressionDescription setExpressionResultType:NSDecimalAttributeType];
+    
+    // Set the request's properties to fetch just the property represented by the expressions.
+    [request setPropertiesToFetch:[NSArray arrayWithObject:expressionDescription]];
+    
+    // Execute the fetch.
+    NSError* error = nil;
+    NSArray* objects = [self.managedObjectContext executeFetchRequest:request error:&error];
+    
+    if (objects.count > 0)
+    {
+        self.collectionCost = [[objects objectAtIndex:0] valueForKey:@"collectionCost"];
+    }
+    else
+    {
+        self.collectionCost = [NSDecimalNumber zero];
+    }
+}
+
+-(void) loadBookDetailView
+{
+    BookDetailViewController* bookDetailView = [[BookDetailViewController alloc] initWithNibName:@"BookDetailViewController" bundle:nil];
+    bookDetailView.detailItem = [self.recentAdditions objectAtIndex:self.recentAdditionsPage];
+    [self.navigationController pushViewController:bookDetailView animated:YES];
 }
 
 @end

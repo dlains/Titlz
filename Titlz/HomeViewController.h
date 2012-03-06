@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RecentAdditionsCell.h"
 
 @class SearchAppViewController;
 
-@interface HomeViewController : UITableViewController
+@interface HomeViewController : UITableViewController <RecentAdditionsPageDelegate>
 
 @property(nonatomic, strong) SearchAppViewController* searchAppViewController;
 @property(nonatomic, weak) NSManagedObjectContext* managedObjectContext;

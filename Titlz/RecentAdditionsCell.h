@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol RecentAdditionsPageDelegate;
+
 @interface RecentAdditionsCell : UITableViewCell <UIScrollViewDelegate>
 
 @property(nonatomic, strong) IBOutlet UIScrollView* scrollView;
@@ -16,9 +18,18 @@
 @property(nonatomic, strong) IBOutlet UILabel* titleLabel;
 @property(nonatomic, strong) IBOutlet UILabel* authorLabel;
 @property(nonatomic, strong) IBOutlet UILabel* detailsLabel;
+@property(nonatomic, assign) id<RecentAdditionsPageDelegate> delegate;
 
 @property(nonatomic, strong) NSArray* recentAdditions;
 
 -(IBAction) userDidPage:(id)sender;
+-(IBAction) contentViewPressed:(id)sender;
+
+@end
+
+@protocol RecentAdditionsPageDelegate <NSObject>
+
+-(void) didUpdateCurrentPageTo:(NSInteger)page;
+-(void) didSelectCurrentPage;
 
 @end

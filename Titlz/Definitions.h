@@ -35,6 +35,10 @@ typedef enum AwardDataSectionRowsEnum
 typedef enum HomeSectionsEnum
 {
     HomeRecentAdditionsSection = 0,
+    HomeCollectionSizeSection,
+    HomeCollectionValueSection,
+    HomeCollectionCostSection,
+    HomeCollectionTotalSection,
     HomeSectionCount
 } HomeSections;
 

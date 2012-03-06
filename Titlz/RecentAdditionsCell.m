@@ -20,6 +20,7 @@
 @synthesize titleLabel = _titleLabel;
 @synthesize authorLabel = _authorLabel;
 @synthesize detailsLabel = _detailsLabel;
+@synthesize delegate = _delegate;
 
 @synthesize recentAdditions = _recentAdditions;
 
@@ -83,6 +84,8 @@
     CGFloat x = self.scrollView.contentOffset.x;
     CGFloat w = self.scrollView.bounds.size.width;
     self.pageControl.currentPage = x/w;
+    
+    [self.delegate didUpdateCurrentPageTo:self.pageControl.currentPage];
 }
 
 -(IBAction) userDidPage:(id)sender
@@ -90,6 +93,13 @@
     NSInteger p = self.pageControl.currentPage;
     CGFloat w = self.scrollView.bounds.size.width;
     [self.scrollView setContentOffset:CGPointMake(p*w, 0) animated:YES];
+    
+    [self.delegate didUpdateCurrentPageTo:self.pageControl.currentPage];
+}
+
+-(IBAction) contentViewPressed:(id)sender
+{
+    [self.delegate didSelectCurrentPage];
 }
 
 -(void) setSelected:(BOOL)selected animated:(BOOL)animated
