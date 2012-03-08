@@ -66,8 +66,10 @@
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
+    releaseDatePicker = nil;
+    purchaseDatePicker = nil;
+    lastReadDatePicker = nil;
+    dateFormatter = nil;
 }
 
 #pragma mark - View lifecycle
@@ -96,12 +98,35 @@
 	// Set up the undo manager and set editing state to YES.
 	[self setUpUndoManager];
 	self.editing = YES;
+
+    // Prepare items needed for cell configuration.
+    dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    
+    releaseDatePicker = [[UIDatePicker alloc] init];
+    releaseDatePicker.datePickerMode = UIDatePickerModeDate;
+    [releaseDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    purchaseDatePicker = [[UIDatePicker alloc] init];
+    purchaseDatePicker.datePickerMode = UIDatePickerModeDate;
+    [purchaseDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    lastReadDatePicker = [[UIDatePicker alloc] init];
+    lastReadDatePicker.datePickerMode = UIDatePickerModeDate;
+    [lastReadDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+    [dateFormatter setDateStyle:NSDateFormatterLongStyle];
 }
 
 -(void)viewDidUnload
 {
 	[super viewDidUnload];
 	[self cleanUpUndoManager];	
+    releaseDatePicker = nil;
+    purchaseDatePicker = nil;
+    lastReadDatePicker = nil;
+    dateFormatter = nil;
 }
 
 -(void) setUpUndoManager
@@ -588,11 +613,6 @@
 {
     EditableLookupAndTextCell* workerCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableLookupAndTextCell"];
     
-    if (dummyView == nil)
-    {
-        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
-    }
-    
     if (workerCell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
@@ -626,27 +646,6 @@
 -(UITableViewCell*) configureDetailsCellAtIndexPath:(NSIndexPath *)indexPath
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
-    
-    // Create the date picker to use for the releaseDate field.
-    if (releaseDatePicker == nil)
-    {
-        releaseDatePicker = [[UIDatePicker alloc] init];
-        releaseDatePicker.datePickerMode = UIDatePickerModeDate;
-        [releaseDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
-    }
-    
-    if (dateFormatter == nil)
-    {
-        dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-        [dateFormatter setDateStyle:NSDateFormatterLongStyle];
-    }
-    
-    // A dummy view to keep the keyboard from popping up in the lookup fields.
-    if (dummyView == nil)
-    {
-        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
-    }
     
     if(cell == nil)
     {
@@ -730,34 +729,6 @@
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
     EditableTextViewCell* textCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextViewCell"];
     
-    // Create the date picker to use for the purchaseDate field.
-    if (purchaseDatePicker == nil)
-    {
-        purchaseDatePicker = [[UIDatePicker alloc] init];
-        purchaseDatePicker.datePickerMode = UIDatePickerModeDate;
-        [purchaseDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
-    }
-    
-    if (lastReadDatePicker == nil)
-    {
-        lastReadDatePicker = [[UIDatePicker alloc] init];
-        lastReadDatePicker.datePickerMode = UIDatePickerModeDate;
-        [lastReadDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
-    }
-    
-    if (dateFormatter == nil)
-    {
-        dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-        [dateFormatter setDateStyle:NSDateFormatterLongStyle];
-    }
-    
-    // A dummy view to keep the keyboard from popping up in the lookup fields.
-    if (dummyView == nil)
-    {
-        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
-    }
-
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
@@ -879,12 +850,6 @@
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SignatureEditableTextCell"];
 
-    // A dummy view to keep the keyboard from popping up in the lookup fields.
-    if (dummyView == nil)
-    {
-        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
-    }
-    
     if(cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
@@ -916,12 +881,6 @@
 -(UITableViewCell*) configureAwardCellAtIndexPath:(NSIndexPath*)indexPath
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"AwardEditableTextCell"];
-    
-    // A dummy view to keep the keyboard from popping up in the lookup fields.
-    if (dummyView == nil)
-    {
-        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
-    }
     
     if (cell == nil)
     {
@@ -955,12 +914,6 @@
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"PointEditableTextCell"];
     
-    // A dummy view to keep the keyboard from popping up in the lookup fields.
-    if (dummyView == nil)
-    {
-        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
-    }
-    
     if (cell == nil)
     {
         // Load the top-level objects from the custom cell XIB.
@@ -992,12 +945,6 @@
 -(UITableViewCell*) configureCollectionCellAtIndexPath:(NSIndexPath*)indexPath
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"CollectionEditableTextCell"];
-    
-    // A dummy view to keep the keyboard from popping up in the lookup fields.
-    if (dummyView == nil)
-    {
-        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
-    }
     
     if (cell == nil)
     {
