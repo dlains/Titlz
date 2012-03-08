@@ -11,18 +11,8 @@
 
 @class Collection;
 
-@interface CollectionDetailViewController : UITableViewController <UITextFieldDelegate, BookSelectedDelegate>
-{
-    UITextField* lookupTextField;
-    UIView* dummyView;
-}
+@interface CollectionDetailViewController : UITableViewController <BookSelectedDelegate>
 
 @property(nonatomic, strong) Collection* detailItem;
-@property(nonatomic, strong) NSUndoManager* undoManager;
-@property(nonatomic, assign) BOOL lookupJustFinished;
-
--(void) setUpUndoManager;
--(void) cleanUpUndoManager;
--(void) updateRightBarButtonItemState;
 
 @end

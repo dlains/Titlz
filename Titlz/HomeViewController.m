@@ -337,11 +337,19 @@
 
 -(void) updateCollectionSize
 {
-    NSFetchRequest* request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext]];
-    
-    NSError* error = nil;
-    self.collectionSize = [self.managedObjectContext countForFetchRequest:request error:&error];
+    // The view loads faster than the initail data is created, so fake the collection size on the first application launch.
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"firstLaunch"])
+    {
+        self.collectionSize = 5;
+    }
+    else
+    {
+        NSFetchRequest* request = [[NSFetchRequest alloc] init];
+        [request setEntity:[NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext]];
+        
+        NSError* error = nil;
+        self.collectionSize = [self.managedObjectContext countForFetchRequest:request error:&error];
+    }
 }
 
 -(void) updateCollectionValue

@@ -36,6 +36,7 @@
 		556E594314C8A953000C4CBC /* AwardDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E594114C8A953000C4CBC /* AwardDetailViewController.m */; };
 		556E594414C8A953000C4CBC /* AwardDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556E594214C8A953000C4CBC /* AwardDetailViewController.xib */; };
 		556E594714C8A974000C4CBC /* NewAwardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E594614C8A974000C4CBC /* NewAwardViewController.m */; };
+		557A835415081A4C006C5B9B /* Collection.m in Sources */ = {isa = PBXBuildFile; fileRef = 557A835315081A4C006C5B9B /* Collection.m */; };
 		557B7B0114CCE78A0057FE42 /* DAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 557B7B0014CCE78A0057FE42 /* DAlertView.m */; };
 		5588721E14D4B6A300F59F87 /* edit-image-overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 5588721D14D4B6A300F59F87 /* edit-image-overlay.png */; };
 		5588722114D4B7A900F59F87 /* blank-image-overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 5588722014D4B7A900F59F87 /* blank-image-overlay.png */; };
@@ -90,7 +91,6 @@
 		55CF1BC414D71435008D5765 /* CollectionDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF1BC214D71435008D5765 /* CollectionDetailViewController.m */; };
 		55CF1BC514D71435008D5765 /* CollectionDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55CF1BC314D71435008D5765 /* CollectionDetailViewController.xib */; };
 		55CF1BC814D7146D008D5765 /* NewCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF1BC714D7146D008D5765 /* NewCollectionViewController.m */; };
-		55CF1BCB14D715DA008D5765 /* Collection.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CF1BCA14D715DA008D5765 /* Collection.m */; };
 		55D4A74C14B55BED00BAA15E /* PersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D4A74A14B55BED00BAA15E /* PersonViewController.m */; };
 		55D4A74D14B55BED00BAA15E /* PersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55D4A74B14B55BED00BAA15E /* PersonViewController.xib */; };
 		55D4A75014B55CE700BAA15E /* NewPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D4A74F14B55CE700BAA15E /* NewPersonViewController.m */; };
@@ -151,6 +151,8 @@
 		556E594214C8A953000C4CBC /* AwardDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AwardDetailViewController.xib; sourceTree = "<group>"; };
 		556E594514C8A974000C4CBC /* NewAwardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewAwardViewController.h; sourceTree = "<group>"; };
 		556E594614C8A974000C4CBC /* NewAwardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewAwardViewController.m; sourceTree = "<group>"; };
+		557A835215081A4C006C5B9B /* Collection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Collection.h; sourceTree = "<group>"; };
+		557A835315081A4C006C5B9B /* Collection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Collection.m; sourceTree = "<group>"; };
 		557B7AFF14CCE78A0057FE42 /* DAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAlertView.h; sourceTree = "<group>"; };
 		557B7B0014CCE78A0057FE42 /* DAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAlertView.m; sourceTree = "<group>"; };
 		5588721D14D4B6A300F59F87 /* edit-image-overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "edit-image-overlay.png"; sourceTree = "<group>"; };
@@ -234,8 +236,6 @@
 		55CF1BC314D71435008D5765 /* CollectionDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectionDetailViewController.xib; sourceTree = "<group>"; };
 		55CF1BC614D7146D008D5765 /* NewCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCollectionViewController.h; sourceTree = "<group>"; };
 		55CF1BC714D7146D008D5765 /* NewCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCollectionViewController.m; sourceTree = "<group>"; };
-		55CF1BC914D715DA008D5765 /* Collection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Collection.h; sourceTree = "<group>"; };
-		55CF1BCA14D715DA008D5765 /* Collection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Collection.m; sourceTree = "<group>"; };
 		55D4A74914B55BED00BAA15E /* PersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonViewController.h; sourceTree = "<group>"; };
 		55D4A74A14B55BED00BAA15E /* PersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonViewController.m; sourceTree = "<group>"; };
 		55D4A74B14B55BED00BAA15E /* PersonViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonViewController.xib; sourceTree = "<group>"; };
@@ -361,8 +361,8 @@
 				556E593814C8A898000C4CBC /* Award.m */,
 				5523BE1714DB068D003C611A /* Book.h */,
 				5523BE1814DB068D003C611A /* Book.m */,
-				55CF1BC914D715DA008D5765 /* Collection.h */,
-				55CF1BCA14D715DA008D5765 /* Collection.m */,
+				557A835215081A4C006C5B9B /* Collection.h */,
+				557A835315081A4C006C5B9B /* Collection.m */,
 				5591513414BF5F2800F1C01E /* DLPoint.h */,
 				5591513514BF5F2800F1C01E /* DLPoint.m */,
 				55B5C4C814C745740022B33D /* Lookup.h */,
@@ -761,7 +761,6 @@
 				55CF1BBF14D7133C008D5765 /* CollectionViewController.m in Sources */,
 				55CF1BC414D71435008D5765 /* CollectionDetailViewController.m in Sources */,
 				55CF1BC814D7146D008D5765 /* NewCollectionViewController.m in Sources */,
-				55CF1BCB14D715DA008D5765 /* Collection.m in Sources */,
 				5523BE1914DB068D003C611A /* Book.m in Sources */,
 				5523BE1F14DB4116003C611A /* EditableLookupAndTextCell.m in Sources */,
 				5523BE2214DB47EB003C611A /* Worker.m in Sources */,
@@ -775,6 +774,7 @@
 				555BA81314F42CF90005A376 /* SearchAppViewController.m in Sources */,
 				55B0885014F6D09D003AD612 /* RecentAdditionsCell.m in Sources */,
 				5598C6B314FC385C0062EC77 /* InitialData.m in Sources */,
+				557A835415081A4C006C5B9B /* Collection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

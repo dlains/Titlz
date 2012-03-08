@@ -47,9 +47,13 @@
 
     [self createCollections];
     [self createBooks];
-    [self loadLookupData];
-    
     [ContextUtil saveContext:managedObjectContext];
+
+    [self loadLookupData];
+    [ContextUtil saveContext:managedObjectContext];
+
+    // Initial data has been created at this point, so firstLaunch can be set to NO.
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"firstLaunch"];
 }
 
 #pragma mark - Initial Book Data

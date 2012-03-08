@@ -90,9 +90,6 @@ void uncaughtExceptionHandler(NSException* exception)
 
 -(void) applicationDidEnterBackground:(UIApplication*)application
 {
-    // Initial data has been created at this point, so firstLaunch can be set to NO.
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"firstLaunch"];
-    
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
 }

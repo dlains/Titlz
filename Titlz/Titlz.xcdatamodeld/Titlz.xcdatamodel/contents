@@ -27,7 +27,7 @@
         <attribute name="purchaseDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="releaseDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="seriesName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sortableTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortableTitle" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="thumbnail" optional="YES" attributeType="Transformable" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
         <attribute name="title" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="awards" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Award" inverseName="book" inverseEntity="Award" syncable="YES"/>
@@ -101,7 +101,7 @@
     </entity>
     <elements>
         <element name="Award" positionX="-8937" positionY="-7893" width="128" height="105"/>
-        <element name="Book" positionX="-8973" positionY="-7746" width="137" height="495"/>
+        <element name="Book" positionX="-8973" positionY="-7746" width="137" height="510"/>
         <element name="Collection" positionX="-8964" positionY="-7434" width="128" height="75"/>
         <element name="Lookup" positionX="160" positionY="192" width="128" height="90"/>
         <element name="Person" positionX="-8244" positionY="-7524" width="128" height="225"/>
