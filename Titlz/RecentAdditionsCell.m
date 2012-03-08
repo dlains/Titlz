@@ -19,7 +19,6 @@
 @synthesize thumbnailView = _thumbnailView;
 @synthesize titleLabel = _titleLabel;
 @synthesize authorLabel = _authorLabel;
-@synthesize detailsLabel = _detailsLabel;
 @synthesize delegate = _delegate;
 
 @synthesize recentAdditions = _recentAdditions;
@@ -65,13 +64,25 @@
             self.thumbnailView.image = book.thumbnail;
 
         self.titleLabel.text = book.title;
-        Worker* worker = [book.workers anyObject];
-        if (worker != nil)
-        {
-            self.authorLabel.text = worker.person.fullName;
-        }
-        self.detailsLabel.text = [NSString stringWithFormat:@"%@ - %@", book.edition, book.format];
         
+        if (book.workers.count > 0)
+        {
+            NSMutableString* authors = [NSMutableString stringWithCapacity:20];
+            int count = 0;
+            for (Worker* worker in book.workers)
+            {
+                if (count > 0)
+                {
+                    [authors appendString:@", "];
+                }
+                
+                [authors appendString:worker.person.fullName];
+                count++;
+            }
+            
+            self.authorLabel.text = authors;
+        }
+
         [v setFrame:CGRectMake(self.scrollView.bounds.size.width * pageNumber, self.scrollView.bounds.origin.y, self.scrollView.bounds.size.width, self.scrollView.bounds.size.height)];
         [self.scrollView setContentSize:CGSizeMake(self.scrollView.frame.size.width * (pageNumber + 1), self.scrollView.bounds.size.height)];
         [self.scrollView addSubview:v];

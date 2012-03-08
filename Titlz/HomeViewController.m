@@ -92,6 +92,8 @@
     [self updateCollectionValue];
     [self updateCollectionCost];
     
+    self.recentAdditionsPage = 0;
+    
     [self.tableView reloadData];
 }
 
@@ -290,7 +292,7 @@
     else
     {
         // Total is less than zero.
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"$(%@)", total];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", total];
         cell.detailTextLabel.textColor = [UIColor redColor];
     }
     
