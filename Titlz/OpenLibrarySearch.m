@@ -23,7 +23,7 @@
     if (self)
     {
         self.searchType = type;
-        self.searchTerm = searchTerm;
+        self.searchTerm = [searchTerm uppercaseString];
         self.delegate = delegate;
     }
     
