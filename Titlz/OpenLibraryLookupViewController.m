@@ -202,16 +202,35 @@
             }
             if (splitName.count == 2)
             {
-                // Most likely first and last name.
-                firstName = [splitName objectAtIndex:0];
-                lastName = [splitName objectAtIndex:1];
+                if ([[splitName objectAtIndex:0] hasSuffix:@","])
+                {
+                    // Name is "Last, First" format.
+                    lastName = [[splitName objectAtIndex:0] stringByTrimmingCharactersInSet:[NSCharacterSet punctuationCharacterSet]];
+                    firstName = [splitName objectAtIndex:1];
+                }
+                else
+                {
+                    // Name is "First Last" format.
+                    firstName = [splitName objectAtIndex:0];
+                    lastName = [splitName objectAtIndex:1];
+                }
             }
             if (splitName.count == 3)
             {
-                // First middle and last name.
-                firstName = [splitName objectAtIndex:0];
-                middleName = [splitName objectAtIndex:1];
-                lastName = [splitName objectAtIndex:2];
+                if ([[splitName objectAtIndex:0] hasSuffix:@","])
+                {
+                    // Name is "Last, First MI" format.
+                    lastName = [[splitName objectAtIndex:0] stringByTrimmingCharactersInSet:[NSCharacterSet punctuationCharacterSet]];
+                    firstName = [splitName objectAtIndex:1];
+                    middleName = [[splitName objectAtIndex:2] stringByTrimmingCharactersInSet:[NSCharacterSet punctuationCharacterSet]];
+                }
+                else
+                {
+                    // Name is "First Middle Last" format.
+                    firstName = [splitName objectAtIndex:0];
+                    middleName = [[splitName objectAtIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet punctuationCharacterSet]];
+                    lastName = [splitName objectAtIndex:2];
+                }
             }
             
             Person* person = [Person findPersonInContext:self.managedObjectContext withFirstName:firstName middleName:middleName andLastName:lastName];

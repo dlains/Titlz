@@ -85,16 +85,6 @@
                 // Use the ISBN provided by the user.
                 self.isbn = self.searchTerm;
                 
-                // The Identifiers dictionary contains the ISBN. Check for ISBN-13 first. If it isn't found
-                // Check for ISBN-10.
-//                NSDictionary* identifiers = [data objectForKey:@"identifiers"];
-//                NSArray* isbnValue = [identifiers objectForKey:@"isbn_13"];
-//                if (isbnValue == nil)
-//                {
-//                    isbnValue = [identifiers objectForKey:@"isbn_10"];
-//                }
-//                self.isbn = [isbnValue objectAtIndex:0];
-                
                 // Number of pages is thankfully straightforward.
                 self.pages = [data objectForKey:@"number_of_pages"];
                 
