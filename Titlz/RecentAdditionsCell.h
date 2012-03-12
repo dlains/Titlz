@@ -17,6 +17,7 @@
 @property(nonatomic, strong) IBOutlet UIImageView* thumbnailView;
 @property(nonatomic, strong) IBOutlet UILabel* titleLabel;
 @property(nonatomic, strong) IBOutlet UILabel* authorLabel;
+@property(nonatomic, strong) IBOutlet UILabel* noItemsLabel;
 @property(nonatomic, assign) id<RecentAdditionsPageDelegate> delegate;
 
 @property(nonatomic, strong) NSArray* recentAdditions;

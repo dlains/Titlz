@@ -19,6 +19,7 @@
 @synthesize thumbnailView = _thumbnailView;
 @synthesize titleLabel = _titleLabel;
 @synthesize authorLabel = _authorLabel;
+@synthesize noItemsLabel = _noItemsLabel;
 @synthesize delegate = _delegate;
 
 @synthesize recentAdditions = _recentAdditions;
@@ -48,6 +49,15 @@
 
 -(void) setRecentAdditions:(NSArray *)recentAdditions
 {
+    if (recentAdditions.count <= 0)
+    {
+        self.noItemsLabel.hidden = NO;
+        self.pageControl.numberOfPages = 0;
+        return;
+    }
+    else
+        self.noItemsLabel.hidden = YES;
+    
     _recentAdditions = recentAdditions;
     
     self.pageControl.numberOfPages = _recentAdditions.count;
