@@ -11,18 +11,16 @@
 
 @implementation OpenLibrarySearch
 
-@synthesize searchType = _searchType;
 @synthesize searchTerm = _searchTerm;
 @synthesize delegate = _delegate;
 @synthesize bookDetails = _bookDetails;
 @synthesize connection = _connection;
 
--(id) initWithSearchType:(OpenLibrarySearchType)type searchTerm:(NSString *)searchTerm andDelegate:(id<OpenLibrarySearchDelegate>)delegate
+-(id) initWithSearchTerm:(NSString *)searchTerm andDelegate:(id<OpenLibrarySearchDelegate>)delegate
 {
     self = [super init];
     if (self)
     {
-        self.searchType = type;
         self.searchTerm = [searchTerm uppercaseString];
         self.delegate = delegate;
     }
@@ -36,24 +34,7 @@
     if (self.bookDetails != nil)
         self.bookDetails = nil;
 
-    NSString* searchType = nil;
-    
-    switch (self.searchType)
-    {
-        case SearchTypeISBN:
-            searchType = NSLocalizedString(@"ISBN", @"Open Library lookup view controller ISBN search type.");
-            break;
-        case SearchTypeLCCN:
-            searchType = NSLocalizedString(@"LCCN", @"Open Library lookup view controller LCCN search type.");
-            break;
-        case SearchTypeOCLC:
-            searchType = NSLocalizedString(@"OCLC", @"Open Library lookup view controller OCLC search type.");
-            break;
-        default:
-            break;
-    }
-    
-    NSString* key = [NSString stringWithFormat:@"%@:%@", searchType, self.searchTerm];
+    NSString* key = [NSString stringWithFormat:@"%@:%@", @"ISBN", self.searchTerm];
     NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"http://openlibrary.org/api/books?bibkeys=%@&format=json&jscmd=data", key]];
     
     DConnectionCompletionBlock completion = ^(DConnection* connection, NSError* error)
@@ -64,7 +45,7 @@
         }
         else
         {
-            self.bookDetails = [[OpenLibraryBookDetails alloc] initWithData:connection.downloadData andSearchKey:searchType andSearchTerm:self.searchTerm];
+            self.bookDetails = [[OpenLibraryBookDetails alloc] initWithData:connection.downloadData andSearchTerm:self.searchTerm];
             [self.delegate openLibrarySearchDidFinishWithBookDetails:self.bookDetails];
         }
     };

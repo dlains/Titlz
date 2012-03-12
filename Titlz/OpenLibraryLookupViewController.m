@@ -17,6 +17,9 @@
 @interface OpenLibraryLookupViewController ()
 -(void) findAuthors:(NSArray*)authors forBook:(Book*)book;
 -(void) findPublisher:(NSString*)publisher forBook:(Book*)book;
+
+@property(nonatomic, assign) BOOL searchInProgress;
+
 @end
 
 @implementation OpenLibraryLookupViewController
@@ -26,10 +29,10 @@
 @synthesize searchButton = _searchButton;
 @synthesize cancelButton = _cancelButton;
 @synthesize resultLabel = _resultLabel;
+@synthesize searchInProgress = _searchInProgress;
 
 @synthesize managedObjectContext = _managedObjectContext;
 
-@synthesize selectedSearchType = _selectedSearchType;
 @synthesize openLibrarySearch = _openLibrarySearch;
 
 -(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
@@ -79,44 +82,33 @@
     return YES;
 }
 
-#pragma mark - Event Handling
-
--(IBAction) segmentValueChanged:(id)sender
+-(void) textFieldDidEndEditing:(UITextField *)textField
 {
-    UISegmentedControl* searchType = (UISegmentedControl*)sender;
-
-    self.selectedSearchType = searchType.selectedSegmentIndex;
-    
-    switch (searchType.selectedSegmentIndex)
+    if (self.searchInProgress == NO)
     {
-        case SearchTypeISBN:
-            self.searchTextField.placeholder = NSLocalizedString(@"ISBN", @"Open Library search ISBN placeholder text.");
-            break;
-        case SearchTypeLCCN:
-            self.searchTextField.placeholder = NSLocalizedString(@"LCCN", @"Open Library search LCCN placeholder text.");
-            break;
-        case SearchTypeOCLC:
-            self.searchTextField.placeholder = NSLocalizedString(@"OCLC", @"Open Library search OCLC placeholder text.");
-            break;
-        default:
-            break;
+        [self searchButtonPressed:textField];
     }
 }
 
+#pragma mark - Event Handling
+
 -(IBAction) searchButtonPressed:(id)sender
 {
+    self.searchInProgress = YES;
+    
     [self.searchTextField resignFirstResponder];
     self.cancelButton.enabled = YES;
     self.resultLabel.hidden = YES;
     
     [self.activityIndicator startAnimating];
     
-    self.openLibrarySearch = [[OpenLibrarySearch alloc] initWithSearchType:self.selectedSearchType searchTerm:self.searchTextField.text andDelegate:self];
+    self.openLibrarySearch = [[OpenLibrarySearch alloc] initWithSearchTerm:self.searchTextField.text andDelegate:self];
     [self.openLibrarySearch startSearch];
 }
 
 -(IBAction) cancelButtonPressed:(id)sender
 {
+    self.searchInProgress = NO;
     self.cancelButton.enabled = NO;
     
     [self.openLibrarySearch stopSearch];
@@ -128,6 +120,7 @@
 
 -(void) openLibrarySearchDidFinishWithBookDetails:(OpenLibraryBookDetails*)bookDetails
 {
+    self.searchInProgress = NO;
     [self.activityIndicator stopAnimating];
     
     if (bookDetails != nil)
@@ -135,7 +128,7 @@
         if (bookDetails.dataFound == NO)
         {
             self.resultLabel.hidden = NO;
-            self.resultLabel.text = NSLocalizedString(@"There was no data found for that identifier.", @"OpenLibraryLookupViewController:openLibrarySearchDidFinishWithBookDetails: error text.");
+            self.resultLabel.text = NSLocalizedString(@"There was no data found for that ISBN.", @"OpenLibraryLookupViewController:openLibrarySearchDidFinishWithBookDetails: error text.");
             [self.searchTextField becomeFirstResponder];
             return;
         }
@@ -153,6 +146,8 @@
         [self findAuthors:bookDetails.authors forBook:newBook];
         newBook.isbn  = bookDetails.isbn;
         newBook.pages = bookDetails.pages;
+        newBook.format = NSLocalizedString(@"Hardcover", @"OpenLibraryLookupViewController default format value for new book.");
+        newBook.edition = NSLocalizedString(@"First Edition", @"OpenLibraryLookupViewController default edition value for new book.");
         [self findPublisher:bookDetails.publisher forBook:newBook];
         
         // Get the thumbnail image.

@@ -17,7 +17,6 @@
 @synthesize rawData = _rawData;
 @synthesize dataFound = _dataFound;
 @synthesize dataParsed = _dataParsed;
-@synthesize searchKey = _searchKey;
 @synthesize searchTerm = _searchTerm;
 @synthesize title = _title;
 @synthesize authors = _authors;
@@ -27,7 +26,7 @@
 @synthesize mediumCover = _mediumCover;
 @synthesize largeCover = _largeCover;
 
--(id) initWithData:(NSMutableData*)data andSearchKey:(NSString*)searchKey andSearchTerm:(NSString *)searchTerm
+-(id) initWithData:(NSMutableData*)data andSearchTerm:(NSString *)searchTerm
 {
     self = [super init];
     if (self)
@@ -35,7 +34,6 @@
         self.rawData = data;
         self.dataFound = NO;
         self.dataParsed = NO;
-        self.searchKey = searchKey;
         self.searchTerm = searchTerm;
         if (self.rawData != nil)
         {
@@ -57,7 +55,7 @@
         if ([jsonObject isKindOfClass:[NSDictionary class]])
         {
             NSDictionary* deserializedDictionary = (NSDictionary*)jsonObject;
-            NSDictionary* data = [deserializedDictionary objectForKey:[NSString stringWithFormat:@"%@:%@", self.searchKey, self.searchTerm]];
+            NSDictionary* data = [deserializedDictionary objectForKey:[NSString stringWithFormat:@"%@:%@", @"ISBN", self.searchTerm]];
 
             if (data != nil)
             {
@@ -84,15 +82,18 @@
                     self.publisher = [firstPublisher objectForKey:@"name"];
                 }
                 
+                // Use the ISBN provided by the user.
+                self.isbn = self.searchTerm;
+                
                 // The Identifiers dictionary contains the ISBN. Check for ISBN-13 first. If it isn't found
                 // Check for ISBN-10.
-                NSDictionary* identifiers = [data objectForKey:@"identifiers"];
-                NSArray* isbnValue = [identifiers objectForKey:@"isbn_13"];
-                if (isbnValue == nil)
-                {
-                    isbnValue = [identifiers objectForKey:@"isbn_10"];
-                }
-                self.isbn = [isbnValue objectAtIndex:0];
+//                NSDictionary* identifiers = [data objectForKey:@"identifiers"];
+//                NSArray* isbnValue = [identifiers objectForKey:@"isbn_13"];
+//                if (isbnValue == nil)
+//                {
+//                    isbnValue = [identifiers objectForKey:@"isbn_10"];
+//                }
+//                self.isbn = [isbnValue objectAtIndex:0];
                 
                 // Number of pages is thankfully straightforward.
                 self.pages = [data objectForKey:@"number_of_pages"];
@@ -125,11 +126,11 @@
     // If the small and large strings are still nil create valid OpenLibrary Cover API strings.
     if (medium == nil)
     {
-        medium = [NSString stringWithFormat:@"http://covers.openlibrary.org/b/%@/%@-M.jpg?default=false", [self.searchKey lowercaseString], self.searchTerm];
+        medium = [NSString stringWithFormat:@"http://covers.openlibrary.org/b/%@/%@-M.jpg?default=false", @"isbn", self.searchTerm];
     }
     if (large == nil)
     {
-        large = [NSString stringWithFormat:@"http://covers.openlibrary.org/b/%@/%@-L.jpg?default=false", [self.searchKey lowercaseString], self.searchTerm];
+        large = [NSString stringWithFormat:@"http://covers.openlibrary.org/b/%@/%@-L.jpg?default=false", @"isbn", self.searchTerm];
     }
     
     self.mediumCover = medium;

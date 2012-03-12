@@ -13,7 +13,6 @@
 @property(nonatomic, strong) NSMutableData* rawData;
 @property(nonatomic, assign) BOOL dataFound;
 @property(nonatomic, assign) BOOL dataParsed;
-@property(nonatomic, strong) NSString* searchKey;
 @property(nonatomic, strong) NSString* searchTerm;
 @property(nonatomic, retain) NSString* title;
 @property(nonatomic, retain) NSMutableArray* authors;
@@ -23,7 +22,7 @@
 @property(nonatomic, strong) NSString* mediumCover;
 @property(nonatomic, strong) NSString* largeCover;
 
--(id) initWithData:(NSMutableData*)data andSearchKey:(NSString*)searchKey andSearchTerm:(NSString*)searchTerm;
+-(id) initWithData:(NSMutableData*)data andSearchTerm:(NSString*)searchTerm;
 
 -(void) parseRawData;
 
