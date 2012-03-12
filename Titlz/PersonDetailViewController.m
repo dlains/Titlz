@@ -819,14 +819,17 @@
 
 -(void) personViewController:(PersonViewController *)controller didSelectPerson:(Person *)person withPersonType:(PersonType)type
 {
-    if (type == Alias)
+    if (person != nil)
     {
-        [self.detailItem addAliasesObject:person];
-        [ContextUtil saveContext:self.detailItem.managedObjectContext];
-        
-        [self.navigationController dismissModalViewControllerAnimated:YES];
-        [self.tableView reloadData];
+        if (type == Alias)
+        {
+            [self.detailItem addAliasesObject:person];
+            [ContextUtil saveContext:self.detailItem.managedObjectContext];
+        }
     }
+
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    [self.tableView reloadData];
 }
 
 #pragma mark - Local Helper Methods
