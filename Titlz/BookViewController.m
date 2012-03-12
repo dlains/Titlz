@@ -493,6 +493,7 @@
 {
     OpenLibraryLookupViewController* lookupController = [[OpenLibraryLookupViewController alloc] initWithNibName:@"OpenLibraryLookupViewController" bundle:nil];
     lookupController.managedObjectContext = self.managedObjectContext;
+    lookupController.delegate = self;
     
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:lookupController];
     navController.navigationBar.barStyle = UIBarStyleBlack;
@@ -519,6 +520,8 @@
     }
     
     [self.tableView reloadData];
+    NSIndexPath* indexPath = [self.fetchedResultsController indexPathForObject:controller.detailItem];
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     [self dismissModalViewControllerAnimated:YES];
 }
 

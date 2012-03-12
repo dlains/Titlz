@@ -31,6 +31,7 @@
 @synthesize resultLabel = _resultLabel;
 @synthesize searchInProgress = _searchInProgress;
 
+@synthesize delegate = _delegate;
 @synthesize managedObjectContext = _managedObjectContext;
 
 @synthesize openLibrarySearch = _openLibrarySearch;
@@ -59,6 +60,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = NSLocalizedString(@"Open Library Search", @"Open Library lookup view controller title.");
+    
+    [self.searchTextField becomeFirstResponder];
 }
 
 -(void) viewDidUnload
@@ -262,20 +265,21 @@
 
 -(void) newBookViewController:(NewBookViewController*)controller didFinishWithSave:(BOOL)save
 {
-    if (save)
-    {
-        if (![ContextUtil saveContext:self.managedObjectContext])
-        {
-            // Didn't save, so don't dismiss the modal view.
-            return;
-        }
-    }
-    else
-    {
-        // Canceled the insert, remove the managed object.
-        [self.managedObjectContext deleteObject:controller.detailItem];
-        [ContextUtil saveContext:self.managedObjectContext];
-    }
+    [self.delegate newBookViewController:controller didFinishWithSave:save];
+//    if (save)
+//    {
+//        if (![ContextUtil saveContext:self.managedObjectContext])
+//        {
+//            // Didn't save, so don't dismiss the modal view.
+//            return;
+//        }
+//    }
+//    else
+//    {
+//        // Canceled the insert, remove the managed object.
+//        [self.managedObjectContext deleteObject:controller.detailItem];
+//        [ContextUtil saveContext:self.managedObjectContext];
+//    }
     
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }

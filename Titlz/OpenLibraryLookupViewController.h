@@ -18,6 +18,7 @@
 @property(nonatomic, strong) IBOutlet UIButton* cancelButton;
 @property(nonatomic, strong) IBOutlet UILabel* resultLabel;
 
+@property(nonatomic, strong) id<NewBookDelegate> delegate;
 @property(nonatomic, strong) NSManagedObjectContext* managedObjectContext;
 
 @property(nonatomic, strong) OpenLibrarySearch* openLibrarySearch;
