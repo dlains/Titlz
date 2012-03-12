@@ -228,9 +228,7 @@
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
-    NSString* cacheName = @"Lookup";
-    
-    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:cacheName];
+    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     controller.delegate = self;
     self.fetchedResultsController = controller;
     

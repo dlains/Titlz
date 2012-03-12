@@ -788,30 +788,33 @@
 
 -(void) bookViewController:(BookViewController *)controller didSelectBook:(Book*)book forPersonType:(PersonType)type
 {
-    EditableLookupAndTextCell* workerCell = nil;
-    
-    switch (type)
+    if (book != nil)
     {
-        case Workers:
-            workerCell = (EditableLookupAndTextCell*)lookupTextField.superview.superview;
-            if (workerCell.objectId != nil)
-            {
-                [self updateWorkerObject:workerCell.objectId withTitle:workerCell.fieldLabel.text andBook:book];
-            }
-            else
-            {
-                [self addWorkerWithTitle:workerCell.fieldLabel.text andBook:book];
-            }
-            break;
-        case Signature:
-            [self.detailItem addBooksSignedObject:book];
-            break;
-        default:
-            DLog(@"Invalid PersonType found in PersonDetailViewController: %i.", type);
-            break;
+        EditableLookupAndTextCell* workerCell = nil;
+        
+        switch (type)
+        {
+            case Workers:
+                workerCell = (EditableLookupAndTextCell*)lookupTextField.superview.superview;
+                if (workerCell.objectId != nil)
+                {
+                    [self updateWorkerObject:workerCell.objectId withTitle:workerCell.fieldLabel.text andBook:book];
+                }
+                else
+                {
+                    [self addWorkerWithTitle:workerCell.fieldLabel.text andBook:book];
+                }
+                break;
+            case Signature:
+                [self.detailItem addBooksSignedObject:book];
+                break;
+            default:
+                DLog(@"Invalid PersonType found in PersonDetailViewController: %i.", type);
+                break;
+        }
+        
+        [ContextUtil saveContext:self.detailItem.managedObjectContext];
     }
-    
-    [ContextUtil saveContext:self.detailItem.managedObjectContext];
 
     [self.navigationController dismissModalViewControllerAnimated:YES];
     [self.tableView reloadData];
@@ -882,7 +885,7 @@
     BookViewController* bookViewController = [[BookViewController alloc] initWithNibName:@"BookViewController" bundle:nil];
     bookViewController.managedObjectContext = self.detailItem.managedObjectContext;
     bookViewController.delegate = self;
-    bookViewController.selectionMode = TRUE;
+    bookViewController.selectionMode = SingleSelection;
     bookViewController.personSelectionType = type;
     
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:bookViewController];

@@ -22,6 +22,7 @@
 
 -(IBAction) segmentAction:(id)sender;
 -(void) insertNewObject;
+-(void) cancelSelect;
 
 -(void) loadNewBookView;
 -(void) loadOpenLibraryLookupView;
@@ -84,6 +85,12 @@
 
         UIBarButtonItem* addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
         self.navigationItem.rightBarButtonItem = addButton;
+    }
+    else if (self.selectionMode == SingleSelection)
+    {
+        self.tableView.allowsMultipleSelection = NO;
+        UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"BookViewController cancel button text.") style:UIBarButtonItemStyleBordered target:self action:@selector(cancelSelect)];
+        self.navigationItem.rightBarButtonItem = cancelButton;
     }
 }
 
@@ -441,6 +448,11 @@
     
     UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:cancel destructiveButtonTitle:nil otherButtonTitles:manual, search, nil];
     [actionSheet showFromTabBar:self.tabBarController.tabBar];
+}
+
+-(void) cancelSelect
+{
+    [self.delegate bookViewController:self didSelectBook:nil forPersonType:Workers];
 }
 
 -(void) actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
