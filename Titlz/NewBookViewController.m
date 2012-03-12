@@ -1230,6 +1230,8 @@
     NewAwardViewController* newAwardViewController = [[NewAwardViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	newAwardViewController.delegate = self;
 	newAwardViewController.detailItem = [Award awardInManagedObjectContext:self.detailItem.managedObjectContext];
+    newAwardViewController.detailItem.name = NSLocalizedString(@"New Award", @"NewBookViewController new award default name.");
+    [ContextUtil saveContext:self.detailItem.managedObjectContext];
     
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newAwardViewController];
 	navController.navigationBar.barStyle = UIBarStyleBlack;
@@ -1242,6 +1244,9 @@
     NewPointViewController* newPointViewController = [[NewPointViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	newPointViewController.delegate = self;
 	newPointViewController.detailItem = [DLPoint pointInManagedObjectContext:self.detailItem.managedObjectContext];
+    newPointViewController.detailItem.issue = NSLocalizedString(@"New Point", @"NewBookViewController new point default issue.");
+    newPointViewController.detailItem.location = NSLocalizedString(@"Location", @"NewBookViewController new point default location.");
+    [ContextUtil saveContext:self.detailItem.managedObjectContext];
 	
 	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newPointViewController];
 	navController.navigationBar.barStyle = UIBarStyleBlack;
