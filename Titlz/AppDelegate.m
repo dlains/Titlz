@@ -10,6 +10,8 @@
 
 #import "BookViewController.h"
 #import "HomeViewController.h"
+#import "PublisherViewController.h"
+#import "SellerViewController.h"
 #import "InitialData.h"
 
 void uncaughtExceptionHandler(NSException* exception);
@@ -66,7 +68,19 @@ void uncaughtExceptionHandler(NSException* exception)
     personNavigationController.navigationBar.barStyle = UIBarStyleBlack;
     personViewController.managedObjectContext = self.managedObjectContext;
     
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:homeNavigationController, bookNavigationController, collectionNavigationController, personNavigationController, nil];
+    PublisherViewController* publisherViewController = [[PublisherViewController alloc] initWithNibName:@"PublisherViewController" bundle:nil];
+    UINavigationController* publisherNavigationController = [[UINavigationController alloc] initWithRootViewController:publisherViewController];
+    publisherNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+    publisherViewController.managedObjectContext = self.managedObjectContext;
+    
+    SellerViewController* sellerViewController = [[SellerViewController alloc] initWithNibName:@"SellerViewController" bundle:nil];
+    UINavigationController* sellerNavigationController = [[UINavigationController alloc] initWithRootViewController:sellerViewController];
+    sellerNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+    sellerViewController.managedObjectContext = self.managedObjectContext;
+    
+    self.tabBarController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:homeNavigationController, bookNavigationController, collectionNavigationController, personNavigationController, publisherNavigationController, sellerNavigationController, nil];
+    self.tabBarController.customizableViewControllers = nil;
 
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];

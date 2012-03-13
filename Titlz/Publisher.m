@@ -41,7 +41,7 @@
 
 +(Publisher*) findPublisherInContext:(NSManagedObjectContext*)context withName:(NSString*)name
 {
-    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"name ==[cd] %@", name];
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"name LIKE[cd] %@", name];
     NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
     fetchRequest.entity = [NSEntityDescription entityForName:@"Publisher" inManagedObjectContext:context];
     fetchRequest.predicate = predicate;

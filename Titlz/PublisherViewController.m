@@ -27,6 +27,17 @@
 @synthesize delegate = _delegate;
 @synthesize selectionMode = _selectionMode;
 
+-(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self)
+    {
+        self.title = NSLocalizedString(@"Publishers", @"PublisherViewController header bar title.");
+//        self.tabBarItem.image = [UIImage imageNamed:@"collection"];
+    }
+    return self;
+}
+
 -(void) didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
@@ -41,8 +52,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    self.title = NSLocalizedString(@"Publishers", @"PublisherViewController header bar title.");
-
     self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
 
     // Set up the edit and add buttons.
