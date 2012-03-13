@@ -24,6 +24,18 @@
 @dynamic books;
 @dynamic website;
 
+-(NSString*) firstLetterOfName
+{
+    [self willAccessValueForKey:@"firstLetterOfName"];
+    
+    NSString* value = [[self valueForKey:@"name"] uppercaseString];
+    
+    NSString* result = [value substringWithRange:[value rangeOfComposedCharacterSequenceAtIndex:0]];
+    
+    [self didAccessValueForKey:@"firstLetterOfName"];
+    return result;
+}
+
 +(id) sellerInManagedObjectContext:(NSManagedObjectContext*)context
 {
     return [NSEntityDescription insertNewObjectForEntityForName:@"Seller" inManagedObjectContext:context];

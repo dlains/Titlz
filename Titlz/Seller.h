@@ -13,6 +13,7 @@
 
 @interface Seller : NSManagedObject
 
+@property(nonatomic, readonly) NSString* firstLetterOfName;
 @property(nonatomic, retain) NSString* city;
 @property(nonatomic, retain) NSString* country;
 @property(nonatomic, retain) NSString* email;

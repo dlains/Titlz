@@ -9,6 +9,7 @@
 #import "PublisherViewController.h"
 #import "PublisherDetailViewController.h"
 #import "Publisher.h"
+#import "AlphaIndexFetchedResultsController.h"
 
 @interface PublisherViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
@@ -33,7 +34,6 @@
     if (self)
     {
         self.title = NSLocalizedString(@"Publishers", @"PublisherViewController header bar title.");
-//        self.tabBarItem.image = [UIImage imageNamed:@"collection"];
     }
     return self;
 }
@@ -52,8 +52,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
-
     // Set up the edit and add buttons.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
@@ -116,10 +114,27 @@
     return [[self.fetchedResultsController sections] count];
 }
 
+-(NSArray*) sectionIndexTitlesForTableView:(UITableView*)tableView
+{
+    return [self.fetchedResultsController sectionIndexTitles];
+}
+
 -(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     return [sectionInfo numberOfObjects];
+}
+
+-(NSInteger) tableView:(UITableView*)tableView sectionForSectionIndexTitle:(NSString*)title atIndex:(NSInteger)index
+{
+    // Check for the magnifying glass first.
+    if ([title isEqualToString:UITableViewIndexSearch])
+    {
+        [self.tableView scrollRectToVisible:CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height) animated:NO];
+        return -1;
+    }
+    
+    return [self.fetchedResultsController sectionForSectionIndexTitle:title atIndex:index];
 }
 
 -(UITableViewCell*) tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
@@ -221,7 +236,7 @@
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:cacheName];
+    AlphaIndexFetchedResultsController* controller = [[AlphaIndexFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfName" cacheName:cacheName];
     controller.delegate = self;
     self.fetchedResultsController = controller;
     

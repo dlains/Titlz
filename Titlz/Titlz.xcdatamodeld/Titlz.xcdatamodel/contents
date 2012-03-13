@@ -85,6 +85,7 @@
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="firstLetterOfName" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="postalCode" optional="YES" attributeType="String" syncable="YES"/>
@@ -108,7 +109,7 @@
         <element name="Photo" positionX="160" positionY="192" width="128" height="75"/>
         <element name="Point" positionX="-8417" positionY="-7047" width="128" height="90"/>
         <element name="Publisher" positionX="-8417" positionY="-7263" width="128" height="195"/>
-        <element name="Seller" positionX="-9171" positionY="-7488" width="128" height="210"/>
+        <element name="Seller" positionX="-9171" positionY="-7488" width="128" height="225"/>
         <element name="Worker" positionX="-8433" positionY="-7299" width="128" height="90"/>
     </elements>
 </model>
