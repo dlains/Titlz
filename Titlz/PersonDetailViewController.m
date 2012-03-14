@@ -882,8 +882,7 @@
 {
     self.lookupJustFinished = YES;
     
-    BookViewController* bookViewController = [[BookViewController alloc] initWithNibName:@"BookViewController" bundle:nil];
-    bookViewController.managedObjectContext = self.detailItem.managedObjectContext;
+    BookViewController* bookViewController = [[BookViewController alloc] initWithManagedObjectContext:self.detailItem.managedObjectContext];
     bookViewController.delegate = self;
     bookViewController.selectionMode = SingleSelection;
     bookViewController.personSelectionType = type;

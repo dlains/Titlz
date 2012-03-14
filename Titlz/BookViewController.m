@@ -39,17 +39,19 @@
 @synthesize personSelectionType = _personSelectionType;
 @synthesize excludedBooks = _excludedBooks;
 
--(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
+-(id) initWithManagedObjectContext:(NSManagedObjectContext*)context
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:@"BookViewController" bundle:nil];
     if (self)
     {
         self.title = NSLocalizedString(@"Books", @"BookViewController header bar title.");
         self.tabBarItem.image = [UIImage imageNamed:@"book"];
+        self.managedObjectContext = context;
     }
+    
     return self;
 }
-							
+
 -(void) didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -268,16 +270,15 @@
     NSEntityDescription* entity = [NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
-    // Set the batch size to a suitable number.
-    [fetchRequest setFetchBatchSize:20];
-
-    [fetchRequest setPredicate:predicate];
-    
     // Edit the sort key as appropriate.
     NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"sortableTitle" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
-    
-    [fetchRequest setSortDescriptors:sortDescriptors];
+
+    fetchRequest.fetchBatchSize = 20;
+    fetchRequest.predicate = predicate;
+    fetchRequest.sortDescriptors = sortDescriptors;
+    fetchRequest.propertiesToFetch = [NSArray arrayWithObjects:@"title", @"edition", @"format", nil];
+    fetchRequest.relationshipKeyPathsForPrefetching = [NSArray arrayWithObjects:@"worker", nil];
 
     NSString* cacheName = @"Book";
     if (predicate)
@@ -306,19 +307,33 @@
 
 -(void) controllerWillChangeContent:(NSFetchedResultsController*)controller
 {
-    [self.tableView beginUpdates];
+    if (self.searchDisplayController.isActive)
+    {
+        [self.searchDisplayController.searchResultsTableView beginUpdates];
+    }
+    else
+    {
+        [self.tableView beginUpdates];
+    }
 }
 
 -(void) controller:(NSFetchedResultsController*)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
+    UITableView* tableView = self.tableView;
+    
+    if (self.searchDisplayController.isActive)
+    {
+        tableView = self.searchDisplayController.searchResultsTableView;
+    }
+    
     switch(type)
     {
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
 }
@@ -326,6 +341,11 @@
 -(void) controller:(NSFetchedResultsController*)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath*)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath*)newIndexPath
 {
     UITableView* tableView = self.tableView;
+
+    if (self.searchDisplayController.isActive)
+    {
+        tableView = self.searchDisplayController.searchResultsTableView;
+    }
     
     switch(type)
     {
@@ -350,7 +370,14 @@
 
 -(void) controllerDidChangeContent:(NSFetchedResultsController*)controller
 {
-    [self.tableView endUpdates];
+    if (self.searchDisplayController.isActive)
+    {
+        [self.searchDisplayController.searchResultsTableView endUpdates];
+    }
+    else
+    {
+        [self.tableView endUpdates];
+    }
 }
 
 /*
@@ -410,7 +437,7 @@
 
 #pragma mark - Search delegate
 
--(BOOL) searchDisplayController:(UISearchDisplayController*)controller shouldReloadTableForSearchString:(NSString *)searchString
+-(BOOL) searchDisplayController:(UISearchDisplayController*)controller shouldReloadTableForSearchString:(NSString*)searchString
 {
     NSPredicate* predicate = [NSPredicate predicateWithFormat:@"title CONTAINS[cd] %@", searchString];
     self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:predicate];
@@ -420,6 +447,7 @@
 -(void) searchDisplayControllerWillEndSearch:(UISearchDisplayController*)controller
 {
     self.fetchedResultsController = [self fetchedResultsControllerWithPredicate:nil];
+    [self.tableView reloadData];
 }
 
 #pragma mark - New Book Handling

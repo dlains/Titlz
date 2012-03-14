@@ -31,6 +31,7 @@
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
+    self.imageView.image = nil;
 }
 
 #pragma mark - View lifecycle
@@ -43,6 +44,7 @@
 -(void) viewDidUnload
 {
     [super viewDidUnload];
+    self.imageView.image = nil;
 }
 
 -(void) viewWillAppear:(BOOL)animated

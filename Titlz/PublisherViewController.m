@@ -216,19 +216,16 @@
 -(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate
 {
     NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription* entity = [NSEntityDescription entityForName:@"Publisher" inManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
-    
-    // Set the batch size to a suitable number.
-    [fetchRequest setFetchBatchSize:20];
-    
-    [fetchRequest setPredicate:predicate];
     
     // Edit the sort key as appropriate.
     NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
-    
-    [fetchRequest setSortDescriptors:sortDescriptors];
+
+    fetchRequest.entity = [NSEntityDescription entityForName:@"Publisher" inManagedObjectContext:self.managedObjectContext];
+    fetchRequest.fetchBatchSize = 20;
+    fetchRequest.predicate = predicate;
+    fetchRequest.sortDescriptors = sortDescriptors;
+    fetchRequest.propertiesToFetch = [NSArray arrayWithObject:@"name"];
     
     NSString* cacheName = @"Publisher";
     if (predicate)
@@ -257,11 +254,25 @@
 
 -(void) controllerWillChangeContent:(NSFetchedResultsController*)controller
 {
-    [self.tableView beginUpdates];
+    if (self.searchDisplayController.isActive)
+    {
+        [self.searchDisplayController.searchResultsTableView beginUpdates];
+    }
+    else
+    {
+        [self.tableView beginUpdates];
+    }
 }
 
 -(void) controller:(NSFetchedResultsController*)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
+    UITableView* tableView = self.tableView;
+    
+    if (self.searchDisplayController.isActive)
+    {
+        tableView = self.searchDisplayController.searchResultsTableView;
+    }
+    
     switch(type)
     {
         case NSFetchedResultsChangeInsert:
@@ -277,6 +288,11 @@
 -(void) controller:(NSFetchedResultsController*)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath*)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath*)newIndexPath
 {
     UITableView* tableView = self.tableView;
+
+    if (self.searchDisplayController.isActive)
+    {
+        tableView = self.searchDisplayController.searchResultsTableView;
+    }
     
     switch(type)
     {
@@ -301,7 +317,14 @@
 
 -(void) controllerDidChangeContent:(NSFetchedResultsController*)controller
 {
-    [self.tableView endUpdates];
+    if (self.searchDisplayController.isActive)
+    {
+        [self.searchDisplayController.searchResultsTableView endUpdates];
+    }
+    else
+    {
+        [self.tableView endUpdates];
+    }
 }
 
 /*
@@ -380,6 +403,8 @@
     }
     
     [self.tableView reloadData];
+    NSIndexPath* indexPath = [self.fetchedResultsController indexPathForObject:controller.detailItem];
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     [self dismissModalViewControllerAnimated:YES];
 }
 

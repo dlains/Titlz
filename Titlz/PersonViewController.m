@@ -271,11 +271,25 @@
 
 -(void) controllerWillChangeContent:(NSFetchedResultsController*)controller
 {
-    [self.tableView beginUpdates];
+    if (self.searchDisplayController.isActive)
+    {
+        [self.searchDisplayController.searchResultsTableView beginUpdates];
+    }
+    else
+    {
+        [self.tableView beginUpdates];
+    }
 }
 
 -(void) controller:(NSFetchedResultsController*)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
+    UITableView* tableView = self.tableView;
+    
+    if (self.searchDisplayController.isActive)
+    {
+        tableView = self.searchDisplayController.searchResultsTableView;
+    }
+    
     switch(type)
     {
         case NSFetchedResultsChangeInsert:
@@ -291,6 +305,11 @@
 -(void) controller:(NSFetchedResultsController*)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath*)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath*)newIndexPath
 {
     UITableView* tableView = self.tableView;
+
+    if (self.searchDisplayController.isActive)
+    {
+        tableView = self.searchDisplayController.searchResultsTableView;
+    }
     
     switch(type)
     {
@@ -315,7 +334,14 @@
 
 -(void) controllerDidChangeContent:(NSFetchedResultsController*)controller
 {
-    [self.tableView endUpdates];
+    if (self.searchDisplayController.isActive)
+    {
+        [self.searchDisplayController.searchResultsTableView endUpdates];
+    }
+    else
+    {
+        [self.tableView endUpdates];
+    }
 }
 
 /*

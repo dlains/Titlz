@@ -52,10 +52,9 @@ void uncaughtExceptionHandler(NSException* exception)
     UINavigationController* homeNavigationController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
     homeNavigationController.navigationBar.barStyle = UIBarStyleBlack;
     
-    BookViewController* bookViewController = [[BookViewController alloc] initWithNibName:@"BookViewController" bundle:nil];
+    BookViewController* bookViewController = [[BookViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     UINavigationController* bookNavigationController = [[UINavigationController alloc] initWithRootViewController:bookViewController];
     bookNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-    bookViewController.managedObjectContext = self.managedObjectContext;
     bookViewController.selectionMode = DetailSelection;
     
     CollectionViewController* collectionViewController = [[CollectionViewController alloc] initWithNibName:@"CollectionViewController" bundle:nil];

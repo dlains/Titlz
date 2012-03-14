@@ -17,6 +17,8 @@
 
 @interface BookViewController : UITableViewController <NSFetchedResultsControllerDelegate, UIActionSheetDelegate, NewBookDelegate>
 
+-(id) initWithManagedObjectContext:(NSManagedObjectContext*)context;
+
 @property(nonatomic, strong) BookDetailViewController* bookDetailViewController;
 
 @property(nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
