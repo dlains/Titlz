@@ -19,7 +19,6 @@
 #import "ImageViewController.h"
 #import "EditableLookupAndTextCell.h"
 #import "EditableImageAndTextCell.h"
-#import "EditableTextViewCell.h"
 #import "EditableTextCell.h"
 #import "Book.h"
 #import "Person.h"
@@ -74,6 +73,9 @@
 
 @synthesize detailItem = _detailItem;
 @synthesize undoManager = _undoManager;
+@synthesize textViewCell = _textViewCell;
+@synthesize cellLabel = _cellLabel;
+@synthesize cellTextView = _cellTextView;
 
 #pragma mark - Initialization
 
@@ -978,7 +980,6 @@
 -(UITableViewCell*) configureInstanceDetailsCellAtIndexPath:(NSIndexPath *)indexPath
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];
-    EditableTextViewCell* textCell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextViewCell"];
     
     if(cell == nil)
     {
@@ -988,28 +989,11 @@
         cell.textField.delegate = self;
     }
     
-    if(textCell == nil)
-    {
-        // Load the top-level objects from the custom cell XIB.
-        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextViewCell" owner:self options:nil];
-        textCell = [topLevelObjects objectAtIndex:0];
-        textCell.textView.delegate = self;
-    }
-
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
     cell.textField.inputView = nil;
     cell.textField.keyboardType = UIKeyboardTypeDefault;
     cell.textField.text = @"";
-    if (self.editing)
-    {
-        cell.textField.enabled = YES;
-        textCell.textView.editable = YES;
-    }
-    else
-    {
-        cell.textField.enabled = NO;
-        textCell.textView.editable = NO;
-    }
+    cell.textField.enabled = self.editing;
     
     switch (indexPath.row)
     {
@@ -1085,10 +1069,12 @@
             cell.textField.tag = BookLocationTag;
             break;
         case BookCommentsRow:
-            textCell.fieldLabel.text = NSLocalizedString(@"Comments", @"BookDetailViewController comments data field label.");
-            textCell.textView.text = self.detailItem.comments;
-            textCell.textView.tag = BookCommentsTag;
-            return textCell;
+            self.cellLabel.text = NSLocalizedString(@"Comments", @"BookDetailController comments data field label.");
+            self.cellTextView.editable = self.editing;
+            self.cellTextView.delegate = self;
+            self.cellTextView.text = self.detailItem.comments;
+            self.cellTextView.tag = BookCommentsTag;
+            return self.textViewCell;
         default:
             DLog(@"Invalid BookDetailViewController Data section row found: %i.", indexPath.row);
             break;

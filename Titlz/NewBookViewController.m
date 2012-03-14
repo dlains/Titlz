@@ -737,28 +737,11 @@
         cell.textField.delegate = self;
     }
     
-    if(textCell == nil)
-    {
-        // Load the top-level objects from the custom cell XIB.
-        NSArray* topLevelObjects = [[NSBundle mainBundle] loadNibNamed:@"EditableTextViewCell" owner:self options:nil];
-        textCell = [topLevelObjects objectAtIndex:0];
-        textCell.textView.delegate = self;
-    }
-    
     // Reset default values for the cell. Make sure some values set below are not carried over to other cells.
     cell.textField.inputView = nil;
     cell.textField.keyboardType = UIKeyboardTypeDefault;
     cell.textField.text = @"";
-    if (self.editing)
-    {
-        cell.textField.enabled = YES;
-        textCell.textView.editable = YES;
-    }
-    else
-    {
-        cell.textField.enabled = NO;
-        textCell.textView.editable = NO;
-    }
+    cell.textField.enabled = self.editing;
     
     switch (indexPath.row)
     {
@@ -834,7 +817,12 @@
             cell.textField.tag = BookLocationTag;
             break;
         case BookCommentsRow:
+            if (textCell == nil)
+            {
+                textCell = [[[NSBundle mainBundle] loadNibNamed:@"EditableTextViewCell" owner:self options:nil] objectAtIndex:0];
+            }
             textCell.fieldLabel.text = NSLocalizedString(@"Comments", @"BookDetailViewController comments data field label.");
+            textCell.textView.delegate = self;
             textCell.textView.text = self.detailItem.comments;
             textCell.textView.tag = BookCommentsTag;
             return textCell;

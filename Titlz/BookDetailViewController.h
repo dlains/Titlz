@@ -35,6 +35,9 @@
 
 @property(nonatomic, strong) Book* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;
+@property(nonatomic, strong) IBOutlet UITableViewCell* textViewCell;
+@property(nonatomic, strong) IBOutlet UILabel* cellLabel;
+@property(nonatomic, strong) IBOutlet UITextView* cellTextView;
 
 -(void) setUpUndoManager;
 -(void) cleanUpUndoManager;
