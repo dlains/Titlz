@@ -31,7 +31,6 @@
 
 @implementation BookViewController
 
-@synthesize bookDetailViewController = _bookDetailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize delegate = _delegate;
@@ -227,13 +226,10 @@
     }
     else
     {
-        if (!self.bookDetailViewController)
-        {
-            self.bookDetailViewController = [[BookDetailViewController alloc] initWithNibName:@"BookDetailViewController" bundle:nil];
-        }
+        BookDetailViewController* bookDetailViewController = [[BookDetailViewController alloc] initWithNibName:@"BookDetailViewController" bundle:nil];
         Book* selectedBook = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        self.bookDetailViewController.detailItem = selectedBook;
-        [self.navigationController pushViewController:self.bookDetailViewController animated:YES];
+        bookDetailViewController.detailItem = selectedBook;
+        [self.navigationController pushViewController:bookDetailViewController animated:YES];
     }
 }
 

@@ -19,8 +19,6 @@
 
 -(id) initWithManagedObjectContext:(NSManagedObjectContext*)context;
 
-@property(nonatomic, strong) BookDetailViewController* bookDetailViewController;
-
 @property(nonatomic, strong) NSFetchedResultsController* fetchedResultsController;
 @property(nonatomic, strong) NSManagedObjectContext* managedObjectContext;
 @property(nonatomic, assign) id <BookSelectedDelegate> delegate;
