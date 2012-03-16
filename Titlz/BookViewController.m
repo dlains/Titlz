@@ -523,7 +523,6 @@
     navController.navigationBar.barStyle = UIBarStyleBlack;
 	
     [self.navigationController presentViewController:navController animated:YES completion:nil];
-//    [self.navigationController presentModalViewController:navController animated:YES];
 }
 
 -(void) newBookViewController:(NewBookViewController*)controller didFinishWithSave:(BOOL)save

@@ -823,7 +823,10 @@
         imageCell.textField.enabled = YES;
         imageCell.textField.hidden = NO;
         imageCell.titleLabel.hidden = YES;
-        [imageCell.thumbnailButton setImage:[UIImage imageNamed:@"edit-image-overlay.png"] forState:UIControlStateNormal];
+        UIImage* image = [UIImage imageNamed:@"edit-image-overlay.png"];
+        [imageCell.thumbnailButton setImage:image forState:UIControlStateNormal];
+        [imageCell.thumbnailButton setImage:image forState:UIControlStateSelected];
+        [imageCell.thumbnailButton setImage:image forState:UIControlStateHighlighted];
     }
     else
     {
@@ -831,7 +834,10 @@
         imageCell.textField.enabled = NO;
         imageCell.textField.hidden = YES;
         imageCell.titleLabel.hidden = NO;
-        [imageCell.thumbnailButton setImage:[UIImage imageNamed:@"blank-image-overlay.png"] forState:UIControlStateNormal];
+        UIImage* image = [UIImage imageNamed:@"blank-image-overlay.png"];
+        [imageCell.thumbnailButton setImage:image forState:UIControlStateNormal];
+        [imageCell.thumbnailButton setImage:image forState:UIControlStateSelected];
+        [imageCell.thumbnailButton setImage:image forState:UIControlStateHighlighted];
     }
     
     switch (indexPath.row)
@@ -1587,11 +1593,14 @@
 
 -(void) loadImageView
 {
-    ImageViewController* imageViewController = [[ImageViewController alloc] initWithNibName:@"ImageViewController" bundle:nil];
-    imageViewController.bookImage = self.detailItem.photo;
-    imageViewController.bookTitle = self.detailItem.title;
-    
-    [self.navigationController pushViewController:imageViewController animated:YES];
+    if (self.detailItem.photo != nil)
+    {
+        ImageViewController* imageViewController = [[ImageViewController alloc] initWithNibName:@"ImageViewController" bundle:nil];
+        imageViewController.bookImage = self.detailItem.photo;
+        imageViewController.bookTitle = self.detailItem.title;
+        
+        [self.navigationController pushViewController:imageViewController animated:YES];
+    }
 }
 
 -(void) showLookupViewControllerForLookupType:(LookupType)type

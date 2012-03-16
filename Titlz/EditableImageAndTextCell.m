@@ -47,6 +47,8 @@
         self.textField.enabled = YES;
         self.titleLabel.hidden = YES;
         [self.thumbnailButton setImage:[UIImage imageNamed:@"edit-image-overlay.png"] forState:UIControlStateNormal];
+        [self.thumbnailButton setImage:[UIImage imageNamed:@"edit-image-overlay.png"] forState:UIControlStateSelected];
+        [self.thumbnailButton setImage:[UIImage imageNamed:@"edit-image-overlay.png"] forState:UIControlStateHighlighted];
     }
     if(state == UITableViewCellStateDefaultMask)
     {
@@ -55,6 +57,8 @@
         self.textField.enabled = NO;
         self.titleLabel.hidden = NO;
         [self.thumbnailButton setImage:[UIImage imageNamed:@"blank-image-overlay.png"] forState:UIControlStateNormal];
+        [self.thumbnailButton setImage:[UIImage imageNamed:@"blank-image-overlay.png"] forState:UIControlStateSelected];
+        [self.thumbnailButton setImage:[UIImage imageNamed:@"blank-image-overlay.png"] forState:UIControlStateHighlighted];
     }
 }
 
