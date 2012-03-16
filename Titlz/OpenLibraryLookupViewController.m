@@ -266,20 +266,6 @@
 -(void) newBookViewController:(NewBookViewController*)controller didFinishWithSave:(BOOL)save
 {
     [self.delegate newBookViewController:controller didFinishWithSave:save];
-//    if (save)
-//    {
-//        if (![ContextUtil saveContext:self.managedObjectContext])
-//        {
-//            // Didn't save, so don't dismiss the modal view.
-//            return;
-//        }
-//    }
-//    else
-//    {
-//        // Canceled the insert, remove the managed object.
-//        [self.managedObjectContext deleteObject:controller.detailItem];
-//        [ContextUtil saveContext:self.managedObjectContext];
-//    }
     
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }

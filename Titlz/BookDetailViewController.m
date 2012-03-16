@@ -29,6 +29,7 @@
 #import "Photo.h"
 #import "Collection.h"
 #import "Worker.h"
+#import "UIImage+Resize.h"
 
 @interface BookDetailViewController ()
 -(UITableViewCell*) configureTitleCellAtIndexPath:(NSIndexPath*)indexPath;
@@ -1727,19 +1728,19 @@
 	// Create a new photo object and set the image.
 	Photo* photo = [Photo photoInManagedObjectContext:self.detailItem.managedObjectContext];
     UIImage* selectedImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-	photo.image = selectedImage;
+    // Use a sane size for the large images. No need to be much larger than that iphone screen size.
+    CGSize largeSize = CGSizeMake(450, 670);
+    UIImage* resized = [selectedImage resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:largeSize interpolationQuality:kCGInterpolationHigh];
+	photo.image = resized;
 	
 	// Associate the photo object with the book.
 	self.detailItem.photo = photo;	
 	
 	// Create a thumbnail version of the image for the book object.
-    CGRect thumbnailRect = CGRectMake(0, 0, 175, 260);
+    CGSize thumbnailSize = CGSizeMake(175, 260);
+    UIImage* thumbnail = [selectedImage resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:thumbnailSize interpolationQuality:kCGInterpolationHigh];
+    self.detailItem.thumbnail = thumbnail;
     
-	UIGraphicsBeginImageContext(thumbnailRect.size);
-	[selectedImage drawInRect:thumbnailRect];
-	self.detailItem.thumbnail = UIGraphicsGetImageFromCurrentImageContext();
-	UIGraphicsEndImageContext();
-
 	[ContextUtil saveContext:self.detailItem.managedObjectContext];
 	
     [self dismissModalViewControllerAnimated:YES];

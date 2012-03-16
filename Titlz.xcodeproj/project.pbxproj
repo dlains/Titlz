@@ -26,6 +26,9 @@
 		555BA80F14F420B00005A376 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 555BA80D14F420B00005A376 /* HomeViewController.xib */; };
 		555BA81314F42CF90005A376 /* SearchAppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 555BA81114F42CF90005A376 /* SearchAppViewController.m */; };
 		555BA81414F42CF90005A376 /* SearchAppViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 555BA81214F42CF90005A376 /* SearchAppViewController.xib */; };
+		555FDD091513BD9200DD0DAF /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 555FDD081513BD9200DD0DAF /* UIImage+Resize.m */; };
+		555FDD0F1513BDF000DD0DAF /* UIImage+Alpha.m in Sources */ = {isa = PBXBuildFile; fileRef = 555FDD0C1513BDF000DD0DAF /* UIImage+Alpha.m */; };
+		555FDD101513BDF000DD0DAF /* UIImage+RoundedCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = 555FDD0E1513BDF000DD0DAF /* UIImage+RoundedCorner.m */; };
 		5567223E14F8491900A5F372 /* catch22.png in Resources */ = {isa = PBXBuildFile; fileRef = 5567223914F8491900A5F372 /* catch22.png */; };
 		5567223F14F8491900A5F372 /* slaughterhouse-five.png in Resources */ = {isa = PBXBuildFile; fileRef = 5567223A14F8491900A5F372 /* slaughterhouse-five.png */; };
 		5567224014F8491900A5F372 /* thegrapesofwrath.png in Resources */ = {isa = PBXBuildFile; fileRef = 5567223B14F8491900A5F372 /* thegrapesofwrath.png */; };
@@ -140,6 +143,12 @@
 		555BA81014F42CF90005A376 /* SearchAppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchAppViewController.h; sourceTree = "<group>"; };
 		555BA81114F42CF90005A376 /* SearchAppViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchAppViewController.m; sourceTree = "<group>"; };
 		555BA81214F42CF90005A376 /* SearchAppViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchAppViewController.xib; sourceTree = "<group>"; };
+		555FDD071513BD9200DD0DAF /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
+		555FDD081513BD9200DD0DAF /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
+		555FDD0B1513BDF000DD0DAF /* UIImage+Alpha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Alpha.h"; sourceTree = "<group>"; };
+		555FDD0C1513BDF000DD0DAF /* UIImage+Alpha.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Alpha.m"; sourceTree = "<group>"; };
+		555FDD0D1513BDF000DD0DAF /* UIImage+RoundedCorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+RoundedCorner.h"; sourceTree = "<group>"; };
+		555FDD0E1513BDF000DD0DAF /* UIImage+RoundedCorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCorner.m"; sourceTree = "<group>"; };
 		5567223914F8491900A5F372 /* catch22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = catch22.png; sourceTree = "<group>"; };
 		5567223A14F8491900A5F372 /* slaughterhouse-five.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "slaughterhouse-five.png"; sourceTree = "<group>"; };
 		5567223B14F8491900A5F372 /* thegrapesofwrath.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thegrapesofwrath.png; sourceTree = "<group>"; };
@@ -333,6 +342,8 @@
 		5548F42614C9F704004C8BA8 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				55EED62C14D2174F00AFA726 /* AlphaIndexFetchedResultsController.h */,
+				55EED62D14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m */,
 				5548F42814C9F800004C8BA8 /* ContextUtil.h */,
 				5548F42914C9F800004C8BA8 /* ContextUtil.m */,
 				55EB3C3B14B0CC1300721D42 /* DLog.h */,
@@ -343,8 +354,12 @@
 				5501580C14EEC02F00458477 /* DConnection.m */,
 				5598C6B114FC385C0062EC77 /* InitialData.h */,
 				5598C6B214FC385C0062EC77 /* InitialData.m */,
-				55EED62C14D2174F00AFA726 /* AlphaIndexFetchedResultsController.h */,
-				55EED62D14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m */,
+				555FDD0B1513BDF000DD0DAF /* UIImage+Alpha.h */,
+				555FDD0C1513BDF000DD0DAF /* UIImage+Alpha.m */,
+				555FDD0D1513BDF000DD0DAF /* UIImage+RoundedCorner.h */,
+				555FDD0E1513BDF000DD0DAF /* UIImage+RoundedCorner.m */,
+				555FDD071513BD9200DD0DAF /* UIImage+Resize.h */,
+				555FDD081513BD9200DD0DAF /* UIImage+Resize.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -783,6 +798,9 @@
 				55B0885014F6D09D003AD612 /* RecentAdditionsCell.m in Sources */,
 				5598C6B314FC385C0062EC77 /* InitialData.m in Sources */,
 				557A835415081A4C006C5B9B /* Collection.m in Sources */,
+				555FDD091513BD9200DD0DAF /* UIImage+Resize.m in Sources */,
+				555FDD0F1513BDF000DD0DAF /* UIImage+Alpha.m in Sources */,
+				555FDD101513BDF000DD0DAF /* UIImage+RoundedCorner.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
