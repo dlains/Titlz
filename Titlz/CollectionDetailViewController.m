@@ -21,6 +21,7 @@
 -(void) deleteRowAtIndexPath:(NSIndexPath*)indexPath;
 -(void) loadBookView;
 -(void) loadBookDetailViewForBookAtIndexPath:(NSIndexPath*)indexPath;
+-(void) editingDone;
 @end
 
 @implementation CollectionDetailViewController
@@ -72,8 +73,15 @@
 
     self.title = self.detailItem.name;
 
-    UIBarButtonItem* addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(loadBookView)];
-    self.navigationItem.rightBarButtonItem = addButton;
+    // "Segmented" control to the right
+    UISegmentedControl* segmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"Edit", @"Collection Edit text."), NSLocalizedString(@"Add", @"Collection Add text."), nil]];
+    [segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
+    segmentedControl.frame = CGRectMake(0, 0, 110, CustomButtonHeight);
+    segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
+    segmentedControl.momentary = YES;
+    
+    UIBarButtonItem* segmentBarItem = [[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
+    self.navigationItem.rightBarButtonItem = segmentBarItem;
     
     [self.tableView reloadData];
 }
@@ -99,14 +107,34 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
--(void) updateRightBarButtonItemState
-{
-	// Conditionally enable the right bar button item -- it should only be enabled if the title is in a valid state for saving.
-    self.navigationItem.rightBarButtonItem.enabled = [self.detailItem validateForUpdate:NULL];
-}
-
-
 #pragma mark - Table view data source
+
+-(void) setEditing:(BOOL)editing animated:(BOOL)animated
+{
+    [super setEditing:editing animated:animated];
+
+    // Hide the back button when editing starts, and show it again when editing finishes.
+    [self.navigationItem setHidesBackButton:editing animated:animated];
+    
+    if (editing)
+    {
+        // Change the segment buttons to 'Done' button.
+        UIBarButtonItem* doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editingDone)];
+        self.navigationItem.rightBarButtonItem = doneButton;
+    }
+    else
+    {
+        // Put the segment buttons back.
+        UISegmentedControl* segmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"Edit", @"Collection Edit text."), NSLocalizedString(@"Add", @"Collection Add text."), nil]];
+        [segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
+        segmentedControl.frame = CGRectMake(0, 0, 110, CustomButtonHeight);
+        segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
+        segmentedControl.momentary = YES;
+        
+        UIBarButtonItem* segmentBarItem = [[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
+        self.navigationItem.rightBarButtonItem = segmentBarItem;
+    }
+}
 
 -(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
 {
@@ -141,55 +169,28 @@
         return;
     
     [self loadBookDetailViewForBookAtIndexPath:indexPath];
-    /*
-    switch (indexPath.section)
-    {
-        case CollectionDataSection:
-            break;
-        case CollectionBookSection:
-            if (indexPath.row == self.detailItem.books.count)
-                [self loadBookView];
-            else
-                [self loadBookDetailViewForBookAtIndexPath:indexPath];
-            break;
-        default:
-            DLog(@"Invalid CollectionDetailViewController section found: %i.", indexPath.section);
-            break;
-    }
-     */
 }
 
 -(void) tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        switch (indexPath.section)
-        {
-            case CollectionDataSection:
-                // Never delete the data section rows.
-                break;
-            case CollectionBookSection:
-                [self.detailItem removeBooksObject:[self sortedBookFromSet:self.detailItem.books atIndexPath:indexPath]];
-                [self deleteRowAtIndexPath:indexPath];
-                break;
-            default:
-                break;
-        }
+        [self.detailItem removeBooksObject:[self sortedBookFromSet:self.detailItem.books atIndexPath:indexPath]];
+        [self deleteRowAtIndexPath:indexPath];
         
         // Save the context.
         [ContextUtil saveContext:self.detailItem.managedObjectContext];
     }   
 }
 
+-(UITableViewCellEditingStyle) editingStyleForRow:(NSInteger)row inCollection:(NSSet*)collection
+{
+    return UITableViewCellEditingStyleDelete;
+}
+
 -(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    switch (indexPath.section)
-    {
-        case CollectionDataSection:
-            return NO;
-        default:
-            return YES;
-    }
+    return YES;
 }
 
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath
@@ -235,6 +236,27 @@
     }
     
     cell.detailTextLabel.text = detail;
+}
+
+-(IBAction) segmentAction:(id)sender
+{
+	UISegmentedControl* segmentedControl = (UISegmentedControl*)sender;
+    
+    if (segmentedControl.selectedSegmentIndex == 0)
+    {
+        // Edit operation...
+        [self setEditing:YES animated:NO];
+    }
+    else
+    {
+        // Add books to collection...
+        [self loadBookView];
+    }
+}
+
+-(void) editingDone
+{
+    [self setEditing:NO animated:YES];
 }
 
 #pragma mark - Book Selection Delegate Method
