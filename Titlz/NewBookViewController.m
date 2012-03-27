@@ -595,7 +595,7 @@
     {
         case BookTitleRow:
             if (self.detailItem.thumbnail == nil)
-                imageCell.thumbnailView.image = [UIImage imageNamed:@"BookCover-leather-large.jpg"];
+                imageCell.thumbnailView.image = [UIImage imageNamed:@"default-cover.png"];
             else
                 imageCell.thumbnailView.image = self.detailItem.thumbnail;
             imageCell.textField.text = self.detailItem.title;

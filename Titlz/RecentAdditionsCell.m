@@ -69,7 +69,7 @@
         UIView* v = [nib objectAtIndex:0];
 
         if (book.thumbnail == nil)
-            self.thumbnailView.image = [UIImage imageNamed:@"BookCover-leather-large.jpg"];
+            self.thumbnailView.image = [UIImage imageNamed:@"default-cover.png"];
         else
             self.thumbnailView.image = book.thumbnail;
 

@@ -16,6 +16,8 @@
 		5523BE1C14DB40C7003C611A /* EditableLookupAndTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5523BE1B14DB40C7003C611A /* EditableLookupAndTextCell.xib */; };
 		5523BE1F14DB4116003C611A /* EditableLookupAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5523BE1E14DB4116003C611A /* EditableLookupAndTextCell.m */; };
 		5523BE2214DB47EB003C611A /* Worker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5523BE2114DB47EB003C611A /* Worker.m */; };
+		5523E1411521607F00BF3D6C /* Titlz-57.png in Resources */ = {isa = PBXBuildFile; fileRef = 5523E1401521607F00BF3D6C /* Titlz-57.png */; };
+		5523E1441521608600BF3D6C /* Titlz-114.png in Resources */ = {isa = PBXBuildFile; fileRef = 5523E1431521608600BF3D6C /* Titlz-114.png */; };
 		552C741814AE8EBB00595DE9 /* EditableTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552C741714AE8EBB00595DE9 /* EditableTextCell.xib */; };
 		552C741C14AE926600595DE9 /* EditableTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 552C741B14AE926600595DE9 /* EditableTextCell.m */; };
 		5544D8F914ED930E00298405 /* OpenLibrarySearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 5544D8F814ED930E00298405 /* OpenLibrarySearch.m */; };
@@ -85,6 +87,7 @@
 		55C123EA14C0B29D00827F61 /* PublisherDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C123E814C0B29D00827F61 /* PublisherDetailViewController.m */; };
 		55C123EB14C0B29D00827F61 /* PublisherDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55C123E914C0B29D00827F61 /* PublisherDetailViewController.xib */; };
 		55C123EE14C0B2DD00827F61 /* NewPublisherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C123ED14C0B2DD00827F61 /* NewPublisherViewController.m */; };
+		55C7981F15222FAC008D8F54 /* default-cover.png in Resources */ = {isa = PBXBuildFile; fileRef = 55C7981E15222FAC008D8F54 /* default-cover.png */; };
 		55CF1BB414D70846008D5765 /* book.png in Resources */ = {isa = PBXBuildFile; fileRef = 55CF1BAE14D70846008D5765 /* book.png */; };
 		55CF1BB514D70846008D5765 /* book@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55CF1BAF14D70846008D5765 /* book@2x.png */; };
 		55CF1BB614D70846008D5765 /* collection.png in Resources */ = {isa = PBXBuildFile; fileRef = 55CF1BB014D70846008D5765 /* collection.png */; };
@@ -128,6 +131,8 @@
 		5523BE1E14DB4116003C611A /* EditableLookupAndTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditableLookupAndTextCell.m; sourceTree = "<group>"; };
 		5523BE2014DB47EB003C611A /* Worker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Worker.h; sourceTree = "<group>"; };
 		5523BE2114DB47EB003C611A /* Worker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Worker.m; sourceTree = "<group>"; };
+		5523E1401521607F00BF3D6C /* Titlz-57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Titlz-57.png"; sourceTree = "<group>"; };
+		5523E1431521608600BF3D6C /* Titlz-114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Titlz-114.png"; sourceTree = "<group>"; };
 		552C741714AE8EBB00595DE9 /* EditableTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditableTextCell.xib; sourceTree = "<group>"; };
 		552C741A14AE926600595DE9 /* EditableTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableTextCell.h; sourceTree = "<group>"; };
 		552C741B14AE926600595DE9 /* EditableTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditableTextCell.m; sourceTree = "<group>"; };
@@ -235,6 +240,7 @@
 		55C123E914C0B29D00827F61 /* PublisherDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PublisherDetailViewController.xib; sourceTree = "<group>"; };
 		55C123EC14C0B2DD00827F61 /* NewPublisherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPublisherViewController.h; sourceTree = "<group>"; };
 		55C123ED14C0B2DD00827F61 /* NewPublisherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewPublisherViewController.m; sourceTree = "<group>"; };
+		55C7981E15222FAC008D8F54 /* default-cover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default-cover.png"; sourceTree = "<group>"; };
 		55CF1BAE14D70846008D5765 /* book.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = book.png; sourceTree = "<group>"; };
 		55CF1BAF14D70846008D5765 /* book@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "book@2x.png"; sourceTree = "<group>"; };
 		55CF1BB014D70846008D5765 /* collection.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = collection.png; sourceTree = "<group>"; };
@@ -321,6 +327,7 @@
 				557290FE150EAF2100D2AA27 /* blank-image-overlay@2x.png */,
 				5588721D14D4B6A300F59F87 /* edit-image-overlay.png */,
 				557290FF150EAF2100D2AA27 /* edit-image-overlay@2x.png */,
+				55C7981E15222FAC008D8F54 /* default-cover.png */,
 				550B680D14D0D9F90080115C /* BookCover-leather-large.jpg */,
 			);
 			name = Resources;
@@ -418,6 +425,8 @@
 		55A99E8714A949FA00836F4E = {
 			isa = PBXGroup;
 			children = (
+				5523E1431521608600BF3D6C /* Titlz-114.png */,
+				5523E1401521607F00BF3D6C /* Titlz-57.png */,
 				556873C614FC5988000709A8 /* Default@2x.png */,
 				5598C6B914FC58420062EC77 /* Default.png */,
 				55A99E9E14A949FA00836F4E /* Titlz */,
@@ -720,6 +729,9 @@
 				556873C714FC5988000709A8 /* Default@2x.png in Resources */,
 				55729100150EAF2100D2AA27 /* blank-image-overlay@2x.png in Resources */,
 				55729101150EAF2100D2AA27 /* edit-image-overlay@2x.png in Resources */,
+				5523E1411521607F00BF3D6C /* Titlz-57.png in Resources */,
+				5523E1441521608600BF3D6C /* Titlz-114.png in Resources */,
+				55C7981F15222FAC008D8F54 /* default-cover.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
