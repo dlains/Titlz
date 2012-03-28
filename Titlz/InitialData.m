@@ -82,15 +82,15 @@
     Collection* collection = [Collection collectionInManagedObjectContext:self.managedObjectContext];
     collection.name = NSLocalizedString(@"Classic Books", @"InitialData:createBooks initial collection name.");
     
-    // The Great Gatsby
+    // Slaughterhouse Five
     book = [Book bookInManagedObjectContext:self.managedObjectContext];
     worker = [Worker workerInManagedObjectContext:self.managedObjectContext];
     photo = [Photo photoInManagedObjectContext:self.managedObjectContext];
-    book.title = @"The Great Gatsby";
-    worker.person = [self personWithFirst:@"F." middle:@"Scott" last:@"Fitzgerald"];
+    book.title = @"Slaughterhouse-Five";
+    worker.person = [self personWithFirst:@"Kurt" middle:nil last:@"Vonnegut"];
     worker.title = @"Author";
     [book addWorkersObject:worker];
-    image = [UIImage imageNamed:@"thegreatgatsby.png"];
+    image = [UIImage imageNamed:@"slaughterhouse-five.png"];
     photo.image = image;
     book.photo = photo;
     // Create a thumbnail version of the image for the book object.
@@ -100,9 +100,10 @@
 	UIGraphicsEndImageContext();
     book.edition = @"First Edition";
     book.format = @"Hardcover";
-    book.pages = [NSNumber numberWithInt:218];
-    book.releaseDate = [self dateWithDay:10 month:4 year:1925];
-    book.publisher = [self publisherWithName:@"Scribner" parent:@"Simon & Schuster" street:@"1230 Avenue of the Americas" city:@"New York" state:@"New York" postalCode:@"10020" country:@"United States"];
+    book.pages = [NSNumber numberWithInt:186];
+    book.isbn = @"0-385-31208-3";
+    book.releaseDate = [self dateWithDay:1 month:1 year:1969];
+    book.publisher = [self publisherWithName:@"Delacorte" parent:@"Random House" street:@"1745 Broadway" city:@"New York" state:@"New York" postalCode:@"10019" country:@"United States"];
     [collection addBooksObject:book];
     
     // The Grapes of Wrath
@@ -128,6 +129,28 @@
     book.publisher = [self publisherWithName:@"Viking" parent:@"The Penguin Group" street:@"375 Hudson Street" city:@"New York" state:@"New York" postalCode:@"10014" country:@"United States"];
     [collection addBooksObject:book];
     
+    // The Maltese Falcon
+    book = [Book bookInManagedObjectContext:self.managedObjectContext];
+    worker = [Worker workerInManagedObjectContext:self.managedObjectContext];
+    photo = [Photo photoInManagedObjectContext:self.managedObjectContext];
+    book.title = @"The Maltese Falcon";
+    worker.person = [self personWithFirst:@"Dashiell" middle:nil last:@"Hammett"];
+    worker.title = @"Author";
+    [book addWorkersObject:worker];
+    image = [UIImage imageNamed:@"themaltesefalcon.png"];
+    photo.image = image;
+    book.photo = photo;
+    // Create a thumbnail version of the image for the book object.
+	UIGraphicsBeginImageContext(thumbnailRect.size);
+	[image drawInRect:thumbnailRect];
+	book.thumbnail = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+    book.edition = @"First Edition";
+    book.format = @"Hardcover";
+    book.releaseDate = [self dateWithDay:1 month:1 year:1930];
+    book.publisher = [self publisherWithName:@"Alfred A. Knopf" parent:@"Knopf Doubleday Publishing" street:@"1745 Broadway" city:@"New York" state:@"New York" postalCode:@"10019" country:@"United States"];
+    [collection addBooksObject:book];
+
     // Catch 22
     book = [Book bookInManagedObjectContext:self.managedObjectContext];
     worker = [Worker workerInManagedObjectContext:self.managedObjectContext];
@@ -152,15 +175,15 @@
     book.publisher = [self publisherWithName:@"Simon & Schuster" parent:nil street:@"1230 Avenue of the Americas" city:@"New York" state:@"New York" postalCode:@"10020" country:@"United States"];
     [collection addBooksObject:book];
     
-    // Slaughterhouse Five
+    // The Great Gatsby
     book = [Book bookInManagedObjectContext:self.managedObjectContext];
     worker = [Worker workerInManagedObjectContext:self.managedObjectContext];
     photo = [Photo photoInManagedObjectContext:self.managedObjectContext];
-    book.title = @"Slaughterhouse-Five";
-    worker.person = [self personWithFirst:@"Kurt" middle:nil last:@"Vonnegut"];
+    book.title = @"The Great Gatsby";
+    worker.person = [self personWithFirst:@"F." middle:@"Scott" last:@"Fitzgerald"];
     worker.title = @"Author";
     [book addWorkersObject:worker];
-    image = [UIImage imageNamed:@"slaughterhouse-five.png"];
+    image = [UIImage imageNamed:@"thegreatgatsby.png"];
     photo.image = image;
     book.photo = photo;
     // Create a thumbnail version of the image for the book object.
@@ -170,32 +193,9 @@
 	UIGraphicsEndImageContext();
     book.edition = @"First Edition";
     book.format = @"Hardcover";
-    book.pages = [NSNumber numberWithInt:186];
-    book.isbn = @"0-385-31208-3";
-    book.releaseDate = [self dateWithDay:1 month:1 year:1969];
-    book.publisher = [self publisherWithName:@"Delacorte" parent:@"Random House" street:@"1745 Broadway" city:@"New York" state:@"New York" postalCode:@"10019" country:@"United States"];
-    [collection addBooksObject:book];
-    
-    // The Maltese Falcon
-    book = [Book bookInManagedObjectContext:self.managedObjectContext];
-    worker = [Worker workerInManagedObjectContext:self.managedObjectContext];
-    photo = [Photo photoInManagedObjectContext:self.managedObjectContext];
-    book.title = @"The Maltese Falcon";
-    worker.person = [self personWithFirst:@"Dashiell" middle:nil last:@"Hammett"];
-    worker.title = @"Author";
-    [book addWorkersObject:worker];
-    image = [UIImage imageNamed:@"themaltesefalcon.png"];
-    photo.image = image;
-    book.photo = photo;
-    // Create a thumbnail version of the image for the book object.
-	UIGraphicsBeginImageContext(thumbnailRect.size);
-	[image drawInRect:thumbnailRect];
-	book.thumbnail = UIGraphicsGetImageFromCurrentImageContext();
-	UIGraphicsEndImageContext();
-    book.edition = @"First Edition";
-    book.format = @"Hardcover";
-    book.releaseDate = [self dateWithDay:1 month:1 year:1930];
-    book.publisher = [self publisherWithName:@"Alfred A. Knopf" parent:@"Knopf Doubleday Publishing" street:@"1745 Broadway" city:@"New York" state:@"New York" postalCode:@"10019" country:@"United States"];
+    book.pages = [NSNumber numberWithInt:218];
+    book.releaseDate = [self dateWithDay:10 month:4 year:1925];
+    book.publisher = [self publisherWithName:@"Scribner" parent:@"Simon & Schuster" street:@"1230 Avenue of the Americas" city:@"New York" state:@"New York" postalCode:@"10020" country:@"United States"];
     [collection addBooksObject:book];
 }
 

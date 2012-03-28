@@ -11,7 +11,6 @@
 		5508606014C91CF40051DEA2 /* PointDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5508605E14C91CF40051DEA2 /* PointDetailViewController.m */; };
 		5508606114C91CF40051DEA2 /* PointDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5508605F14C91CF40051DEA2 /* PointDetailViewController.xib */; };
 		5508606414C91D4B0051DEA2 /* NewPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5508606314C91D4B0051DEA2 /* NewPointViewController.m */; };
-		550B680E14D0D9F90080115C /* BookCover-leather-large.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 550B680D14D0D9F90080115C /* BookCover-leather-large.jpg */; };
 		5523BE1914DB068D003C611A /* Book.m in Sources */ = {isa = PBXBuildFile; fileRef = 5523BE1814DB068D003C611A /* Book.m */; };
 		5523BE1C14DB40C7003C611A /* EditableLookupAndTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5523BE1B14DB40C7003C611A /* EditableLookupAndTextCell.xib */; };
 		5523BE1F14DB4116003C611A /* EditableLookupAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5523BE1E14DB4116003C611A /* EditableLookupAndTextCell.m */; };
@@ -123,7 +122,6 @@
 		5508605F14C91CF40051DEA2 /* PointDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PointDetailViewController.xib; sourceTree = "<group>"; };
 		5508606214C91D4B0051DEA2 /* NewPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPointViewController.h; sourceTree = "<group>"; };
 		5508606314C91D4B0051DEA2 /* NewPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewPointViewController.m; sourceTree = "<group>"; };
-		550B680D14D0D9F90080115C /* BookCover-leather-large.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "BookCover-leather-large.jpg"; sourceTree = "<group>"; };
 		5523BE1714DB068D003C611A /* Book.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Book.h; sourceTree = "<group>"; };
 		5523BE1814DB068D003C611A /* Book.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Book.m; sourceTree = "<group>"; };
 		5523BE1B14DB40C7003C611A /* EditableLookupAndTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditableLookupAndTextCell.xib; sourceTree = "<group>"; };
@@ -328,7 +326,6 @@
 				5588721D14D4B6A300F59F87 /* edit-image-overlay.png */,
 				557290FF150EAF2100D2AA27 /* edit-image-overlay@2x.png */,
 				55C7981E15222FAC008D8F54 /* default-cover.png */,
-				550B680D14D0D9F90080115C /* BookCover-leather-large.jpg */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -660,7 +657,7 @@
 		55A99E8914A949FA00836F4E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "Dagger Lake Software";
 			};
 			buildConfigurationList = 55A99E8C14A949FA00836F4E /* Build configuration list for PBXProject "Titlz" */;
@@ -699,7 +696,6 @@
 				556E594414C8A953000C4CBC /* AwardDetailViewController.xib in Resources */,
 				5508606114C91CF40051DEA2 /* PointDetailViewController.xib in Resources */,
 				559E462114CF7BB70055D52C /* EditableImageAndTextCell.xib in Resources */,
-				550B680E14D0D9F90080115C /* BookCover-leather-large.jpg in Resources */,
 				5588721E14D4B6A300F59F87 /* edit-image-overlay.png in Resources */,
 				5588722114D4B7A900F59F87 /* blank-image-overlay.png in Resources */,
 				55CF1BB414D70846008D5765 /* book.png in Resources */,
