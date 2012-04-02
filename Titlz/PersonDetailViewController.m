@@ -518,6 +518,24 @@
     }
 }
 
+-(NSString*) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    switch (section)
+    {
+        case PersonDataSection:
+        case PersonWorkedSection:
+            return nil;
+        case PersonBooksSignedSection:
+            return NSLocalizedString(@"Signed", @"PersonDetailView section header title for Signed section.");
+        case PersonAliasSection:
+            return NSLocalizedString(@"Aliases", @"PersonDetailView section header title for Aliases section.");
+        case PersonAliasOfSection:
+            return nil;
+        default:
+            return nil;
+    }
+}
+
 -(UITableViewCell*) configureDataCellForRow:(NSInteger)row
 {
     EditableTextCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"EditableTextCell"];

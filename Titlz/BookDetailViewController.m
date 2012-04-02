@@ -809,6 +809,28 @@
     }
 }
 
+-(NSString*) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    switch (section)
+    {
+        case BookTitleSection:
+        case BookWorkersSection:
+        case BookDetailsSection:
+        case BookInstanceDetailsSection:
+            return nil;
+        case BookSignatureSection:
+            return NSLocalizedString(@"Signatures", @"BookDetailView section header title for Signatures section.");
+        case BookAwardSection:
+            return NSLocalizedString(@"Awards", @"BookDetailView section header title for Awards section.");
+        case BookPointSection:
+            return NSLocalizedString(@"Points", @"BookDetailView section header title for Points section.");
+        case BookCollectionSection:
+            return NSLocalizedString(@"Collections", @"BookDetailView section header title for Collections section.");
+        default:
+            return nil;
+    }
+}
+
 -(BOOL) tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 {
     switch (indexPath.section)

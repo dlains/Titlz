@@ -162,9 +162,9 @@ typedef enum PersonDetailSectionsEnum
 {
     PersonDataSection = 0,
     PersonWorkedSection,
+    PersonBooksSignedSection,
     PersonAliasSection,
     PersonAliasOfSection,
-    PersonBooksSignedSection,
     PersonDetailSectionCount
 } PersonDetailSections;
 
@@ -186,9 +186,9 @@ typedef enum PersonDataFieldTagEnum
     PersonBornTag,
     PersonDiedTag,
     PersonWorkedTag,
+    PersonSignedTag,
     PersonAliasTag,
-    PersonAliasOfTag,
-    PersonSignedTag
+    PersonAliasOfTag
 } PersonDataFieldTag;
 
 typedef enum PointDetailSectionsEnum
