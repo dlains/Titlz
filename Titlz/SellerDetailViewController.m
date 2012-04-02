@@ -24,6 +24,7 @@
 
 @synthesize detailItem = _detailItem;
 @synthesize undoManager = _undoManager;
+@synthesize allowDrilldown = _allowDrilldown;
 
 -(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
@@ -31,6 +32,7 @@
     if (self)
     {
         self.title = NSLocalizedString(@"Seller", @"SellerDetailViewController header bar title.");
+        self.allowDrilldown = YES;
     }
     return self;
 }
@@ -365,6 +367,9 @@
                 [[UIApplication sharedApplication] openURL:url];
             break;
         case SellerBooksSection:
+            if (self.allowDrilldown == NO)
+                return;
+
             [self loadBookDetailViewForBookAtIndexPath:indexPath];
             break;
         default:

@@ -96,6 +96,7 @@
 {
     [super didReceiveMemoryWarning];
     self.detailItem = nil;
+    dummyView = nil;
     releaseDatePicker = nil;
     purchaseDatePicker = nil;
     lastReadDatePicker = nil;
@@ -107,23 +108,38 @@
     [super viewDidLoad];
 
     // Prepare items needed for cell configuration.
-    dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
-    
-    releaseDatePicker = [[UIDatePicker alloc] init];
-    releaseDatePicker.datePickerMode = UIDatePickerModeDate;
-    [releaseDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
-    
-    purchaseDatePicker = [[UIDatePicker alloc] init];
-    purchaseDatePicker.datePickerMode = UIDatePickerModeDate;
-    [purchaseDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
-    
-    lastReadDatePicker = [[UIDatePicker alloc] init];
-    lastReadDatePicker.datePickerMode = UIDatePickerModeDate;
-    [lastReadDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
-    
-    dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-    [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+    if (dummyView == nil)
+    {
+        dummyView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    }
+
+    if (releaseDatePicker == nil)
+    {
+        releaseDatePicker = [[UIDatePicker alloc] init];
+        releaseDatePicker.datePickerMode = UIDatePickerModeDate;
+        [releaseDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    }
+
+    if (purchaseDatePicker == nil)
+    {
+        purchaseDatePicker = [[UIDatePicker alloc] init];
+        purchaseDatePicker.datePickerMode = UIDatePickerModeDate;
+        [purchaseDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    }
+
+    if (lastReadDatePicker == nil)
+    {
+        lastReadDatePicker = [[UIDatePicker alloc] init];
+        lastReadDatePicker.datePickerMode = UIDatePickerModeDate;
+        [lastReadDatePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    }
+
+    if (dateFormatter == nil)
+    {
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+        [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+    }
 }
 
 -(void) viewDidUnload
@@ -131,6 +147,7 @@
     [super viewDidUnload];
 
     self.detailItem = nil;
+    dummyView = nil;
     releaseDatePicker = nil;
     purchaseDatePicker = nil;
     lastReadDatePicker = nil;
@@ -1435,13 +1452,14 @@
 
 -(void) loadPersonViewForPersonType:(PersonType)type
 {
-    PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
-    personViewController.managedObjectContext = self.detailItem.managedObjectContext;
-    personViewController.delegate = self;
-    personViewController.selectionMode = TRUE;
-    personViewController.personSelectionType = type;
+    PersonViewController* personView = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
+
+    personView.managedObjectContext = self.detailItem.managedObjectContext;
+    personView.delegate = self;
+    personView.selectionMode = TRUE;
+    personView.personSelectionType = type;
     
-	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:personViewController];
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:personView];
     navController.navigationBar.barStyle = UIBarStyleBlack;
     
     [self.navigationController presentModalViewController:navController animated:YES];
@@ -1449,7 +1467,8 @@
 
 -(void) loadPersonDetailViewForPersonType:(PersonType)type atIndexPath:(NSIndexPath*)indexPath
 {
-    PersonDetailViewController* personDetailViewController = [[PersonDetailViewController alloc] initWithNibName:@"PersonDetailViewController" bundle:nil];
+    PersonDetailViewController* personDetailView = [[PersonDetailViewController alloc] initWithNibName:@"PersonDetailViewController" bundle:nil];
+
     Person* selectedPerson = nil;
     Worker* worker = nil;
     
@@ -1468,8 +1487,13 @@
     
     if (selectedPerson)
     {
-        personDetailViewController.detailItem = selectedPerson;
-        [self.navigationController pushViewController:personDetailViewController animated:YES];
+        personDetailView.detailItem = selectedPerson;
+        // Keep the number of UINavigationController pushes from going too far.
+        if (self.navigationController.viewControllers.count >= 5)
+        {
+            personDetailView.allowDrilldown = NO;
+        }
+        [self.navigationController pushViewController:personDetailView animated:YES];
     }
 }
 
@@ -1491,6 +1515,11 @@
     if (publisher)
     {
         PublisherDetailViewController* publisherDetailViewController = [[PublisherDetailViewController alloc] initWithNibName:@"PublisherDetailViewController" bundle:nil];
+        // Keep the number of UINavigationController pushes from going too far.
+        if (self.navigationController.viewControllers.count >= 5)
+        {
+            publisherDetailViewController.allowDrilldown = NO;
+        }
         publisherDetailViewController.detailItem = publisher;
         [self.navigationController pushViewController:publisherDetailViewController animated:YES];
     }
@@ -1514,6 +1543,10 @@
     if (seller)
     {
         SellerDetailViewController* sellerDetailViewController = [[SellerDetailViewController alloc] initWithNibName:@"SellerDetailViewController" bundle:nil];
+        if (self.navigationController.viewControllers.count >= 5)
+        {
+            sellerDetailViewController.allowDrilldown = NO;
+        }
         sellerDetailViewController.detailItem = seller;
         [self.navigationController pushViewController:sellerDetailViewController animated:YES];
     }
@@ -1587,6 +1620,10 @@
     
     if (selectedCollection)
     {
+        if (self.navigationController.viewControllers.count >= 5)
+        {
+            collectionDetailViewController.allowDrilldown = NO;
+        }
         collectionDetailViewController.detailItem = selectedCollection;
         [self.navigationController pushViewController:collectionDetailViewController animated:YES];
     }

@@ -14,5 +14,6 @@
 @interface CollectionDetailViewController : UITableViewController <BookSelectedDelegate>
 
 @property(nonatomic, strong) Collection* detailItem;
+@property(nonatomic, assign) BOOL allowDrilldown;
 
 @end

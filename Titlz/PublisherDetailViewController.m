@@ -24,6 +24,7 @@
 
 @synthesize detailItem = _detailItem;
 @synthesize undoManager = _undoManager;
+@synthesize allowDrilldown = _allowDrilldown;
 
 #pragma mark - Initialization
 
@@ -33,6 +34,7 @@
     if (self)
     {
         self.title = NSLocalizedString(@"Publisher", @"PublisherDetailViewController header bar title.");
+        self.allowDrilldown = YES;
     }
     return self;
 }
@@ -337,6 +339,9 @@
 
 -(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
+    if (self.allowDrilldown == NO)
+        return;
+
     switch (indexPath.section)
     {
         case PublisherDataSection:

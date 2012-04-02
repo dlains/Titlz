@@ -45,6 +45,7 @@
 @synthesize personTypeBeingAdded = _personTypeBeingAdded;
 @synthesize undoManager = _undoManager;
 @synthesize lookupJustFinished = _lookupJustFinished;
+@synthesize allowDrilldown = _allowDrilldown;
 
 #pragma mark - Initialization
 
@@ -54,6 +55,7 @@
     if (self)
     {
         self.title = NSLocalizedString(@"Person", @"PersonDetailViewController header bar title.");
+        self.allowDrilldown = YES;
     }
     return self;
 }
@@ -442,6 +444,9 @@
 -(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
     if (self.editing)
+        return;
+
+    if (self.allowDrilldown == NO)
         return;
 
     switch (indexPath.section)

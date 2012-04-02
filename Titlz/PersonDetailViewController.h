@@ -29,6 +29,7 @@
 @property(nonatomic, assign) NSInteger personTypeBeingAdded;
 @property(nonatomic, strong) NSUndoManager* undoManager;
 @property(nonatomic, assign) BOOL lookupJustFinished;
+@property(nonatomic, assign) BOOL allowDrilldown;
 
 -(void) setUpUndoManager;
 -(void) cleanUpUndoManager;

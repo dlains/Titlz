@@ -27,6 +27,7 @@
 @implementation CollectionDetailViewController
 
 @synthesize detailItem = _detailItem;
+@synthesize allowDrilldown = _allowDrilldown;
 
 #pragma mark - Initialization
 
@@ -35,6 +36,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
+        self.allowDrilldown = YES;
     }
     return self;
 }
@@ -168,6 +170,9 @@
     if (self.editing)
         return;
     
+    if (self.allowDrilldown == NO)
+        return;
+
     [self loadBookDetailViewForBookAtIndexPath:indexPath];
 }
 

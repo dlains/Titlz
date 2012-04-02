@@ -19,6 +19,7 @@
 
 @property(nonatomic, strong) Seller* detailItem;
 @property(nonatomic, strong) NSUndoManager* undoManager;
+@property(nonatomic, assign) BOOL allowDrilldown;
 
 -(void) setUpUndoManager;
 -(void) cleanUpUndoManager;
