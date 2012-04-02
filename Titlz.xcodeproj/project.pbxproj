@@ -27,6 +27,7 @@
 		555BA80F14F420B00005A376 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 555BA80D14F420B00005A376 /* HomeViewController.xib */; };
 		555BA81314F42CF90005A376 /* SearchAppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 555BA81114F42CF90005A376 /* SearchAppViewController.m */; };
 		555BA81414F42CF90005A376 /* SearchAppViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 555BA81214F42CF90005A376 /* SearchAppViewController.xib */; };
+		555D656A152A5EA8004A8B34 /* worker-button-border.png in Resources */ = {isa = PBXBuildFile; fileRef = 555D6569152A5EA8004A8B34 /* worker-button-border.png */; };
 		555FDD091513BD9200DD0DAF /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 555FDD081513BD9200DD0DAF /* UIImage+Resize.m */; };
 		555FDD0F1513BDF000DD0DAF /* UIImage+Alpha.m in Sources */ = {isa = PBXBuildFile; fileRef = 555FDD0C1513BDF000DD0DAF /* UIImage+Alpha.m */; };
 		555FDD101513BDF000DD0DAF /* UIImage+RoundedCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = 555FDD0E1513BDF000DD0DAF /* UIImage+RoundedCorner.m */; };
@@ -146,6 +147,7 @@
 		555BA81014F42CF90005A376 /* SearchAppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchAppViewController.h; sourceTree = "<group>"; };
 		555BA81114F42CF90005A376 /* SearchAppViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchAppViewController.m; sourceTree = "<group>"; };
 		555BA81214F42CF90005A376 /* SearchAppViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchAppViewController.xib; sourceTree = "<group>"; };
+		555D6569152A5EA8004A8B34 /* worker-button-border.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "worker-button-border.png"; sourceTree = "<group>"; };
 		555FDD071513BD9200DD0DAF /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
 		555FDD081513BD9200DD0DAF /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
 		555FDD0B1513BDF000DD0DAF /* UIImage+Alpha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Alpha.h"; sourceTree = "<group>"; };
@@ -321,6 +323,7 @@
 				555BA80614F41FDB0005A376 /* home@2x.png */,
 				55CF1BB214D70846008D5765 /* user.png */,
 				55CF1BB314D70846008D5765 /* user@2x.png */,
+				555D6569152A5EA8004A8B34 /* worker-button-border.png */,
 				5588722014D4B7A900F59F87 /* blank-image-overlay.png */,
 				557290FE150EAF2100D2AA27 /* blank-image-overlay@2x.png */,
 				5588721D14D4B6A300F59F87 /* edit-image-overlay.png */,
@@ -728,6 +731,7 @@
 				5523E1411521607F00BF3D6C /* Titlz-57.png in Resources */,
 				5523E1441521608600BF3D6C /* Titlz-114.png in Resources */,
 				55C7981F15222FAC008D8F54 /* default-cover.png in Resources */,
+				555D656A152A5EA8004A8B34 /* worker-button-border.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

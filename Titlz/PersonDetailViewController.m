@@ -627,11 +627,14 @@
     {
         workerCell.textField.enabled = YES;
         workerCell.lookupButton.enabled = YES;
+        UIImage* image = [UIImage imageNamed:@"worker-button-border.png"];
+        [workerCell.lookupButton setBackgroundImage:image forState:UIControlStateNormal];
     }
     else
     {
         workerCell.textField.enabled = NO;
         workerCell.lookupButton.enabled = NO;
+        [workerCell.lookupButton setBackgroundImage:nil forState:UIControlStateNormal];
     }
 
     Worker* worker = [self sortedWorkerFromSet:self.detailItem.worked atIndexPath:indexPath];

@@ -31,11 +31,14 @@
     {
         self.lookupButton.enabled = YES;
         self.textField.enabled = YES;
+        UIImage* image = [UIImage imageNamed:@"worker-button-border.png"];
+        [self.lookupButton setBackgroundImage:image forState:UIControlStateNormal];
     }
     if(state == UITableViewCellStateDefaultMask)
     {
         self.lookupButton.enabled = NO;
         self.textField.enabled = NO;
+        [self.lookupButton setBackgroundImage:nil forState:UIControlStateNormal];
     }
 }
 
