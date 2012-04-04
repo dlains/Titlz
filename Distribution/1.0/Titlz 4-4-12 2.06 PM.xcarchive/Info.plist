@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AppStoreFileSize</key>
+	<integer>4792032</integer>
+	<key>ApplicationProperties</key>
+	<dict>
+		<key>ApplicationPath</key>
+		<string>Applications/Titlz.app</string>
+		<key>CFBundleIdentifier</key>
+		<string>com.davidlains.Titlz</string>
+		<key>CFBundleShortVersionString</key>
+		<string>1.0</string>
+		<key>IconPaths</key>
+		<array>
+			<string>Applications/Titlz.app/Titlz-57.png</string>
+			<string>Applications/Titlz.app/Titlz-114.png</string>
+			<string>Applications/Titlz.app/Titlz-57.png</string>
+			<string>Applications/Titlz.app/Titlz-114.png</string>
+		</array>
+		<key>SigningIdentity</key>
+		<string>iPhone Distribution: David Lains</string>
+	</dict>
+	<key>ArchiveVersion</key>
+	<integer>2</integer>
+	<key>CreationDate</key>
+	<date>2012-04-04T21:06:22Z</date>
+	<key>Name</key>
+	<string>Titlz</string>
+	<key>SchemeName</key>
+	<string>Titlz</string>
+	<key>Status</key>
+	<string>Submitted</string>
+</dict>
+</plist>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSManagedObjectModel_CurrentVersionName</key>
+	<string>Titlz</string>
+	<key>NSManagedObjectModel_VersionHashes</key>
+	<dict>
+		<key>Titlz</key>
+		<dict>
+			<key>Award</key>
+			<data>
+			LJ9TVfK4FIEne3EpfpwmwcSj8fa8FUEWgLvxW1gU0/w=
+			</data>
+			<key>Book</key>
+			<data>
+			ZMqsQ9e/UAvK5J84LonLxFeGvuGLg4KaJYXDyG4n1aA=
+			</data>
+			<key>Collection</key>
+			<data>
+			U8TJSNFT+BHkDC3+g4rCrbXC0JYmQbN48sVsZnzLRdg=
+			</data>
+			<key>Lookup</key>
+			<data>
+			n7XX9BDE2marPBeueupCrj1FhrXEZHenboFhKd8BW1s=
+			</data>
+			<key>Person</key>
+			<data>
+			qIfjCIxgapJNQqtjhU98o6M67FwpJorycIuuiyKbP14=
+			</data>
+			<key>Photo</key>
+			<data>
+			6Q8Ia6E+EkuE5kzzCbB7271c1hiELv1w0GqBBG+AwPE=
+			</data>
+			<key>Point</key>
+			<data>
+			+3XE2/kvTUdjFyzM3B/g+iFhMkqXjaJFLPP0Rq4XpzA=
+			</data>
+			<key>Publisher</key>
+			<data>
+			SwNrRpHmF1zxCDDUc7r/AAvT9+5OmlLSZDLCu56qTGQ=
+			</data>
+			<key>Seller</key>
+			<data>
+			BxVF+doWZ5+FKSvMHtjBjzLzOrbSW0h/arvHiV2mbJY=
+			</data>
+			<key>Worker</key>
+			<data>
+			drQqvjjrdj615pGIDkvwDDRcczeLIH8MYKAtCG/4jZY=
+			</data>
+		</dict>
+	</dict>
+</dict>
+</plist>

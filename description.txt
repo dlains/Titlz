@@ -1,0 +1,13 @@
+Titlz is the premier app for serious book collectors and bibliophiles. Track important identification information
+on books you are hunting as well as detailed information for books already in your library.
+
+Features
+ - Add books manually or create via ISBN lookup
+ - Create collections to organize your library
+ - Store identification information for books you are hunting
+ - Add awards books have won
+ - Associate multiple people with a book, not just the author(s)
+ - Track the location of books in your library
+ - See the value of you collection
+ - Keep book seller contact information
+ - Maintain a reading list
