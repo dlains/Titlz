@@ -10,6 +10,7 @@
 #import "SearchAppViewController.h"
 #import "BookDetailViewController.h"
 #import "Book.h"
+#import "Collection.h"
 
 @interface HomeViewController()
 
@@ -17,9 +18,15 @@
 @property(nonatomic, strong) NSDecimalNumber* collectionValue;
 @property(nonatomic, strong) NSDecimalNumber* collectionCost;
 @property(nonatomic, assign) NSInteger recentAdditionsPage;
+@property(nonatomic, strong) NSArray* collectionList;
+@property(nonatomic, assign) BOOL collectionListOpen;
+@property(nonatomic, strong) NSString* currentCollection;
+
+-(void) addCollectionItems:(NSArray*)paths;
+-(void) removeCollectionItems:(NSArray*)paths;
 
 -(UITableViewCell*) configureRecentAdditionsCell;
--(UITableViewCell*) configureCollectionSizeCell;
+-(UITableViewCell*) configureCollectionSizeCellAtIndexPath:(NSIndexPath*)indexPath;
 -(UITableViewCell*) configureCollectionValueCell;
 -(UITableViewCell*) configureCollectionCostCell;
 -(UITableViewCell*) configureCollectionTotalCell;
@@ -30,6 +37,8 @@
 -(void) updateCollectionValue;
 -(void) updateCollectionCost;
 -(void) loadBookDetailView;
+-(void) updateCollectionList;
+
 @end
 
 @implementation HomeViewController
@@ -40,6 +49,9 @@
 @synthesize collectionValue = _collectionValue;
 @synthesize collectionCost = _collectionCost;
 @synthesize recentAdditionsPage = _recentAdditionsPage;
+@synthesize collectionList = _collectionList;
+@synthesize collectionListOpen = _collectionListOpen;
+@synthesize currentCollection = _currentCollection;
 
 -(id) initWithStyle:(UITableViewStyle)style
 {
@@ -48,6 +60,11 @@
     {
         self.title = NSLocalizedString(@"Home", @"HomeViewController header bar title.");
         self.tabBarItem.image = [UIImage imageNamed:@"home"];
+        self.collectionListOpen = NO;
+        self.currentCollection = [[NSUserDefaults standardUserDefaults] stringForKey:@"currentCollection"];
+
+        // Set the initial data for the collection list.
+        self.collectionList = [NSArray arrayWithObject:@"Collection Size"];
     }
     return self;
 }
@@ -66,11 +83,14 @@
 {
     [super viewDidLoad];
 
-    self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
+    //self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
+    self.tableView.backgroundColor = [UIColor darkGrayColor];
+    self.tableView.separatorColor = [UIColor darkGrayColor];
 
     UIBarButtonItem* searchButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchApp)];
     self.navigationItem.rightBarButtonItem = searchButton;
     
+    self.collectionListOpen = NO;
     self.recentAdditionsPage = 0;
     [self updateCollectionSize];
     [self updateCollectionValue];
@@ -92,6 +112,7 @@
     [self updateCollectionValue];
     [self updateCollectionCost];
     
+    self.collectionListOpen = NO;
     self.recentAdditionsPage = 0;
     
     [self.tableView reloadData];
@@ -132,7 +153,10 @@
         case HomeRecentAdditionsSection:
             return 1;
         case HomeCollectionSizeSection:
-            return 1;
+            if (self.collectionListOpen)
+                return self.collectionList.count;
+            else
+                return 1;
         case HomeCollectionValueSection:
             return 1;
         case HomeCollectionCostSection:
@@ -155,7 +179,7 @@
             cell = [self configureRecentAdditionsCell];
             break;
         case HomeCollectionSizeSection:
-            cell = [self configureCollectionSizeCell];
+            cell = [self configureCollectionSizeCellAtIndexPath:indexPath];
             break;
         case HomeCollectionValueSection:
             cell = [self configureCollectionValueCell];
@@ -200,7 +224,97 @@
 
 -(NSIndexPath*) tableView:(UITableView*)tableView willSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    return nil;
+    switch (indexPath.section)
+    {
+        case HomeRecentAdditionsSection:
+        case HomeCollectionValueSection:
+        case HomeCollectionCostSection:
+        case HomeCollectionTotalSection:
+            return nil;
+        case HomeCollectionSizeSection:
+            return indexPath;
+        default:
+            return nil;
+    };
+}
+
+-(void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    switch (indexPath.section)
+    {
+        case HomeRecentAdditionsSection:
+        case HomeCollectionCostSection:
+        case HomeCollectionTotalSection:
+        case HomeCollectionValueSection:
+            cell.backgroundColor = [UIColor whiteColor];
+            break;
+        case HomeCollectionSizeSection:
+            if (indexPath.row == 0)
+                cell.backgroundColor = [UIColor whiteColor];
+            else
+                cell.backgroundColor = [UIColor lightGrayColor];
+            break;
+        default:
+            break;
+    }
+}
+
+-(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    [self updateCollectionList];
+
+    // Start at index 1 to skip over "Collection Size" name cell name.
+    NSMutableArray* paths = [NSMutableArray arrayWithCapacity:self.collectionList.count];
+    for (int i = 1; i < self.collectionList.count; i++)
+    {
+        NSIndexPath* path = [NSIndexPath indexPathForRow:i inSection:HomeCollectionSizeSection];
+        [paths addObject:path];
+    }
+    
+    if (indexPath.section == HomeCollectionSizeSection && indexPath.row == 0)
+    {
+        if (self.collectionListOpen)
+        {
+            [self.tableView reloadData];
+            [self removeCollectionItems:paths];
+        }
+        else
+        {
+            [self.tableView reloadData];
+            [self addCollectionItems:paths];
+        }
+    }
+    else if (indexPath.section == HomeCollectionSizeSection && indexPath.row > 0)
+    {
+        // The selected collection name is the new selected collection.
+        [[NSUserDefaults standardUserDefaults] setValue:[self.collectionList objectAtIndex:indexPath.row] forKey:@"currentCollection"];
+        self.currentCollection = [self.collectionList objectAtIndex:indexPath.row];
+
+        // Update the stats.
+        [self updateCollectionSize];
+        [self updateCollectionValue];
+        [self updateCollectionCost];
+        
+        [self.tableView reloadData];
+
+        [self removeCollectionItems:paths];
+    }
+}
+
+-(void) addCollectionItems:(NSArray*)paths
+{
+    self.collectionListOpen = YES;
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView endUpdates];
+}
+
+-(void) removeCollectionItems:(NSArray*)paths
+{
+    self.collectionListOpen = NO;
+    [self.tableView beginUpdates];
+    [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView endUpdates];
 }
 
 -(UITableViewCell*) configureRecentAdditionsCell
@@ -220,25 +334,44 @@
     return cell;
 }
 
--(UITableViewCell*) configureCollectionSizeCell
+-(UITableViewCell*) configureCollectionSizeCellAtIndexPath:(NSIndexPath*)indexPath
 {
-    static NSString* CellIdentifier = @"CollectionCell";
+    static NSString* CellIdentifier = @"CollectionSize";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    
-    cell.textLabel.text = NSLocalizedString(@"Collection Size", @"HomeViewController:configureCollectionSizeCell cell text.");
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", self.collectionSize];
+
+    if (indexPath.row == 0)
+    {
+        cell.textLabel.text = [self.collectionList objectAtIndex:indexPath.row];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%i", self.collectionSize];
+        cell.accessoryType = UITableViewCellAccessoryNone;
+        if (self.collectionListOpen)
+            cell.imageView.image = [UIImage imageNamed:@"disclosure-triangle-down"];
+        else
+            cell.imageView.image = [UIImage imageNamed:@"disclosure-triangle-right"];
+    }
+    else
+    {
+        cell.textLabel.text = [self.collectionList objectAtIndex:indexPath.row];
+        cell.imageView.image = nil;
+        cell.detailTextLabel.text = nil;
+        if ([self.currentCollection compare:cell.textLabel.text] == NSOrderedSame)
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        else
+            cell.accessoryType = UITableViewCellAccessoryNone;
+    }
     
     return cell;
 }
 
 -(UITableViewCell*) configureCollectionValueCell
 {
-    static NSString* CellIdentifier = @"CollectionCell";
+    static NSString* CellIdentifier = @"CollectionValue";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -248,13 +381,14 @@
     
     cell.textLabel.text = NSLocalizedString(@"Collection Value", @"HomeViewController:configureCollectionValueCell cell text.");
     cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", self.collectionValue];
+    cell.accessoryType = UITableViewCellAccessoryNone;
     
     return cell;
 }
 
 -(UITableViewCell*) configureCollectionCostCell
 {
-    static NSString* CellIdentifier = @"CollectionCell";
+    static NSString* CellIdentifier = @"CollectionCost";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -264,13 +398,14 @@
     
     cell.textLabel.text = NSLocalizedString(@"Collection Cost", @"HomeViewController:configureCollectionCostCell cell text.");
     cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", self.collectionCost];
-    
+    cell.accessoryType = UITableViewCellAccessoryNone;
+
     return cell;
 }
 
 -(UITableViewCell*) configureCollectionTotalCell
 {
-    static NSString* CellIdentifier = @"CollectionCell";
+    static NSString* CellIdentifier = @"CollectionTotal";
     
     UITableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -288,12 +423,15 @@
         // Total is greater than or equal to zero.
         cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", total];
         cell.detailTextLabel.textColor = [UIColor colorWithRed:0.19607 green:0.30980 blue:0.52156 alpha:1.0];
+        cell.accessoryType = UITableViewCellAccessoryNone;
+
     }
     else
     {
         // Total is less than zero.
         cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", total];
         cell.detailTextLabel.textColor = [UIColor redColor];
+        cell.accessoryType = UITableViewCellAccessoryNone;
     }
     
     return cell;
@@ -346,90 +484,160 @@
     }
     else
     {
-        NSFetchRequest* request = [[NSFetchRequest alloc] init];
-        [request setEntity:[NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext]];
-        
-        NSError* error = nil;
-        self.collectionSize = [self.managedObjectContext countForFetchRequest:request error:&error];
+        if ([self.currentCollection compare:@"Entire Library"] == NSOrderedSame)
+        {
+            NSFetchRequest* request = [[NSFetchRequest alloc] init];
+            [request setEntity:[NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext]];
+            
+            NSError* error = nil;
+            self.collectionSize = [self.managedObjectContext countForFetchRequest:request error:&error];
+        }
+        else
+        {
+            NSFetchRequest* request = [[NSFetchRequest alloc] init];
+            [request setEntity:[NSEntityDescription entityForName:@"Collection" inManagedObjectContext:self.managedObjectContext]];
+            [request setPredicate:[NSPredicate predicateWithFormat:@"name = %@", self.currentCollection]];
+            
+            NSArray* result = [self.managedObjectContext executeFetchRequest:request error:nil];
+            Collection* collection = [result lastObject];
+            self.collectionSize = collection.books.count;
+        }
     }
 }
 
 -(void) updateCollectionValue
 {
-    NSFetchRequest* request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext]];
-    
-    // Specify that the request should return dictionaries.
-    [request setResultType:NSDictionaryResultType];
-    
-    // Create an expression for the key path.
-    NSExpression* keyPathExpression = [NSExpression expressionForKeyPath:@"currentValue"];
-    
-    // Create an expression to represent the minimum value at the key path 'creationDate'
-    NSExpression* sumExpression = [NSExpression expressionForFunction:@"sum:" arguments:[NSArray arrayWithObject:keyPathExpression]];
-    
-    // Create an expression description using the minExpression and returning a date.
-    NSExpressionDescription* expressionDescription = [[NSExpressionDescription alloc] init];
-    
-    // The name is the key that will be used in the dictionary for the return value.
-    [expressionDescription setName:@"collectionValue"];
-    [expressionDescription setExpression:sumExpression];
-    [expressionDescription setExpressionResultType:NSDecimalAttributeType];
-    
-    // Set the request's properties to fetch just the property represented by the expressions.
-    [request setPropertiesToFetch:[NSArray arrayWithObject:expressionDescription]];
-    
-    // Execute the fetch.
-    NSError* error = nil;
-    NSArray* objects = [self.managedObjectContext executeFetchRequest:request error:&error];
-
-    if (objects.count > 0)
+    if ([self.currentCollection compare:@"Entire Library"] == NSOrderedSame)
     {
-        self.collectionValue = [[objects objectAtIndex:0] valueForKey:@"collectionValue"];
+        NSFetchRequest* request = [[NSFetchRequest alloc] init];
+        [request setEntity:[NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext]];
+        
+        // Specify that the request should return dictionaries.
+        [request setResultType:NSDictionaryResultType];
+        
+        // Create an expression for the key path.
+        NSExpression* keyPathExpression = [NSExpression expressionForKeyPath:@"currentValue"];
+        
+        // Create an expression to represent sum of current values.
+        NSExpression* sumExpression = [NSExpression expressionForFunction:@"sum:" arguments:[NSArray arrayWithObject:keyPathExpression]];
+        
+        // Create an expression description.
+        NSExpressionDescription* expressionDescription = [[NSExpressionDescription alloc] init];
+        // The name is the key that will be used in the dictionary for the return value.
+        [expressionDescription setName:@"collectionValue"];
+        [expressionDescription setExpression:sumExpression];
+        [expressionDescription setExpressionResultType:NSDecimalAttributeType];
+        
+        // Set the request's properties to fetch just the property represented by the expressions.
+        [request setPropertiesToFetch:[NSArray arrayWithObject:expressionDescription]];
+        
+        // Execute the fetch.
+        NSError* error = nil;
+        NSArray* objects = [self.managedObjectContext executeFetchRequest:request error:&error];
+        
+        if (objects.count > 0)
+        {
+            self.collectionValue = [[objects objectAtIndex:0] valueForKey:@"collectionValue"];
+        }
+        else
+        {
+            self.collectionValue = [NSDecimalNumber zero];
+        }
     }
     else
     {
-        self.collectionValue = [NSDecimalNumber zero];
+        Collection* collection = [Collection findCollectionInContext:self.managedObjectContext withName:self.currentCollection];
+        
+        double value = 0.0;
+        if (collection != nil)
+        {
+            for (Book* book in collection.books)
+            {
+                value += [book.currentValue doubleValue];
+            }
+        }
+        self.collectionValue = [NSDecimalNumber decimalNumberWithDecimal:[[NSNumber numberWithDouble:value] decimalValue]];
     }
 }
 
 -(void) updateCollectionCost
 {
-    NSFetchRequest* request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext]];
-    
-    // Specify that the request should return dictionaries.
-    [request setResultType:NSDictionaryResultType];
-    
-    // Create an expression for the key path.
-    NSExpression* keyPathExpression = [NSExpression expressionForKeyPath:@"pricePaid"];
-    
-    // Create an expression to represent the minimum value at the key path 'creationDate'
-    NSExpression* sumExpression = [NSExpression expressionForFunction:@"sum:" arguments:[NSArray arrayWithObject:keyPathExpression]];
-    
-    // Create an expression description using the minExpression and returning a date.
-    NSExpressionDescription* expressionDescription = [[NSExpressionDescription alloc] init];
-    
-    // The name is the key that will be used in the dictionary for the return value.
-    [expressionDescription setName:@"collectionCost"];
-    [expressionDescription setExpression:sumExpression];
-    [expressionDescription setExpressionResultType:NSDecimalAttributeType];
-    
-    // Set the request's properties to fetch just the property represented by the expressions.
-    [request setPropertiesToFetch:[NSArray arrayWithObject:expressionDescription]];
-    
-    // Execute the fetch.
-    NSError* error = nil;
-    NSArray* objects = [self.managedObjectContext executeFetchRequest:request error:&error];
-    
-    if (objects.count > 0)
+    if ([self.currentCollection compare:@"Entire Library"] == NSOrderedSame)
     {
-        self.collectionCost = [[objects objectAtIndex:0] valueForKey:@"collectionCost"];
+        NSFetchRequest* request = [[NSFetchRequest alloc] init];
+        [request setEntity:[NSEntityDescription entityForName:@"Book" inManagedObjectContext:self.managedObjectContext]];
+        
+        // Specify that the request should return dictionaries.
+        [request setResultType:NSDictionaryResultType];
+        
+        // Create an expression for the key path.
+        NSExpression* keyPathExpression = [NSExpression expressionForKeyPath:@"pricePaid"];
+        
+        // Create an expression to represent the minimum value at the key path 'creationDate'
+        NSExpression* sumExpression = [NSExpression expressionForFunction:@"sum:" arguments:[NSArray arrayWithObject:keyPathExpression]];
+        
+        // Create an expression description using the minExpression and returning a date.
+        NSExpressionDescription* expressionDescription = [[NSExpressionDescription alloc] init];
+        
+        // The name is the key that will be used in the dictionary for the return value.
+        [expressionDescription setName:@"collectionCost"];
+        [expressionDescription setExpression:sumExpression];
+        [expressionDescription setExpressionResultType:NSDecimalAttributeType];
+        
+        // Set the request's properties to fetch just the property represented by the expressions.
+        [request setPropertiesToFetch:[NSArray arrayWithObject:expressionDescription]];
+        
+        // Execute the fetch.
+        NSError* error = nil;
+        NSArray* objects = [self.managedObjectContext executeFetchRequest:request error:&error];
+        
+        if (objects.count > 0)
+        {
+            self.collectionCost = [[objects objectAtIndex:0] valueForKey:@"collectionCost"];
+        }
+        else
+        {
+            self.collectionCost = [NSDecimalNumber zero];
+        }
     }
     else
     {
-        self.collectionCost = [NSDecimalNumber zero];
+        Collection* collection = [Collection findCollectionInContext:self.managedObjectContext withName:self.currentCollection];
+        
+        double value = 0.0;
+        if (collection != nil)
+        {
+            for (Book* book in collection.books)
+            {
+                value += [book.pricePaid doubleValue];
+            }
+        }
+        self.collectionCost = [NSDecimalNumber decimalNumberWithDecimal:[[NSNumber numberWithDouble:value] decimalValue]];
     }
+}
+
+-(void) updateCollectionList
+{
+    NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
+    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Collection" inManagedObjectContext:self.managedObjectContext]];
+    
+    // Edit the sort key as appropriate.
+    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    
+    NSArray* dbNames = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+    NSMutableArray* result = [NSMutableArray arrayWithCapacity:dbNames.count + 2];
+    [result addObject:@"Collection Size"];
+    [result addObject:@"Entire Library"];
+    
+    for (Collection* collection in dbNames)
+    {
+        [result addObject:collection.name];
+    }
+    
+    self.collectionList = result;
 }
 
 -(void) loadBookDetailView

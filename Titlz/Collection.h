@@ -25,5 +25,6 @@
 -(void) removeBooks:(NSSet*)values;
 
 +(id) collectionInManagedObjectContext:(NSManagedObjectContext*)context;
++(Collection*) findCollectionInContext:(NSManagedObjectContext*)context withName:(NSString*)name;
 
 @end

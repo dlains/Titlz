@@ -20,6 +20,18 @@
     return [NSEntityDescription insertNewObjectForEntityForName:@"Collection" inManagedObjectContext:context];
 }
 
++(Collection*) findCollectionInContext:(NSManagedObjectContext*)context withName:(NSString*)name
+{
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"name =[cd] %@", name];
+    NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
+    fetchRequest.entity = [NSEntityDescription entityForName:@"Collection" inManagedObjectContext:context];
+    fetchRequest.predicate = predicate;
+    
+    NSArray* result = [context executeFetchRequest:fetchRequest error:nil];
+    
+    return [result lastObject];
+}
+
 // Name must not be empty.
 -(BOOL) validateName:(id*)value error:(NSError**)error
 {

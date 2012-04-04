@@ -86,6 +86,10 @@ void uncaughtExceptionHandler(NSException* exception)
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"firstLaunch"])
     {
+        // Set the current collection default.
+        [[NSUserDefaults standardUserDefaults] setValue:@"Entire Library" forKey:@"currentCollection"];
+        
+        // Create the initial database records.
         InitialData* initialData = [[InitialData alloc] init];
         [initialData createInManagedObjectContext:self.managedObjectContext];
     }
