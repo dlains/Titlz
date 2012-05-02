@@ -16,4 +16,8 @@
 @property(nonatomic, strong) SearchAppViewController* searchAppViewController;
 @property(nonatomic, weak) NSManagedObjectContext* managedObjectContext;
 
+@property(nonatomic, assign) NSInteger recentAdditionsPage;
+
+-(NSArray*) recentAdditions;
+
 @end

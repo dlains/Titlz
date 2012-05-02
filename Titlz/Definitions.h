@@ -11,6 +11,16 @@
 
 #define CustomButtonHeight 30.0
 
+typedef enum TabIndexEnum
+{
+    HomeTab = 0,
+    BookTab,
+    CollectionTab,
+    PersonTab,
+    PublisherTab,
+    SellerTab
+} TabIndex;
+
 typedef enum SelectionModeEnum
 {
     DetailSelection = 0,

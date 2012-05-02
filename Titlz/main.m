@@ -9,11 +9,20 @@
 #import <UIKit/UIKit.h>
 
 #import "AppDelegate.h"
+#import "AppDelegate_Pad.h"
+#import "AppDelegate_Phone.h"
 
 int main(int argc, char *argv[])
 {
     @autoreleasepool
     {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+        {
+            return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate_Pad class]));
+        }
+        else
+        {
+            return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate_Phone class]));
+        }
     }
 }

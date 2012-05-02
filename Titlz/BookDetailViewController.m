@@ -190,8 +190,7 @@
 
 -(BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return YES;
 }
 
 -(void) updateRightBarButtonItemState
@@ -572,38 +571,52 @@
 
 -(NSInteger) numberOfSectionsInTableView:(UITableView*)tableView
 {
-    return BookDetailSectionCount;
+    if (self.detailItem != nil)
+    {
+        return BookDetailSectionCount;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 -(NSInteger) tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger insertionRow = 0;
-    
-    // If the table is in editing mode add one row for inserting new records to most of the sections.
-    if(self.editing)
-        insertionRow = 1;
-    
-    switch (section)
+    if (self.detailItem != nil)
     {
-        case BookTitleSection:
-            return BookTitleSectionRowCount;
-        case BookWorkersSection:
-            return self.detailItem.workers.count + insertionRow;
-        case BookDetailsSection:
-            return BookDetailsSectionRowCount;
-        case BookInstanceDetailsSection:
-            return BookInstanceDetailsSectionRowCount;
-        case BookSignatureSection:
-            return self.detailItem.signatures.count + insertionRow;
-        case BookAwardSection:
-            return self.detailItem.awards.count + insertionRow;
-        case BookPointSection:
-            return self.detailItem.points.count + insertionRow;
-        case BookCollectionSection:
-            return self.detailItem.collections.count + insertionRow;
-        default:
-            DLog(@"Invalid BookDetailViewController section found: %i.", section);
-            return 0;
+        NSInteger insertionRow = 0;
+        
+        // If the table is in editing mode add one row for inserting new records to most of the sections.
+        if(self.editing)
+            insertionRow = 1;
+        
+        switch (section)
+        {
+            case BookTitleSection:
+                return BookTitleSectionRowCount;
+            case BookWorkersSection:
+                return self.detailItem.workers.count + insertionRow;
+            case BookDetailsSection:
+                return BookDetailsSectionRowCount;
+            case BookInstanceDetailsSection:
+                return BookInstanceDetailsSectionRowCount;
+            case BookSignatureSection:
+                return self.detailItem.signatures.count + insertionRow;
+            case BookAwardSection:
+                return self.detailItem.awards.count + insertionRow;
+            case BookPointSection:
+                return self.detailItem.points.count + insertionRow;
+            case BookCollectionSection:
+                return self.detailItem.collections.count + insertionRow;
+            default:
+                DLog(@"Invalid BookDetailViewController section found: %i.", section);
+                return 0;
+        }
+    }
+    else
+    {
+        return 0;
     }
 }
 

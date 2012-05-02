@@ -8,16 +8,7 @@
 
 #import "AppDelegate.h"
 
-#import "BookViewController.h"
-#import "HomeViewController.h"
-#import "PublisherViewController.h"
-#import "SellerViewController.h"
-#import "InitialData.h"
-
 void uncaughtExceptionHandler(NSException* exception);
-
-@interface AppDelegate()
-@end
 
 @implementation AppDelegate
 
@@ -39,60 +30,12 @@ void uncaughtExceptionHandler(NSException* exception)
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 
     // Register the firstLaunch user default so we can detect when to load the lookup table.
+    // TODO: Probably will need to add a check here to see if a version of the database already exists in iCloud. If so get it, otherwise it is firstLaunch.
     [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES],@"firstLaunch",nil]];
     
     application.applicationSupportsShakeToEdit = YES;
     application.statusBarStyle = UIStatusBarStyleBlackOpaque;
-    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.tabBarController = [[UITabBarController alloc] init];
-
-    HomeViewController* homeViewController = [[HomeViewController alloc] initWithStyle:UITableViewStylePlain];
-    homeViewController.managedObjectContext = self.managedObjectContext;
-    UINavigationController* homeNavigationController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
-    homeNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-    
-    BookViewController* bookViewController = [[BookViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
-    UINavigationController* bookNavigationController = [[UINavigationController alloc] initWithRootViewController:bookViewController];
-    bookNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-    bookViewController.selectionMode = DetailSelection;
-    
-    CollectionViewController* collectionViewController = [[CollectionViewController alloc] initWithNibName:@"CollectionViewController" bundle:nil];
-    UINavigationController* collectionNavigationController = [[UINavigationController alloc] initWithRootViewController:collectionViewController];
-    collectionNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-    collectionViewController.managedObjectContext = self.managedObjectContext;
-    
-    PersonViewController* personViewController = [[PersonViewController alloc] initWithNibName:@"PersonViewController" bundle:nil];
-    UINavigationController* personNavigationController = [[UINavigationController alloc] initWithRootViewController:personViewController];
-    personNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-    personViewController.managedObjectContext = self.managedObjectContext;
-    
-    PublisherViewController* publisherViewController = [[PublisherViewController alloc] initWithNibName:@"PublisherViewController" bundle:nil];
-    UINavigationController* publisherNavigationController = [[UINavigationController alloc] initWithRootViewController:publisherViewController];
-    publisherNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-    publisherViewController.managedObjectContext = self.managedObjectContext;
-    
-    SellerViewController* sellerViewController = [[SellerViewController alloc] initWithNibName:@"SellerViewController" bundle:nil];
-    UINavigationController* sellerNavigationController = [[UINavigationController alloc] initWithRootViewController:sellerViewController];
-    sellerNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-    sellerViewController.managedObjectContext = self.managedObjectContext;
-    
-    self.tabBarController.moreNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:homeNavigationController, bookNavigationController, collectionNavigationController, personNavigationController, publisherNavigationController, sellerNavigationController, nil];
-    self.tabBarController.customizableViewControllers = nil;
-
-    self.window.rootViewController = self.tabBarController;
-    [self.window makeKeyAndVisible];
-    
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"firstLaunch"])
-    {
-        // Set the current collection default.
-        [[NSUserDefaults standardUserDefaults] setValue:@"Entire Library" forKey:@"currentCollection"];
-        
-        // Create the initial database records.
-        InitialData* initialData = [[InitialData alloc] init];
-        [initialData createInManagedObjectContext:self.managedObjectContext];
-    }
     
     return YES;
 }

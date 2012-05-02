@@ -8,7 +8,6 @@
 
 #import "HomeViewController.h"
 #import "SearchAppViewController.h"
-#import "BookDetailViewController.h"
 #import "Book.h"
 #import "Collection.h"
 
@@ -17,7 +16,6 @@
 @property(nonatomic, assign) NSUInteger collectionSize;
 @property(nonatomic, strong) NSDecimalNumber* collectionValue;
 @property(nonatomic, strong) NSDecimalNumber* collectionCost;
-@property(nonatomic, assign) NSInteger recentAdditionsPage;
 @property(nonatomic, strong) NSArray* collectionList;
 @property(nonatomic, assign) BOOL collectionListOpen;
 @property(nonatomic, strong) NSString* currentCollection;
@@ -32,11 +30,9 @@
 -(UITableViewCell*) configureCollectionTotalCell;
 
 -(void) searchApp;
--(NSArray*) recentAdditions;
 -(void) updateCollectionSize;
 -(void) updateCollectionValue;
 -(void) updateCollectionCost;
--(void) loadBookDetailView;
 -(void) updateCollectionList;
 
 @end
@@ -135,8 +131,7 @@
 
 -(BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
 
 #pragma mark - Table view data source
@@ -441,12 +436,10 @@
 
 -(void) didUpdateCurrentPageTo:(NSInteger)page
 {
-    self.recentAdditionsPage = page;
 }
 
 -(void) didSelectCurrentPage
 {
-    [self loadBookDetailView];
 }
 
 #pragma mark - Local Methods
@@ -638,13 +631,6 @@
     }
     
     self.collectionList = result;
-}
-
--(void) loadBookDetailView
-{
-    BookDetailViewController* bookDetailView = [[BookDetailViewController alloc] initWithNibName:@"BookDetailViewController" bundle:nil];
-    bookDetailView.detailItem = [self.recentAdditions objectAtIndex:self.recentAdditionsPage];
-    [self.navigationController pushViewController:bookDetailView animated:YES];
 }
 
 @end

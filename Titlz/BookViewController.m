@@ -126,8 +126,7 @@
 
 -(BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return YES;
 }
 
 // Customize the number of sections in the table view.
@@ -213,23 +212,30 @@
 
 -(void) tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    if (self.selectionMode == SingleSelection)
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
     {
-        // Get the selected book and update the correct delegate.
-        Book* selectedBook = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        [self.delegate bookViewController:self didSelectBook:selectedBook forPersonType:self.personSelectionType];
-    }
-    else if (self.selectionMode == MultipleSelection)
-    {
-        NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
-        self.navigationItem.leftBarButtonItem.title = [NSString stringWithFormat:NSLocalizedString(@"Select (%d)", @"BookViewController multiple selection button text"), selectedRows.count];
+        if (self.selectionMode == SingleSelection)
+        {
+            // Get the selected book and update the correct delegate.
+            Book* selectedBook = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+            [self.delegate bookViewController:self didSelectBook:selectedBook forPersonType:self.personSelectionType];
+        }
+        else if (self.selectionMode == MultipleSelection)
+        {
+            NSArray *selectedRows = [self.tableView indexPathsForSelectedRows];
+            self.navigationItem.leftBarButtonItem.title = [NSString stringWithFormat:NSLocalizedString(@"Select (%d)", @"BookViewController multiple selection button text"), selectedRows.count];
+        }
+        else
+        {
+            BookDetailViewController* bookDetailViewController = [[BookDetailViewController alloc] initWithNibName:@"BookDetailViewController" bundle:nil];
+            Book* selectedBook = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+            bookDetailViewController.detailItem = selectedBook;
+            [self.navigationController pushViewController:bookDetailViewController animated:YES];
+        }
     }
     else
     {
-        BookDetailViewController* bookDetailViewController = [[BookDetailViewController alloc] initWithNibName:@"BookDetailViewController" bundle:nil];
-        Book* selectedBook = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-        bookDetailViewController.detailItem = selectedBook;
-        [self.navigationController pushViewController:bookDetailViewController animated:YES];
+        
     }
 }
 

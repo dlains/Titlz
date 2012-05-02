@@ -129,6 +129,11 @@
     dateFormatter = nil;
 }
 
+-(BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return YES;
+}
+
 -(void) setUpUndoManager
 {
 	/*
