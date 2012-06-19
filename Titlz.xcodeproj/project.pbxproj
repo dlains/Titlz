@@ -116,7 +116,6 @@
 		55EDF6F014C4AC1000C4BCE5 /* BookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EDF6EC14C4AC1000C4BCE5 /* BookViewController.m */; };
 		55EDF6F114C4AC1000C4BCE5 /* NewBookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EDF6EE14C4AC1000C4BCE5 /* NewBookViewController.m */; };
 		55EDF6FD14C4B1F100C4BCE5 /* Publisher.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EDF6FC14C4B1F100C4BCE5 /* Publisher.m */; };
-		55EED62E14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EED62D14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -285,8 +284,6 @@
 		55EDF6EE14C4AC1000C4BCE5 /* NewBookViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewBookViewController.m; sourceTree = "<group>"; };
 		55EDF6FB14C4B1F100C4BCE5 /* Publisher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Publisher.h; sourceTree = "<group>"; };
 		55EDF6FC14C4B1F100C4BCE5 /* Publisher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Publisher.m; sourceTree = "<group>"; };
-		55EED62C14D2174F00AFA726 /* AlphaIndexFetchedResultsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlphaIndexFetchedResultsController.h; sourceTree = "<group>"; };
-		55EED62D14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlphaIndexFetchedResultsController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -361,8 +358,6 @@
 		5548F42614C9F704004C8BA8 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				55EED62C14D2174F00AFA726 /* AlphaIndexFetchedResultsController.h */,
-				55EED62D14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m */,
 				5548F42814C9F800004C8BA8 /* ContextUtil.h */,
 				5548F42914C9F800004C8BA8 /* ContextUtil.m */,
 				55EB3C3B14B0CC1300721D42 /* DLog.h */,
@@ -808,7 +803,6 @@
 				559E461814CF584D0055D52C /* Photo.m in Sources */,
 				559E461C14CF58D40055D52C /* ImageToDataTransformer.m in Sources */,
 				559E461F14CF7B8F0055D52C /* EditableImageAndTextCell.m in Sources */,
-				55EED62E14D2174F00AFA726 /* AlphaIndexFetchedResultsController.m in Sources */,
 				55CF1BBF14D7133C008D5765 /* CollectionViewController.m in Sources */,
 				55CF1BC414D71435008D5765 /* CollectionDetailViewController.m in Sources */,
 				55CF1BC814D7146D008D5765 /* NewCollectionViewController.m in Sources */,

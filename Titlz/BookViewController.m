@@ -12,7 +12,6 @@
 #import "Photo.h"
 #import "Person.h"
 #import "Worker.h"
-#import "AlphaIndexFetchedResultsController.h"
 #import "OpenLibraryLookupViewController.h"
 
 @interface BookViewController ()
@@ -276,13 +275,9 @@
     fetchRequest.propertiesToFetch = [NSArray arrayWithObjects:@"title", @"edition", @"format", nil];
     fetchRequest.relationshipKeyPathsForPrefetching = [NSArray arrayWithObjects:@"worker", nil];
 
-    NSString* cacheName = @"Book";
-    if (predicate)
-        cacheName = nil;
-
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    AlphaIndexFetchedResultsController* controller = [[AlphaIndexFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfTitle" cacheName:cacheName];
+    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfTitle" cacheName:nil];
     controller.delegate = self;
     self.fetchedResultsController = controller;
     

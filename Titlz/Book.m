@@ -83,21 +83,6 @@
         result = [value substringWithRange:[value rangeOfComposedCharacterSequenceAtIndex:0]];
     }
     
-    if (result == nil)
-    {
-        [self didAccessValueForKey:@"firstLetterOfTitle"];
-        return result;
-    }
-    
-    // Any non-alpha character should be grouped in the # group.
-    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"[A-Z]" options:NSRegularExpressionSearch error:nil];
-    NSArray* matches = [regex matchesInString:result options:0 range:NSMakeRange(0, [result length])];
-    
-    if ([matches count] == 0)
-    {
-        result = @"#";
-    }
-    
     [self didAccessValueForKey:@"firstLetterOfTitle"];
     return result;
 }

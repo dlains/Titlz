@@ -9,7 +9,6 @@
 #import "PublisherViewController.h"
 #import "PublisherDetailViewController.h"
 #import "Publisher.h"
-#import "AlphaIndexFetchedResultsController.h"
 
 @interface PublisherViewController ()
 -(void) configureCell:(UITableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
@@ -227,13 +226,9 @@
     fetchRequest.sortDescriptors = sortDescriptors;
     fetchRequest.propertiesToFetch = [NSArray arrayWithObject:@"name"];
     
-    NSString* cacheName = @"Publisher";
-    if (predicate)
-        cacheName = nil;
-    
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    AlphaIndexFetchedResultsController* controller = [[AlphaIndexFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfName" cacheName:cacheName];
+    NSFetchedResultsController* controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"firstLetterOfName" cacheName:nil];
     controller.delegate = self;
     self.fetchedResultsController = controller;
     
