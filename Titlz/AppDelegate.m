@@ -17,6 +17,7 @@
 void uncaughtExceptionHandler(NSException* exception);
 
 @interface AppDelegate()
+-(BOOL) addSkipBackupAttributeToItemAtURL:(NSURL*)URL;
 @end
 
 @implementation AppDelegate
@@ -219,8 +220,23 @@ void uncaughtExceptionHandler(NSException* exception)
         DLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }    
-    
+
+    [self addSkipBackupAttributeToItemAtURL:storeURL];
     return __persistentStoreCoordinator;
+}
+
+// TODO: Had to add this to pass review. Switch to iCloud backup as soon as you can.
+-(BOOL) addSkipBackupAttributeToItemAtURL:(NSURL*)URL
+{
+    assert([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]);
+    
+    NSError *error = nil;
+    BOOL success = [URL setResourceValue: [NSNumber numberWithBool: YES] forKey: NSURLIsExcludedFromBackupKey error: &error];
+    if(!success)
+    {
+        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+    }
+    return success;
 }
 
 #pragma mark - Application's Documents directory
