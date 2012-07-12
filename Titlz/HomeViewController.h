@@ -12,6 +12,9 @@
 @class SearchAppViewController;
 
 @interface HomeViewController : UITableViewController <RecentAdditionsPageDelegate>
+{
+    NSNumberFormatter* numberFormatter;
+}
 
 @property(nonatomic, strong) SearchAppViewController* searchAppViewController;
 @property(nonatomic, weak) NSManagedObjectContext* managedObjectContext;

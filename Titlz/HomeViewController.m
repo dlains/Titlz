@@ -74,7 +74,7 @@
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
-    // Release any cached data, images, etc that aren't in use.
+    numberFormatter = nil;
 }
 
 #pragma mark - View lifecycle
@@ -95,13 +95,19 @@
     [self updateCollectionSize];
     [self updateCollectionValue];
     [self updateCollectionCost];
+
+    if (numberFormatter == nil)
+    {
+        numberFormatter = [[NSNumberFormatter alloc] init];
+        [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    }
 }
 
 -(void) viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+
+    numberFormatter = nil;
 }
 
 -(void) viewWillAppear:(BOOL)animated
@@ -380,7 +386,7 @@
     }
     
     cell.textLabel.text = NSLocalizedString(@"Collection Value", @"HomeViewController:configureCollectionValueCell cell text.");
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", self.collectionValue];
+    cell.detailTextLabel.text = [numberFormatter stringFromNumber:self.collectionValue];
     cell.accessoryType = UITableViewCellAccessoryNone;
     
     return cell;
@@ -397,7 +403,7 @@
     }
     
     cell.textLabel.text = NSLocalizedString(@"Collection Cost", @"HomeViewController:configureCollectionCostCell cell text.");
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", self.collectionCost];
+    cell.detailTextLabel.text = [numberFormatter stringFromNumber:self.collectionCost];
     cell.accessoryType = UITableViewCellAccessoryNone;
 
     return cell;
@@ -421,7 +427,7 @@
     if (result == NSOrderedDescending || result == NSOrderedSame)
     {
         // Total is greater than or equal to zero.
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", total];
+        cell.detailTextLabel.text = [numberFormatter stringFromNumber:total];
         cell.detailTextLabel.textColor = [UIColor colorWithRed:0.19607 green:0.30980 blue:0.52156 alpha:1.0];
         cell.accessoryType = UITableViewCellAccessoryNone;
 
@@ -429,7 +435,7 @@
     else
     {
         // Total is less than zero.
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"$%@", total];
+        cell.detailTextLabel.text = [numberFormatter stringFromNumber:total];
         cell.detailTextLabel.textColor = [UIColor redColor];
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
