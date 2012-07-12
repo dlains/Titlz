@@ -58,6 +58,7 @@
 		559E461C14CF58D40055D52C /* ImageToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 559E461B14CF58D40055D52C /* ImageToDataTransformer.m */; };
 		559E461F14CF7B8F0055D52C /* EditableImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 559E461E14CF7B8F0055D52C /* EditableImageAndTextCell.m */; };
 		559E462114CF7BB70055D52C /* EditableImageAndTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 559E462014CF7BB70055D52C /* EditableImageAndTextCell.xib */; };
+		55A58AFE15AF490B0074078C /* DataUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A58AFD15AF490B0074078C /* DataUpdater.m */; };
 		55A864A5152BB1F200B6A7AF /* disclosure-triangle-down.png in Resources */ = {isa = PBXBuildFile; fileRef = 55A864A1152BB1F200B6A7AF /* disclosure-triangle-down.png */; };
 		55A864A6152BB1F200B6A7AF /* disclosure-triangle-down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55A864A2152BB1F200B6A7AF /* disclosure-triangle-down@2x.png */; };
 		55A864A7152BB1F200B6A7AF /* disclosure-triangle-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 55A864A3152BB1F200B6A7AF /* disclosure-triangle-right.png */; };
@@ -197,6 +198,8 @@
 		559E461D14CF7B8F0055D52C /* EditableImageAndTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditableImageAndTextCell.h; sourceTree = "<group>"; };
 		559E461E14CF7B8F0055D52C /* EditableImageAndTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditableImageAndTextCell.m; sourceTree = "<group>"; };
 		559E462014CF7BB70055D52C /* EditableImageAndTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditableImageAndTextCell.xib; sourceTree = "<group>"; };
+		55A58AFC15AF490B0074078C /* DataUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataUpdater.h; sourceTree = "<group>"; };
+		55A58AFD15AF490B0074078C /* DataUpdater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataUpdater.m; sourceTree = "<group>"; };
 		55A864A1152BB1F200B6A7AF /* disclosure-triangle-down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disclosure-triangle-down.png"; sourceTree = "<group>"; };
 		55A864A2152BB1F200B6A7AF /* disclosure-triangle-down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disclosure-triangle-down@2x.png"; sourceTree = "<group>"; };
 		55A864A3152BB1F200B6A7AF /* disclosure-triangle-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disclosure-triangle-right.png"; sourceTree = "<group>"; };
@@ -374,6 +377,8 @@
 				555FDD0E1513BDF000DD0DAF /* UIImage+RoundedCorner.m */,
 				555FDD071513BD9200DD0DAF /* UIImage+Resize.h */,
 				555FDD081513BD9200DD0DAF /* UIImage+Resize.m */,
+				55A58AFC15AF490B0074078C /* DataUpdater.h */,
+				55A58AFD15AF490B0074078C /* DataUpdater.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -823,6 +828,7 @@
 				555FDD091513BD9200DD0DAF /* UIImage+Resize.m in Sources */,
 				555FDD0F1513BDF000DD0DAF /* UIImage+Alpha.m in Sources */,
 				555FDD101513BDF000DD0DAF /* UIImage+RoundedCorner.m in Sources */,
+				55A58AFE15AF490B0074078C /* DataUpdater.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -97,18 +97,18 @@
     // Ignore 'the', 'a' and 'an' as first words in the title.
     if ([value hasPrefix:@"THE "])
     {
-        NSRange range = NSMakeRange(4, sortableTitle.length - 5);
-        result = [NSString stringWithFormat:@"%@, %@", [sortableTitle substringWithRange:range], @"The"];
+        NSRange range = NSMakeRange(4, sortableTitle.length - 4);
+        result = [NSString stringWithFormat:@"%@, %@", [value substringWithRange:range], @"THE"];
     }
     else if ([value hasPrefix:@"A "])
     {
-        NSRange range = NSMakeRange(2, sortableTitle.length - 3);
-        result = [NSString stringWithFormat:@"%@, %@", [sortableTitle substringWithRange:range], @"A"];
+        NSRange range = NSMakeRange(2, sortableTitle.length - 2);
+        result = [NSString stringWithFormat:@"%@, %@", [value substringWithRange:range], @"A"];
     }
     else if ([value hasPrefix:@"AN "])
     {
-        NSRange range = NSMakeRange(3, sortableTitle.length - 4);
-        result = [NSString stringWithFormat:@"%@, %@", [sortableTitle substringWithRange:range], @"An"];
+        NSRange range = NSMakeRange(3, sortableTitle.length - 3);
+        result = [NSString stringWithFormat:@"%@, %@", [value substringWithRange:range], @"AN"];
     }
     else
     {

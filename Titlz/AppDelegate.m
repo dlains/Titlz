@@ -13,6 +13,7 @@
 #import "PublisherViewController.h"
 #import "SellerViewController.h"
 #import "InitialData.h"
+#import "DataUpdater.h"
 
 void uncaughtExceptionHandler(NSException* exception);
 
@@ -40,7 +41,7 @@ void uncaughtExceptionHandler(NSException* exception)
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 
     // Register the firstLaunch user default so we can detect when to load the lookup table.
-    [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES],@"firstLaunch",nil]];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES],@"firstLaunch", [NSNumber numberWithBool:YES],@"updateSortableTitles", nil]];
     
     application.applicationSupportsShakeToEdit = YES;
     application.statusBarStyle = UIStatusBarStyleBlackOpaque;
@@ -93,6 +94,17 @@ void uncaughtExceptionHandler(NSException* exception)
         // Create the initial database records.
         InitialData* initialData = [[InitialData alloc] init];
         [initialData createInManagedObjectContext:self.managedObjectContext];
+    }
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"updateSortableTitles"])
+    {
+        // Fix existing sortableTitle fields that were created before the fix in 1.0.2.
+        DataUpdater* updater = [[DataUpdater alloc] init];
+        [updater fixSortableTitlesInContext:self.managedObjectContext];
+        
+        // Turn the default off so it doesn't run all the time.
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"updateSortableTitles"];
+        updater = nil;
     }
     
     return YES;
@@ -224,6 +236,8 @@ void uncaughtExceptionHandler(NSException* exception)
     [self addSkipBackupAttributeToItemAtURL:storeURL];
     return __persistentStoreCoordinator;
 }
+
+#pragma mark - Private methods
 
 // TODO: Had to add this to pass review. Switch to iCloud backup as soon as you can.
 -(BOOL) addSkipBackupAttributeToItemAtURL:(NSURL*)URL
