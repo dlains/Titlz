@@ -69,6 +69,8 @@
     self.searchBar.placeholder = NSLocalizedString(@"Search Titlz", @"SearchAppViewController:viewDidLoad search bar placeholder text.");
     self.navigationItem.titleView = self.searchBar;
     [self.searchBar becomeFirstResponder];
+
+    [TestFlight passCheckpoint:@"SearchAppViewController Loaded"];
 }
 
 -(void) viewDidUnload

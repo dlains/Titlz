@@ -117,6 +117,8 @@
     dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
     [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+
+    [TestFlight passCheckpoint:@"NewBookViewController Loaded"];
 }
 
 -(void)viewDidUnload
@@ -348,7 +350,7 @@
         case BookCollectionTag:
             break;
         default:
-            DLog(@"Invalid NewBookViewController textField.tag value found: %i.", textField.tag);
+            NSLog(@"Invalid NewBookViewController textField.tag value found: %i.", textField.tag);
             break;
     }
     
@@ -363,7 +365,7 @@
             self.detailItem.comments = textView.text;
             break;
         default:
-            DLog(@"Invalid NewBookViewController textView.tag value found: %i.", textView.tag);
+            NSLog(@"Invalid NewBookViewController textView.tag value found: %i.", textView.tag);
             break;
     }
     
@@ -428,7 +430,7 @@
                     lookupTextField.text = value;
                 }
                 else
-                    DLog(@"Invalid textField.tag found for LookupTypeCondition selection: %i.", lookupTextField.tag);
+                    NSLog(@"Invalid textField.tag found for LookupTypeCondition selection: %i.", lookupTextField.tag);
                 break;
             case LookupTypeWorker:
                 lookupCell = (EditableLookupAndTextCell*)workerLookupLabel.superview.superview;
@@ -440,7 +442,7 @@
                 lookupTextField.text = value;
                 break;
             default:
-                DLog(@"Invalid LookupType found in NewBookViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
+                NSLog(@"Invalid LookupType found in NewBookViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
                 break;
         }
     }
@@ -493,7 +495,7 @@
         case BookCollectionSection:
             return self.detailItem.collections.count + insertionRow;
         default:
-            DLog(@"Invalid NewBookViewController section found: %i.", section);
+            NSLog(@"Invalid NewBookViewController section found: %i.", section);
             return 0;
     }
 }
@@ -530,7 +532,7 @@
             cell = [self configureCollectionCellAtIndexPath:indexPath];
             break;
         default:
-            DLog(@"Invalid NewBookViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid NewBookViewController section found: %i.", indexPath.section);
             break;
     }
     
@@ -624,7 +626,7 @@
             imageCell.titleLabel.text = self.detailItem.title;
             break;
         default:
-            DLog(@"Invalid NewBookViewController Title section row found: %i.", indexPath.row);
+            NSLog(@"Invalid NewBookViewController Title section row found: %i.", indexPath.row);
             break;
     }
     
@@ -739,7 +741,7 @@
             cell.textField.tag = BookPublisherTag;
             break;
         default:
-            DLog(@"Invalid NewBookViewController Data section row found: %i.", indexPath.row);
+            NSLog(@"Invalid NewBookViewController Data section row found: %i.", indexPath.row);
             break;
     }
     
@@ -849,7 +851,7 @@
             textCell.textView.tag = BookCommentsTag;
             return textCell;
         default:
-            DLog(@"Invalid NewBookViewController Data section row found: %i.", indexPath.row);
+            NSLog(@"Invalid NewBookViewController Data section row found: %i.", indexPath.row);
             break;
     }
     
@@ -1037,7 +1039,7 @@
                 [self.detailItem addSignaturesObject:person];
                 break;
             default:
-                DLog(@"Invalid PersonType found in TitleDetailViewController: %i.", type);
+                NSLog(@"Invalid PersonType found in TitleDetailViewController: %i.", type);
                 break;
         }
     }

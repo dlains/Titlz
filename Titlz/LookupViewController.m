@@ -56,7 +56,7 @@
                 self.title = NSLocalizedString(@"Location", @"LookupViewController Location header bar title.");
                 break;
             default:
-                DLog(@"Invalid LookupType found in LookupViewController init: %i.", self.selectedLookupType);
+                NSLog(@"Invalid LookupType found in LookupViewController init: %i.", self.selectedLookupType);
                 break;
         }
     }
@@ -240,7 +240,7 @@
          
 	     abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
 	     */
-	    DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 	    abort();
 	}
     

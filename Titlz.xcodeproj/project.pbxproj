@@ -59,6 +59,8 @@
 		559E461F14CF7B8F0055D52C /* EditableImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 559E461E14CF7B8F0055D52C /* EditableImageAndTextCell.m */; };
 		559E462114CF7BB70055D52C /* EditableImageAndTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 559E462014CF7BB70055D52C /* EditableImageAndTextCell.xib */; };
 		55A58AFE15AF490B0074078C /* DataUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A58AFD15AF490B0074078C /* DataUpdater.m */; };
+		55A58B0415AF75EA0074078C /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A58B0015AF75EA0074078C /* libTestFlight.a */; };
+		55A58B0815AF76870074078C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A58B0715AF76870074078C /* libz.dylib */; };
 		55A864A5152BB1F200B6A7AF /* disclosure-triangle-down.png in Resources */ = {isa = PBXBuildFile; fileRef = 55A864A1152BB1F200B6A7AF /* disclosure-triangle-down.png */; };
 		55A864A6152BB1F200B6A7AF /* disclosure-triangle-down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 55A864A2152BB1F200B6A7AF /* disclosure-triangle-down@2x.png */; };
 		55A864A7152BB1F200B6A7AF /* disclosure-triangle-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 55A864A3152BB1F200B6A7AF /* disclosure-triangle-right.png */; };
@@ -107,7 +109,6 @@
 		55D4A74C14B55BED00BAA15E /* PersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D4A74A14B55BED00BAA15E /* PersonViewController.m */; };
 		55D4A74D14B55BED00BAA15E /* PersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55D4A74B14B55BED00BAA15E /* PersonViewController.xib */; };
 		55D4A75014B55CE700BAA15E /* NewPersonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D4A74F14B55CE700BAA15E /* NewPersonViewController.m */; };
-		55EB3C3D14B0CC1300721D42 /* DLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EB3C3C14B0CC1300721D42 /* DLog.m */; };
 		55EB3C4214B13D1D00721D42 /* PersonDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EB3C4014B13D1D00721D42 /* PersonDetailViewController.m */; };
 		55EB3C4314B13D1D00721D42 /* PersonDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55EB3C4114B13D1D00721D42 /* PersonDetailViewController.xib */; };
 		55EB3C4614B13E5600721D42 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 55EB3C4514B13E5600721D42 /* Person.m */; };
@@ -200,6 +201,9 @@
 		559E462014CF7BB70055D52C /* EditableImageAndTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditableImageAndTextCell.xib; sourceTree = "<group>"; };
 		55A58AFC15AF490B0074078C /* DataUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataUpdater.h; sourceTree = "<group>"; };
 		55A58AFD15AF490B0074078C /* DataUpdater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataUpdater.m; sourceTree = "<group>"; };
+		55A58B0015AF75EA0074078C /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		55A58B0315AF75EA0074078C /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
+		55A58B0715AF76870074078C /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		55A864A1152BB1F200B6A7AF /* disclosure-triangle-down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disclosure-triangle-down.png"; sourceTree = "<group>"; };
 		55A864A2152BB1F200B6A7AF /* disclosure-triangle-down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disclosure-triangle-down@2x.png"; sourceTree = "<group>"; };
 		55A864A3152BB1F200B6A7AF /* disclosure-triangle-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disclosure-triangle-right.png"; sourceTree = "<group>"; };
@@ -270,8 +274,6 @@
 		55D4A74B14B55BED00BAA15E /* PersonViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonViewController.xib; sourceTree = "<group>"; };
 		55D4A74E14B55CE700BAA15E /* NewPersonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPersonViewController.h; sourceTree = "<group>"; };
 		55D4A74F14B55CE700BAA15E /* NewPersonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewPersonViewController.m; sourceTree = "<group>"; };
-		55EB3C3B14B0CC1300721D42 /* DLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLog.h; sourceTree = "<group>"; };
-		55EB3C3C14B0CC1300721D42 /* DLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DLog.m; sourceTree = "<group>"; };
 		55EB3C3F14B13D1D00721D42 /* PersonDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonDetailViewController.h; sourceTree = "<group>"; };
 		55EB3C4014B13D1D00721D42 /* PersonDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonDetailViewController.m; sourceTree = "<group>"; };
 		55EB3C4114B13D1D00721D42 /* PersonDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonDetailViewController.xib; sourceTree = "<group>"; };
@@ -294,10 +296,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55A58B0815AF76870074078C /* libz.dylib in Frameworks */,
 				55A99E9714A949FA00836F4E /* UIKit.framework in Frameworks */,
 				55A99E9914A949FA00836F4E /* Foundation.framework in Frameworks */,
 				55A99E9B14A949FA00836F4E /* CoreGraphics.framework in Frameworks */,
 				55A99E9D14A949FA00836F4E /* CoreData.framework in Frameworks */,
+				55A58B0415AF75EA0074078C /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,8 +367,6 @@
 			children = (
 				5548F42814C9F800004C8BA8 /* ContextUtil.h */,
 				5548F42914C9F800004C8BA8 /* ContextUtil.m */,
-				55EB3C3B14B0CC1300721D42 /* DLog.h */,
-				55EB3C3C14B0CC1300721D42 /* DLog.m */,
 				557B7AFF14CCE78A0057FE42 /* DAlertView.h */,
 				557B7B0014CCE78A0057FE42 /* DAlertView.m */,
 				5501580B14EEC02F00458477 /* DConnection.h */,
@@ -434,9 +436,19 @@
 			name = Award;
 			sourceTree = "<group>";
 		};
+		55A58AFF15AF75EA0074078C /* TestFlightSDK1.0 */ = {
+			isa = PBXGroup;
+			children = (
+				55A58B0015AF75EA0074078C /* libTestFlight.a */,
+				55A58B0315AF75EA0074078C /* TestFlight.h */,
+			);
+			path = TestFlightSDK1.0;
+			sourceTree = "<group>";
+		};
 		55A99E8714A949FA00836F4E = {
 			isa = PBXGroup;
 			children = (
+				55A58B0715AF76870074078C /* libz.dylib */,
 				5523E1431521608600BF3D6C /* Titlz-114.png */,
 				5523E1401521607F00BF3D6C /* Titlz-57.png */,
 				556873C614FC5988000709A8 /* Default@2x.png */,
@@ -469,6 +481,7 @@
 		55A99E9E14A949FA00836F4E /* Titlz */ = {
 			isa = PBXGroup;
 			children = (
+				55A58AFF15AF75EA0074078C /* TestFlightSDK1.0 */,
 				55A99EC014A94A6C00836F4E /* Model */,
 				5562329C14AAF1FA0099765E /* Entities */,
 				55A99EBE14A94A3A00836F4E /* Classes */,
@@ -778,7 +791,6 @@
 				55A99EA914A949FA00836F4E /* AppDelegate.m in Sources */,
 				55A99EAC14A949FA00836F4E /* Titlz.xcdatamodeld in Sources */,
 				552C741C14AE926600595DE9 /* EditableTextCell.m in Sources */,
-				55EB3C3D14B0CC1300721D42 /* DLog.m in Sources */,
 				55EB3C4214B13D1D00721D42 /* PersonDetailViewController.m in Sources */,
 				55EB3C4614B13E5600721D42 /* Person.m in Sources */,
 				55D4A74C14B55BED00BAA15E /* PersonViewController.m in Sources */,
@@ -883,8 +895,9 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 			};
 			name = Debug;
 		};
@@ -896,17 +909,18 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: David Lains";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "D7B0C53D-9EB9-4917-8F77-1E516EF62568";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -914,12 +928,21 @@
 		55A99EBC14A949FA00836F4E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: David Lains (QM2CE9893Z)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: David Lains (QM2CE9893Z)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Titlz/Titlz-Prefix.pch";
+				"GCC_PREPROCESSOR_DEFINITIONS[sdk=iphonesimulator*][arch=*]" = "";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Titlz/Titlz-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Titlz/TestFlightSDK1.0\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "7AFD7249-67F8-42AD-BE81-05EB6420603D";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7AFD7249-67F8-42AD-BE81-05EB6420603D";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -932,6 +955,10 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Titlz/Titlz-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Titlz/TestFlightSDK1.0\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

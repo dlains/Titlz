@@ -9,13 +9,18 @@
 #endif
 
 #ifdef __OBJC__
-    #import <UIKit/UIKit.h>
-    #import <Foundation/Foundation.h>
-    #import <CoreData/CoreData.h>
 
-    #import "DLog.h"
-    #import "DAlertView.h"
-    #import "DConnection.h"
-    #import "Definitions.h"
-    #import "ContextUtil.h"
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
+
+#import "DAlertView.h"
+#import "DConnection.h"
+#import "Definitions.h"
+#import "ContextUtil.h"
+#import "TestFlight.h"
+
+// TestFlight remote logging. See AppDelegate.m for debug / production options.
+#define NSLog(__FORMAT__, ...) TFLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+
 #endif

@@ -313,7 +313,7 @@
             workerLookupLabel.text = value;
             break;
         default:
-            DLog(@"Invalid LookupType found in PersonDetailViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
+            NSLog(@"Invalid LookupType found in PersonDetailViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
             break;
     }
 }
@@ -402,7 +402,7 @@
             cell = [self configureBooksSignedCellAtIndexPath:indexPath];
             break;
         default:
-            DLog(@"Invalid PersonDetailViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid PersonDetailViewController section found: %i.", indexPath.section);
             break;
     }
     
@@ -425,7 +425,7 @@
         case PersonBooksSignedSection:
             return [self editingStyleForRow:indexPath.row inCollection:self.detailItem.booksSigned];
         default:
-            DLog(@"Invalid PersonDetailViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid PersonDetailViewController section found: %i.", indexPath.section);
             return UITableViewCellEditingStyleNone;
     }
 }
@@ -466,7 +466,7 @@
             [self loadBookDetailViewForPersonType:Signature atIndexPath:indexPath];
             break;
         default:
-            DLog(@"Invalid PersonDetailViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid PersonDetailViewController section found: %i.", indexPath.section);
             break;
     }
 }
@@ -835,7 +835,7 @@
                 [self.detailItem addBooksSignedObject:book];
                 break;
             default:
-                DLog(@"Invalid PersonType found in PersonDetailViewController: %i.", type);
+                NSLog(@"Invalid PersonType found in PersonDetailViewController: %i.", type);
                 break;
         }
         

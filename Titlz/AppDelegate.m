@@ -31,8 +31,8 @@ void uncaughtExceptionHandler(NSException* exception);
 
 void uncaughtExceptionHandler(NSException* exception)
 {
-    DLog(@"CRASH: %@", exception);
-    DLog(@"Stack Trace: %@", [exception callStackSymbols]);
+    NSLog(@"CRASH: %@", exception);
+    NSLog(@"Stack Trace: %@", [exception callStackSymbols]);
 }
 
 -(BOOL) application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
@@ -40,6 +40,15 @@ void uncaughtExceptionHandler(NSException* exception)
     // Get a better view of crash data.
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 
+    // Start TestFlight SDK.
+    [TestFlight takeOff:@"25a11a41593196e35b887e0a16a4273b_MTA5NjczMjAxMi0wNy0xMiAxNzoyNzo0OC4yMDEwMzg"];
+
+    // Turn off console and STDERR logging in production builds.
+#ifndef DEBUG
+    [TestFlight setOptions:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:@"logToConsole"]];
+    [TestFlight setOptions:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:@"logToSTDERR"]];
+#endif
+    
     // Register the firstLaunch user default so we can detect when to load the lookup table.
     [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES],@"firstLaunch", [NSNumber numberWithBool:YES],@"updateSortableTitles", nil]];
     
@@ -229,7 +238,7 @@ void uncaughtExceptionHandler(NSException* exception)
          Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
          
          */
-        DLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }    
 

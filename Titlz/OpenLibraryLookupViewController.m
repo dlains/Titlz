@@ -62,6 +62,8 @@
     self.title = NSLocalizedString(@"Open Library Search", @"Open Library lookup view controller title.");
     
     [self.searchTextField becomeFirstResponder];
+
+    [TestFlight passCheckpoint:@"OpenLibraryLookupViewController Loaded"];
 }
 
 -(void) viewDidUnload

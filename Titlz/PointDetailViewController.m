@@ -257,7 +257,7 @@
             cell = [self configureDataCellForRow:indexPath.row];
             break;
         default:
-            DLog(@"Invalid PointDetailViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid PointDetailViewController section found: %i.", indexPath.section);
             break;
     }
     
@@ -272,7 +272,7 @@
         case PointDataSection:
             return UITableViewCellEditingStyleNone;
         default:
-            DLog(@"Invalid PointDetailViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid PointDetailViewController section found: %i.", indexPath.section);
             return UITableViewCellEditingStyleNone;
     }
 }

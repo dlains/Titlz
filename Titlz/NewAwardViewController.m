@@ -46,6 +46,8 @@
 	// Set up the undo manager and set editing state to YES.
 	[self setUpUndoManager];
 	self.editing = YES;
+
+    [TestFlight passCheckpoint:@"NewAwardViewController Loaded"];
 }
 
 -(void) viewDidUnload

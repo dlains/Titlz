@@ -41,7 +41,7 @@
 
 -(void) createInManagedObjectContext:(NSManagedObjectContext*)managedObjectContext
 {
-    DLog(@"Creating initial data on first application run.");
+    NSLog(@"Creating initial data on first application run.");
  
     self.managedObjectContext = managedObjectContext;
 

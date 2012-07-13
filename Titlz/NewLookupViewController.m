@@ -59,7 +59,7 @@
             self.title = NSLocalizedString(@"New Location", @"NewLookupViewController Location header bar title.");
             break;
         default:
-            DLog(@"Invalid LookupType found in LookupViewController init: %i.", self.selectedLookupType);
+            NSLog(@"Invalid LookupType found in LookupViewController init: %i.", self.selectedLookupType);
             break;
     }
     self.tableView.backgroundColor = [UIColor colorWithRed:0.93333 green:0.93333 blue:0.93333 alpha:1.0];
@@ -73,6 +73,8 @@
 	// Set up the undo manager and set editing state to YES.
 	[self setUpUndoManager];
 	self.editing = YES;
+
+    [TestFlight passCheckpoint:@"NewLookupViewController Loaded"];
 }
 
 -(void) viewDidUnload
@@ -235,7 +237,7 @@
             cell.fieldLabel.text = NSLocalizedString(@"Location", @"NewLookupViewController value data field label.");
             break;
         default:
-            DLog(@"Invalid LookupType found in LookupViewController init: %i.", self.selectedLookupType);
+            NSLog(@"Invalid LookupType found in LookupViewController init: %i.", self.selectedLookupType);
             break;
     }
     cell.textField.text = self.detailItem.name;

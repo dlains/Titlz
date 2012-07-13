@@ -97,7 +97,7 @@
     }
     else if (error != nil)
     {
-        DLog(@"Error deserializing the JSON data: %@.", error);
+        NSLog(@"Error deserializing the JSON data: %@.", error);
         self.dataParsed = NO;
     }
 }

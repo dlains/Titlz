@@ -49,6 +49,8 @@
 	// Set up the undo manager and set editing state to YES.
 	[self setUpUndoManager];
 	self.editing = YES;
+
+    [TestFlight passCheckpoint:@"NewPublisherViewController Loaded"];
 }
 
 -(void) viewDidUnload
@@ -215,7 +217,7 @@
                 self.detailItem.country = value;
                 break;
             default:
-                DLog(@"Invalid LookupType found in NewPublisherViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
+                NSLog(@"Invalid LookupType found in NewPublisherViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
                 break;
         }
         

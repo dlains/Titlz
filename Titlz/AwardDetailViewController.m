@@ -245,7 +245,7 @@
             cell = [self configureDataCellForRow:indexPath.row];
             break;
         default:
-            DLog(@"Invalid AwardDetailViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid AwardDetailViewController section found: %i.", indexPath.section);
             break;
     }
     
@@ -260,7 +260,7 @@
         case AwardDataSection:
             return UITableViewCellEditingStyleNone;
         default:
-            DLog(@"Invalid AwardDetailViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid AwardDetailViewController section found: %i.", indexPath.section);
             return UITableViewCellEditingStyleNone;
     }
 }

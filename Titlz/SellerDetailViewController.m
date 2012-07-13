@@ -255,7 +255,7 @@
                 self.detailItem.country = value;
                 break;
             default:
-                DLog(@"Invalid LookupType found in SellerDetailViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
+                NSLog(@"Invalid LookupType found in SellerDetailViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
                 break;
         }
         
@@ -319,7 +319,7 @@
             cell = [self configureBooksCellAtIndexPath:indexPath];
             break;
         default:
-            DLog(@"Invalid SellerDetailViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid SellerDetailViewController section found: %i.", indexPath.section);
             break;
     }
     
@@ -336,7 +336,7 @@
         case SellerBooksSection:
             return UITableViewCellEditingStyleNone;
         default:
-            DLog(@"Invalid SellerDetailViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid SellerDetailViewController section found: %i.", indexPath.section);
             return UITableViewCellEditingStyleNone;
     }
 }
@@ -373,7 +373,7 @@
             [self loadBookDetailViewForBookAtIndexPath:indexPath];
             break;
         default:
-            DLog(@"Invalid SellerDetailViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid SellerDetailViewController section found: %i.", indexPath.section);
             break;
     }
 }

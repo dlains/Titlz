@@ -13,7 +13,7 @@
 
 -(void) fixSortableTitlesInContext:(NSManagedObjectContext*)context
 {
-    DLog(@"Updating the sortable titles for existing records.");
+    NSLog(@"Updating the sortable titles for existing records.");
 
     // Get all the books.
     NSFetchRequest* request = [[NSFetchRequest alloc] init];

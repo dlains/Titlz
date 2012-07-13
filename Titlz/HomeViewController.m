@@ -197,7 +197,7 @@
             cell = [self configureCollectionTotalCell];
             break;
         default:
-            DLog(@"Invalid HomeViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid HomeViewController section found: %i.", indexPath.section);
             break;
     }
     

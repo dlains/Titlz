@@ -249,7 +249,7 @@
                 self.detailItem.country = value;
                 break;
             default:
-                DLog(@"Invalid LookupType found in PublisherDetailViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
+                NSLog(@"Invalid LookupType found in PublisherDetailViewController::lookupViewController:didSelectValue:withLookupType: %i.", type);
                 break;
         }
         
@@ -313,7 +313,7 @@
             cell = [self configureBooksCellAtIndexPath:indexPath];
             break;
         default:
-            DLog(@"Invalid PublisherDetailViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid PublisherDetailViewController section found: %i.", indexPath.section);
             break;
     }
     
@@ -330,7 +330,7 @@
         case PublisherBooksSection:
             return UITableViewCellEditingStyleNone;
         default:
-            DLog(@"Invalid PublisherDetailViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid PublisherDetailViewController section found: %i.", indexPath.section);
             return UITableViewCellEditingStyleNone;
     }
 }
@@ -350,7 +350,7 @@
             [self loadBookDetailViewForBookAtIndexPath:indexPath];
             break;
         default:
-            DLog(@"Invalid PublisherDetailViewController section found: %i.", indexPath.section);
+            NSLog(@"Invalid PublisherDetailViewController section found: %i.", indexPath.section);
             break;
     }
 }
