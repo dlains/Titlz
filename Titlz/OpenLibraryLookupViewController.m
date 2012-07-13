@@ -39,8 +39,9 @@
 -(id) initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
+    if (self)
+    {
+        self.searchInProgress = NO;
     }
     return self;
 }
@@ -62,7 +63,8 @@
     self.title = NSLocalizedString(@"Open Library Search", @"Open Library lookup view controller title.");
     
     [self.searchTextField becomeFirstResponder];
-
+    self.searchInProgress = NO;
+    
     [TestFlight passCheckpoint:@"OpenLibraryLookupViewController Loaded"];
 }
 
@@ -87,13 +89,13 @@
     return YES;
 }
 
--(void) textFieldDidEndEditing:(UITextField *)textField
-{
-    if (self.searchInProgress == NO)
-    {
-        [self searchButtonPressed:textField];
-    }
-}
+//-(void) textFieldDidEndEditing:(UITextField *)textField
+//{
+//    if (self.searchInProgress == NO)
+//    {
+//        [self searchButtonPressed:textField];
+//    }
+//}
 
 #pragma mark - Event Handling
 
@@ -102,7 +104,6 @@
     self.searchInProgress = YES;
     
     [self.searchTextField resignFirstResponder];
-    self.cancelButton.enabled = YES;
     self.resultLabel.hidden = YES;
     
     [self.activityIndicator startAnimating];
@@ -113,11 +114,13 @@
 
 -(IBAction) cancelButtonPressed:(id)sender
 {
-    self.searchInProgress = NO;
-    self.cancelButton.enabled = NO;
+    if (self.searchInProgress == YES)
+    {
+        self.searchInProgress = NO;
+        [self.openLibrarySearch stopSearch];
+        [self.activityIndicator stopAnimating];
+    }
     
-    [self.openLibrarySearch stopSearch];
-    [self.activityIndicator stopAnimating];
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 

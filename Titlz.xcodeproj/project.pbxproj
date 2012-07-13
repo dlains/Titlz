@@ -439,6 +439,7 @@
 		55A58AFF15AF75EA0074078C /* TestFlightSDK1.0 */ = {
 			isa = PBXGroup;
 			children = (
+				55A58B0715AF76870074078C /* libz.dylib */,
 				55A58B0015AF75EA0074078C /* libTestFlight.a */,
 				55A58B0315AF75EA0074078C /* TestFlight.h */,
 			);
@@ -448,7 +449,6 @@
 		55A99E8714A949FA00836F4E = {
 			isa = PBXGroup;
 			children = (
-				55A58B0715AF76870074078C /* libz.dylib */,
 				5523E1431521608600BF3D6C /* Titlz-114.png */,
 				5523E1401521607F00BF3D6C /* Titlz-57.png */,
 				556873C614FC5988000709A8 /* Default@2x.png */,
@@ -950,6 +950,8 @@
 		55A99EBD14A949FA00836F4E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Distribution: David Lains";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: David Lains";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Titlz/Titlz-Prefix.pch";
 				HEADER_SEARCH_PATHS = "";
@@ -960,6 +962,8 @@
 					"\"$(SRCROOT)/Titlz/TestFlightSDK1.0\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "68B9F898-DA60-48C0-9736-44EB6EC28E30";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "68B9F898-DA60-48C0-9736-44EB6EC28E30";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
