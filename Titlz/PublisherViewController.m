@@ -217,7 +217,7 @@
     NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] init];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+    NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
     NSArray* sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
 
     fetchRequest.entity = [NSEntityDescription entityForName:@"Publisher" inManagedObjectContext:self.managedObjectContext];
