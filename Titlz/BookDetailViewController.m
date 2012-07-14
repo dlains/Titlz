@@ -1762,6 +1762,7 @@
     
     if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:delete])
     {
+        [TestFlight passCheckpoint:@"Delete Photo Selected"];
         self.detailItem.thumbnail = nil;
         [self.detailItem.managedObjectContext deleteObject:self.detailItem.photo];
         [ContextUtil saveContext:self.detailItem.managedObjectContext];
@@ -1770,6 +1771,7 @@
     
     if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:take])
     {
+        [TestFlight passCheckpoint:@"Take Photo Selected"];
         UIImagePickerController* picker = [[UIImagePickerController alloc] init];
         picker.delegate = self;
         picker.sourceType = UIImagePickerControllerSourceTypeCamera;
@@ -1778,6 +1780,7 @@
     
     if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:choose])
     {
+        [TestFlight passCheckpoint:@"Choose Photo Selected"];
         UIImagePickerController* picker = [[UIImagePickerController alloc] init];
         picker.delegate = self;
         picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;

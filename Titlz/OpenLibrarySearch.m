@@ -42,11 +42,13 @@
         if (error)
         {
             [self.delegate openLibraryConnectionFailed];
+            [TestFlight passCheckpoint:@"OpenLibraryConnectionFailed"];
         }
         else
         {
             self.bookDetails = [[OpenLibraryBookDetails alloc] initWithData:connection.downloadData andSearchTerm:self.searchTerm];
             [self.delegate openLibrarySearchDidFinishWithBookDetails:self.bookDetails];
+            [TestFlight passCheckpoint:@"OpenLibraryLookupComplete"];
         }
     };
 

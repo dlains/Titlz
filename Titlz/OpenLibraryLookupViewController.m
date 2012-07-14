@@ -64,8 +64,6 @@
     
     [self.searchTextField becomeFirstResponder];
     self.searchInProgress = NO;
-    
-    [TestFlight passCheckpoint:@"OpenLibraryLookupViewController Loaded"];
 }
 
 -(void) viewDidUnload

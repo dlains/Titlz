@@ -471,11 +471,14 @@
     if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:manual])
     {
         [self loadNewBookView];
+        [TestFlight passCheckpoint:@"Manual Book Entry Selected"];
+
     }
     
     if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:search])
     {
         [self loadOpenLibraryLookupView];
+        [TestFlight passCheckpoint:@"Open Library Book Entry Selected"];
     }
 }
 

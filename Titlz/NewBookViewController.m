@@ -117,8 +117,6 @@
     dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
     [dateFormatter setDateStyle:NSDateFormatterLongStyle];
-
-    [TestFlight passCheckpoint:@"NewBookViewController Loaded"];
 }
 
 -(void)viewDidUnload
