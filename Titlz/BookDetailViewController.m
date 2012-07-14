@@ -558,6 +558,9 @@
     {
         [self setUpUndoManager];
         [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationRight];
+        
+        // Make sure the comments field goes into edit mode.
+        self.cellTextView.editable = YES;
     }
     else
     {
@@ -567,6 +570,9 @@
 
         [self.tableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView reloadData];
+        
+        // Make sure the comments field is no longer editable.
+        self.cellTextView.editable = NO;
     }
 }
 
