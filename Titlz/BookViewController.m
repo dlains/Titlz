@@ -19,9 +19,9 @@
 -(NSFetchedResultsController*) fetchedResultsControllerWithPredicate:(NSPredicate*)predicate;
 -(void) selectObjects;
 
--(IBAction) segmentAction:(id)sender;
 -(void) insertNewObject;
 -(void) cancelSelect;
+-(void) cancelMultiSelect;
 
 -(void) loadNewBookView;
 -(void) loadOpenLibraryLookupView;
@@ -68,15 +68,8 @@
         UIBarButtonItem* selectButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Select (0)", @"BookViewController multiple selection button text") style:UIBarButtonItemStyleBordered target:self action:@selector(selectObjects)];
         self.navigationItem.leftBarButtonItem = selectButton;
 
-        // "Segmented" control to the right
-        UISegmentedControl* segmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:NSLocalizedString(@"Cancel", @"Selection mode cancel text."), NSLocalizedString(@"Add", @"Selection mode add text."), nil]];
-        [segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-        segmentedControl.frame = CGRectMake(0, 0, 110, CustomButtonHeight);
-        segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
-        segmentedControl.momentary = YES;
-        
-        UIBarButtonItem* segmentBarItem = [[UIBarButtonItem alloc] initWithCustomView:segmentedControl];
-        self.navigationItem.rightBarButtonItem = segmentBarItem;
+        UIBarButtonItem* cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"BookViewController cancel button text.") style:UIBarButtonItemStyleBordered target:self action:@selector(cancelMultiSelect)];
+        self.navigationItem.rightBarButtonItem = cancelButton;
     }
     else if (self.selectionMode == DetailSelection)
     {
@@ -443,21 +436,6 @@
 
 #pragma mark - New Book Handling
 
--(IBAction) segmentAction:(id)sender
-{
-	UISegmentedControl* segmentedControl = (UISegmentedControl*)sender;
-    
-    if (segmentedControl.selectedSegmentIndex == 0)
-    {
-        // Cancel operation...
-        [self.delegate bookViewController:self didSelectBooks:nil];
-    }
-    else
-    {
-        [self insertNewObject];
-    }
-}
-
 -(void) insertNewObject
 {
     NSString* title  = NSLocalizedString(@"Get book details via:", @"BookViewController new book action sheet title.");
@@ -472,6 +450,11 @@
 -(void) cancelSelect
 {
     [self.delegate bookViewController:self didSelectBook:nil forPersonType:Workers];
+}
+
+-(void) cancelMultiSelect
+{
+    [self.delegate bookViewController:self didSelectBooks:nil];
 }
 
 -(void) actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
